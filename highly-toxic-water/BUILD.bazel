@@ -1,13 +1,6 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-
-copy_file(
-    name = "mcmeta",
-    src = "//template:mcmeta",
-    out = "pack.mcmeta",
-)
 
 pack_id = "highly_toxic_water"
 
@@ -56,7 +49,7 @@ pkg_zip(
     srcs = [
         "README.md",
         "pack.png",
-        ":mcmeta",
+        "//template:mcmeta",
         ":pack_function",
         ":pack_function_legacy",
         ":vanilla_tag",
