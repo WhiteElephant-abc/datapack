@@ -1,0 +1,11 @@
+alias(
+    name = "mcmeta",
+    actual = "pack.mcmeta",
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "templates",
+    srcs = glob(["*.enjoy.*"]),
+    visibility = ["//visibility:public"],
+)

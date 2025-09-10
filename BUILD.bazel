@@ -1,0 +1,5 @@
+alias(
+    name = "license_gpl",
+    actual = "LICENSE",
+    visibility = ["//visibility:public"],
+)
