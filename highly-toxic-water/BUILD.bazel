@@ -62,13 +62,18 @@ pkg_zip(
 java_binary(
     name = "server",
     srcs = [],
-    data = [":highly-toxic-water"],
+    data = [
+        ":highly-toxic-water",
+        "//game:ops_json",
+    ],
     jvm_flags = [
         "-Ddev.launch.version=1.21.8",
         "-Ddev.launch.type=server",
         "-Ddev.launch.mainClass=net.minecraft.server.Main",
         "-Xmx4G",
-        "-Ddev.launch.copyFiles=$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip",
+        "-Ddev.launch.copyFiles=" +
+            "$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip," +
+            "$(rlocationpath //game:ops_json):ops.json",
     ],
     main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
     runtime_deps = [

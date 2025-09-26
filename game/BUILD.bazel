@@ -13,3 +13,9 @@ java_import(
     visibility = ["//visibility:public"],
     jars = [":server_file"],
 )
+
+alias(
+    name = "ops_json",
+    visibility = ["//visibility:public"],
+    actual = "ops.json",
+)
