@@ -3,6 +3,7 @@ package top.fifthlight.fabazel.devlaunchwrapper;
 import com.google.devtools.build.runfiles.AutoBazelRepository;
 import com.google.devtools.build.runfiles.Runfiles;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -41,6 +42,7 @@ public class DevLaunchWrapper {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             var targetPath = toPath.resolve(fromPath.relativize(file));
+            new File(targetPath.toString()).delete();
             Files.deleteIfExists(targetPath);
             Files.copy(file, targetPath, copyOptions);
             return FileVisitResult.CONTINUE;
@@ -72,6 +74,7 @@ public class DevLaunchWrapper {
                 if (Files.isDirectory(from)) {
                     Files.walkFileTree(from, new CopyDirectoryVisitor(from, to, StandardCopyOption.REPLACE_EXISTING));
                 } else {
+                    new File(to.toString()).delete();
                     Files.deleteIfExists(to);
                     Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
                 }
