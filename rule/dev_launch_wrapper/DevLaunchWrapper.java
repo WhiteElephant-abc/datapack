@@ -40,7 +40,9 @@ public class DevLaunchWrapper {
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.copy(file, toPath.resolve(fromPath.relativize(file)), copyOptions);
+            var targetPath = toPath.resolve(fromPath.relativize(file));
+            Files.deleteIfExists(targetPath);
+            Files.copy(file, targetPath, copyOptions);
             return FileVisitResult.CONTINUE;
         }
     }
@@ -70,6 +72,7 @@ public class DevLaunchWrapper {
                 if (Files.isDirectory(from)) {
                     Files.walkFileTree(from, new CopyDirectoryVisitor(from, to, StandardCopyOption.REPLACE_EXISTING));
                 } else {
+                    Files.deleteIfExists(to);
                     Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
                 }
             }
