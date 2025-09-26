@@ -20,3 +20,12 @@ http_file(
     integrity = "sha256-Dn5yGUFGqBR6l7xz/g8LoPm30CUdMeywxegL1hvTZpM=",
     downloaded_file_path = "enjoy-5.2.5-sources.jar",
 )
+
+minecraft = use_extension("//repo:minecraft_jar.bzl", "minecraft")
+minecraft.minecraft_jar(
+    version = "1.21.8",
+    type = "server",
+    mapping = True,
+)
+use_repo(minecraft, "minecraft")
+use_repo(minecraft, "minecraft_assets")

@@ -1,6 +1,7 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+load("@rules_java//java:defs.bzl", "java_binary")
 
 pack_id = "highly_toxic_water"
 
@@ -55,5 +56,24 @@ pkg_zip(
         ":vanilla_tag",
         ":vanilla_tag_legacy",
         "//:license_gpl",
+    ],
+)
+
+java_binary(
+    name = "server",
+    srcs = [],
+    data = [":highly-toxic-water"],
+    jvm_flags = [
+        "-Ddev.launch.version=1.21.8",
+        "-Ddev.launch.type=server",
+        "-Ddev.launch.mainClass=net.minecraft.server.Main",
+        "-Xmx4G",
+        "-Ddev.launch.copyFiles=$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip",
+    ],
+    main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
+    runtime_deps = [
+        "//rule/dev_launch_wrapper",
+        "//game:server",
+        "@minecraft//:1.21.8_server_libraries",
     ],
 )

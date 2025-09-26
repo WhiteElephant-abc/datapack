@@ -1,0 +1,15 @@
+load("//rule:extract_jar.bzl", "extract_jar")
+load("@rules_java//java:defs.bzl", "java_library", "java_import")
+
+extract_jar(
+    name = "server_file",
+    entry_path = "META-INF/versions/1.21.8/server-1.21.8.jar",
+    filename = "_minecraft/server.jar",
+    input = "@minecraft//:1.21.8_server",
+)
+
+java_import(
+    name = "server",
+    visibility = ["//visibility:public"],
+    jars = [":server_file"],
+)
