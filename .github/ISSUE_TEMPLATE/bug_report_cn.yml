@@ -19,7 +19,7 @@ body:
       - label: 我已将数据包更新到最新版本
         required: true
 - type: input
-  id: Verison
+  id: Name
   attributes:
     label: 名称
     description: 您使用的数据包名称
