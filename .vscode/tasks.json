@@ -15,11 +15,17 @@
             "command": "bazelisk",
             "args": [
                 "build",
-                {
-                    "value": "@//${input:projectName}",
-                    "quoting": "weak"
-                }
+                "@//${input:projectName}"
             ],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [
+                        "/d",
+                        "/c"
+                    ]
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -40,6 +46,15 @@
                 "run",
                 "//${input:projectName}:server"
             ],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [
+                        "/d",
+                        "/c"
+                    ]
+                }
+            },
             "group": "none",
             "presentation": {
                 "echo": true,
