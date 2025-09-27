@@ -5,7 +5,7 @@ labels: [ "enhancement" ]
 body:
 - type: markdown
   attributes:
-    value: "# 🎁 | 您正在填写本模组的新功能建议!"
+    value: "# 🎁 | 您正在填写数据包的新功能建议!"
 - type: checkboxes
   id: Prefeedback
   attributes:
@@ -16,8 +16,16 @@ body:
         required: true
       - label: 此功能不在 PR 中
         required: true
-      - label: 模组的最新版本并未添加此功能
+      - label: 数据包的最新版本并未添加此功能
         required: true
+- type: input
+  id: Name
+  attributes:
+    label: 名称
+    description: 您请求添加新功能的数据包名称
+    placeholder: 名称：xxx
+  validations:
+    required: true
 - type: input
   id: FeatureRequest_Summary
   attributes:
@@ -34,5 +42,5 @@ body:
       <此功能的详细内容>
 - type: markdown
   attributes:
-    value: "### 🎉 | 感谢您对本模组的支持!"
+    value: "### 🎉 | 感谢您对本数据包的支持!"
   
