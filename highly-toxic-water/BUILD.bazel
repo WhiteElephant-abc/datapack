@@ -59,6 +59,7 @@ pkg_zip(
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
+        "@//datapackets-functions-LIB:dfl_folder",
     ],
 )
 

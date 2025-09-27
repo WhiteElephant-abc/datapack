@@ -51,6 +51,14 @@ pkg_files(
     prefix = "README",
 )
 
+pkg_files(
+    name = "dfl_folder",
+    srcs = glob(["data/dfl/function/**/*.mcfunction"]),
+    strip_prefix = "data/dfl/function",
+    prefix = "data/dfl/function",
+    visibility = ["//visibility:public"],
+)
+
 pkg_zip(
     name = "datapackets-functions-LIB",
     srcs = [
