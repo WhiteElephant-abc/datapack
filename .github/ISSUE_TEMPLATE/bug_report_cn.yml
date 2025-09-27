@@ -49,7 +49,7 @@ body:
   id: UploadLog
   attributes:
     label: 日志
-    description: 在游戏内输入`/function #unif.logger:logs/v1/read_all`以及`/function #unif.logger:logs/v1/read_debug`并将输出提交到此
+    description: 在游戏内输入`/function \#unif.logger:logs/v1/read_all`以及`/function \#unif.logger:logs/v1/read_debug`并将输出提交到此
   validations:
     required: false
 - type: markdown
