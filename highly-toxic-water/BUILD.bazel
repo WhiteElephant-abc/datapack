@@ -13,9 +13,7 @@ datapack(
         "README.md",
         "pack.png",
         "//:license_gpl",
-        "@unif-logger//:unif_logger_functions",
-        "@unif-logger//:unif_logger_license",
-        "@unif-logger//:unif_logger_tags",
+        "@unif-logger//:unif-logger",
         "@//datapackets-functions-LIB:dfl",
     ],
 )
