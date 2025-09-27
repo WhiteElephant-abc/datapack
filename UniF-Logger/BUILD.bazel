@@ -1,93 +1,9 @@
-load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
-load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-load("@rules_java//java:defs.bzl", "java_binary")
-
-pack_id = "unif.logger"
-
-expand_enjoy(
-    name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id], allow_empty = True),
-    include_files = ["//template:templates"],
-)
-
-pkg_files(
-    name = "pack_function",
-    srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    prefix = "data/%s/function" % pack_id,
-)
-
-pkg_files(
-    name = "pack_function_legacy",
-    srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    prefix = "data/%s/functions" % pack_id,
-)
-
-pkg_files(
-    name = "vanilla_tag",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/function",
-)
-
-pkg_files(
-    name = "vanilla_tag_legacy",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/functions",
-)
 
 pkg_files(
     name = "unif_logger_data",
     srcs = glob(["data/unif.logger/**"]),
+    visibility = ["//visibility:public"],
     strip_prefix = "data/unif.logger",
     prefix = "data/unif.logger",
-    visibility = ["//visibility:public"],
-)
-
-pkg_zip(
-    name = "UniF-Logger",
-    srcs = [
-        "README.md",
-        "pack.png",
-        "//template:mcmeta",
-        ":pack_function",
-        ":pack_function_legacy",
-        ":vanilla_tag",
-        ":vanilla_tag_legacy",
-        ":unif_logger_data",
-        "//:license_gpl",
-    ],
-)
-
-java_binary(
-    name = "server",
-    srcs = [],
-    data = [
-        ":UniF-Logger",
-        "//game:ops_json",
-    ],
-    jvm_flags = [
-        "-Ddev.launch.version=1.21.8",
-        "-Ddev.launch.type=server",
-        "-Ddev.launch.mainClass=net.minecraft.server.Main",
-        "-Xmx4G",
-        "-Ddev.launch.copyFiles=" +
-            "$(rlocationpath //UniF-Logger:UniF-Logger):world/datapacks/UniF-Logger.zip," +
-            "$(rlocationpath //game:ops_json):ops.json",
-    ],
-    main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
-    runtime_deps = [
-        "//rule/dev_launch_wrapper",
-        "//game:server",
-        "@minecraft//:1.21.8_server_libraries",
-    ],
 )
