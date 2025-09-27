@@ -1,0 +1,57 @@
+name: 🐛 | BUG 提交
+description: 🎤 | 提交您发现的数据包中的 BUG
+title: "[BUG]: "
+labels: [ "bug" ]
+body:
+- type: markdown
+  attributes:
+    value: "# 🎁 | 欢迎您来填写数据包的 BUG 反馈!"
+- type: checkboxes
+  id: BUG_Prefeedback
+  attributes:
+    label: 检查项
+    description: 在提交前，请确认以下内容：
+    options:
+      - label: 此 BUG 未被提交过
+        required: true
+      - label: 此 BUG 的修复不在 PR 中
+        required: true
+      - label: 我已将数据包更新到最新版本
+        required: true
+- type: input
+  id: Verison
+  attributes:
+    label: 名称
+    description: 您使用的数据包名称
+    placeholder: 名称：xxx
+  validations:
+    required: true
+- type: input
+  id: Verison
+  attributes:
+    label: 版本
+    description: 您发现此 BUG 使用的数据包版本、Minecraft 版本
+    placeholder: 数据包版本：vx.x.x；Minecraft版本：x.x.x
+  validations:
+    required: true
+- type: textarea
+  id: BUGInMSS3_Retry
+  attributes:
+    label: 复现流程
+    description: 请简要陈述如何触发这一个 BUG
+    placeholder: |
+      1. xxx
+      2. xxx
+      3. xxx
+  validations:
+    required: true
+- type: textarea
+  id: UploadLog
+  attributes:
+    label: 日志
+    description: 在游戏内输入`/function #unif.logger:logs/v1/read_all`以及`/function #unif.logger:logs/v1/read_debug`并将输出提交到此
+  validations:
+    required: false
+- type: markdown
+  attributes:
+    value: "### 🎉 | 感谢您对本数据包的支持!"
