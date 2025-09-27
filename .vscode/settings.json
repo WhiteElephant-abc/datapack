@@ -1,5 +1,11 @@
 {
     "cSpell.words": [
         "mcfunction"
+    ],
+    "zipViewer.textFileAssociations": [
+        {
+            "zipPath": "\\bazel-bin\\highly-toxic-water\\highly-toxic-water.zip",
+            "subfilePath": "LICENSE"
+        }
     ]
 }
