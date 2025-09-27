@@ -21,6 +21,14 @@ http_file(
     downloaded_file_path = "enjoy-5.2.5-sources.jar",
 )
 
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "unif-logger",
+    url = "https://cdn.modrinth.com/data/ATVC2dJr/versions/qESWh4KO/UniF-Logger-1.0.0.zip",
+    sha256 = "c65e360caa1bef72801df7026ec0abe4a6a4718fc2a9f7f359ec60563b97d4b2",
+    build_file = "@//third_party/unif-logger:BUILD.unif-logger.bazel",
+)
+
 minecraft = use_extension("//repo:minecraft_jar.bzl", "minecraft")
 minecraft.minecraft_jar(
     version = "1.21.8",

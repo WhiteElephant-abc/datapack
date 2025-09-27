@@ -1,9 +1,0 @@
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
-
-pkg_files(
-    name = "unif_logger_data",
-    srcs = glob(["data/unif.logger/**"]),
-    visibility = ["//visibility:public"],
-    strip_prefix = "data/unif.logger",
-    prefix = "data/unif.logger",
-)

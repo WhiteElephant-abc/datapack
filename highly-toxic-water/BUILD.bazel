@@ -55,7 +55,8 @@ pkg_zip(
         ":pack_function_legacy",
         ":vanilla_tag",
         ":vanilla_tag_legacy",
-        "//UniF-Logger:unif_logger_data",
+        "@unif-logger//:unif_logger_functions",
+        "@unif-logger//:unif_logger_tags",
         "//:license_gpl",
     ],
 )
