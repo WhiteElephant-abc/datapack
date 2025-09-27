@@ -7,7 +7,7 @@ pack_id = "unif.logger"
 
 expand_enjoy(
     name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id]),
+    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id], allow_empty = True),
     include_files = ["//template:templates"],
 )
 
@@ -48,6 +48,7 @@ pkg_files(
 pkg_files(
     name = "unif_logger_data",
     srcs = glob(["data/unif.logger/**"]),
+    strip_prefix = "data/unif.logger",
     prefix = "data/unif.logger",
     visibility = ["//visibility:public"],
 )
