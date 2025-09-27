@@ -3,11 +3,11 @@ load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-pack_id = "highly_toxic_water"
+pack_id = "dfl"
 
 expand_enjoy(
     name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id]),
+    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id], allow_empty = True),
     include_files = ["//template:templates"],
 )
 
@@ -46,27 +46,28 @@ pkg_files(
 )
 
 pkg_zip(
-    name = "highly-toxic-water",
+    name = "datapackets-functions-LIB",
     srcs = [
         "README.md",
+        "README-en_us.md",
+        "LICENSE",
         "pack.png",
         ":pack_function",
         ":pack_function_legacy",
         ":vanilla_tag",
         ":vanilla_tag_legacy",
-        "//:license_gpl",
         "//template:mcmeta",
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
-    ],
+    ] + glob(["README/*"]),
 )
 
 java_binary(
     name = "server",
     srcs = [],
     data = [
-        ":highly-toxic-water",
+        ":datapackets-functions-LIB",
         "//game:ops_json",
     ],
     jvm_flags = [
@@ -75,7 +76,7 @@ java_binary(
         "-Ddev.launch.mainClass=net.minecraft.server.Main",
         "-Xmx4G",
         "-Ddev.launch.copyFiles=" +
-        "$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip," +
+        "$(rlocationpath //datapackets-functions-LIB:datapackets-functions-LIB):world/datapacks/datapackets-functions-LIB.zip," +
         "$(rlocationpath //game:ops_json):ops.json",
     ],
     main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",

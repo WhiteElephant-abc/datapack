@@ -31,7 +31,7 @@ expand_enjoy = rule(
     implementation = _expand_enjoy_impl,
     attrs = {
         "srcs": attr.label_list(
-            allow_empty = False,
+            allow_empty = True,
             allow_files = [".enjoy.mcfunction"],
         ),
         "include_files": attr.label_list(
