@@ -1,0 +1,24 @@
+{
+    "start.dfl.enable": "始启得成",
+    "start.dfl.license.a": "此数据包用",
+    "start.dfl.license.b": "协约开源",
+    "start.dfl.official": "数据包之官站",
+
+    "tick.ban.dfl.ban":"汝已为此服务器软禁",
+    "tick.ban.dfl.from":"由数据包",
+    
+    "tick.show.entity.dfl.entity.num":"实体之数：",
+    
+    "tick.kill.dfl.too.many": "實體過多，已清除也",
+    "tick.kill.dfl.entity.num": "個實體",
+    "tick.kill.dfl.need.tag": "欲防實體被清除者，可為實體",
+    "tick.kill.dfl.add": "添",
+    "tick.kill.dfl.tag": "標籤",
+
+    "redstone.kill.item.dfl.entity.clear":"除却",
+    "redstone.kill.item.dfl.entity.item":"落物数",
+    
+    "redstone.show.entity.dfl.entity.entity":"实体之数：",
+    "redstone.show.entity.dfl.entity.other.entity":"非玩家之实体数：",
+    "redstone.show.entity.dfl.entity.item":"落物之数："
+} 

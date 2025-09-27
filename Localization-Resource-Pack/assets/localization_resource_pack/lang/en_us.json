@@ -1,0 +1,30 @@
+{
+    "start.dfl.enable": "Loaded",
+    "start.dfl.license.a": "This datapack uses",
+    "start.dfl.license.b": "open-source license",
+    "start.dfl.official": "Official Website",
+
+    "tick.ban.dfl.ban": "You are soft-banned",
+    "tick.ban.dfl.from": "via datapack",
+
+    "tick.show.entity.dfl.entity.num": "Entities:",
+
+    "tick.kill.dfl.too.many": "Too many entities, cleared",
+    "tick.kill.dfl.entity.num": "entities",
+    "tick.kill.dfl.need.tag": "Want to prevent clearing?",
+    "tick.kill.dfl.add": "Add",
+    "tick.kill.dfl.tag": "tag",
+
+    "redstone.kill.item.dfl.entity.clear": "Cleared",
+    "redstone.kill.item.dfl.entity.item": "items",
+
+    "redstone.show.entity.dfl.entity.entity": "Entities:",
+    "redstone.show.entity.dfl.entity.other.entity": "Non-player:",
+    "redstone.show.entity.dfl.entity.item": "Items:",
+
+    "things.stone.disappearance.data.pack.message": "[Datapack]",
+    "things.stone.disappearance.message.enable": "Filling glass ON",
+    "things.stone.disappearance.message.disable": "Filling glass OFF",
+
+    "redstone.lucky.block.island.kill.entity": "[Datapack] Cleared entities"
+}
