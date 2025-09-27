@@ -1,1 +1,7 @@
-{"replace": false,"values": ["highly_toxic_water:start"]}
+{
+    "replace": false,
+    "values": [
+        "highly_toxic_water:start",
+        "unif.logger:load"
+    ]
+}

@@ -3,7 +3,7 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 load("@rules_java//java:defs.bzl", "java_binary")
 
-pack_id = "highly_toxic_water"
+pack_id = "unif.logger"
 
 expand_enjoy(
     name = "pack_functions_expanded",
@@ -45,8 +45,15 @@ pkg_files(
     prefix = "data/minecraft/tags/functions",
 )
 
+pkg_files(
+    name = "unif_logger_data",
+    srcs = glob(["data/unif.logger/**"]),
+    prefix = "data/unif.logger",
+    visibility = ["//visibility:public"],
+)
+
 pkg_zip(
-    name = "highly-toxic-water",
+    name = "UniF-Logger",
     srcs = [
         "README.md",
         "pack.png",
@@ -55,7 +62,7 @@ pkg_zip(
         ":pack_function_legacy",
         ":vanilla_tag",
         ":vanilla_tag_legacy",
-        "//UniF-Logger:unif_logger_data",
+        ":unif_logger_data",
         "//:license_gpl",
     ],
 )
@@ -64,7 +71,7 @@ java_binary(
     name = "server",
     srcs = [],
     data = [
-        ":highly-toxic-water",
+        ":UniF-Logger",
         "//game:ops_json",
     ],
     jvm_flags = [
@@ -73,7 +80,7 @@ java_binary(
         "-Ddev.launch.mainClass=net.minecraft.server.Main",
         "-Xmx4G",
         "-Ddev.launch.copyFiles=" +
-            "$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip," +
+            "$(rlocationpath //UniF-Logger:UniF-Logger):world/datapacks/UniF-Logger.zip," +
             "$(rlocationpath //game:ops_json):ops.json",
     ],
     main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
