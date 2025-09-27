@@ -58,9 +58,15 @@ public class EnjoyExpander {
         Template template = engine.getTemplateByString(inputStr);
         String result = template.renderToString(data);
 
+        Path outputPath = Paths.get(outputFile);
+        var baseDir = outputPath.getParent();
+        if (baseDir != null) {
+            Files.createDirectories(baseDir);
+        }
+
         // Output
         if (outputFile != null) {
-            Files.writeString(Paths.get(outputFile), result);
+            Files.writeString(outputPath, result);
         } else {
             System.out.println(result);
         }

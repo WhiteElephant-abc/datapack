@@ -1,35 +1,37 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@rules_java//java:defs.bzl", "java_binary")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
 pack_id = "dfl"
 
 expand_enjoy(
     name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id], allow_empty = True),
+    srcs = glob(["data/%s/function/**/*.enjoy.mcfunction" % pack_id], allow_empty = True),
     include_files = ["//template:templates"],
 )
 
 pkg_files(
     name = "pack_function",
     srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
+        include = ["data/%s/function/**/*.mcfunction" % pack_id],
+        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
     ) + [
         ":pack_functions_expanded",
     ],
+    strip_prefix = "data/%s/function" % pack_id,
     prefix = "data/%s/function" % pack_id,
 )
 
 pkg_files(
     name = "pack_function_legacy",
     srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
+        include = ["data/%s/function/**/*.mcfunction" % pack_id],
+        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
     ) + [
         ":pack_functions_expanded",
     ],
+    strip_prefix = "data/%s/function" % pack_id,
     prefix = "data/%s/functions" % pack_id,
 )
 
@@ -51,12 +53,15 @@ pkg_files(
     prefix = "README",
 )
 
-pkg_files(
-    name = "dfl_folder",
-    srcs = glob(["data/dfl/function/**/*.mcfunction"]),
-    strip_prefix = "data/dfl/function",
-    prefix = "data/dfl/function",
+pkg_filegroup(
+    name = "dfl",
     visibility = ["//visibility:public"],
+    srcs = [
+        ":pack_function",
+        ":pack_function_legacy",
+        ":vanilla_tag",
+        ":vanilla_tag_legacy",
+    ],
 )
 
 pkg_zip(

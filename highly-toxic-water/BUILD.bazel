@@ -7,29 +7,31 @@ pack_id = "highly_toxic_water"
 
 expand_enjoy(
     name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/*.enjoy.mcfunction" % pack_id]),
+    srcs = glob(["data/%s/function/**/*.enjoy.mcfunction" % pack_id]),
     include_files = ["//template:templates"],
 )
 
 pkg_files(
     name = "pack_function",
     srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
+        include = ["data/%s/function/**/*.mcfunction" % pack_id],
+        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
     ) + [
         ":pack_functions_expanded",
     ],
+    strip_prefix = "data/%s/function" % pack_id,
     prefix = "data/%s/function" % pack_id,
 )
 
 pkg_files(
     name = "pack_function_legacy",
     srcs = glob(
-        include = ["data/%s/function/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/*.enjoy.mcfunction" % pack_id],
+        include = ["data/%s/function/**/*.mcfunction" % pack_id],
+        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
     ) + [
         ":pack_functions_expanded",
     ],
+    strip_prefix = "data/%s/function" % pack_id,
     prefix = "data/%s/functions" % pack_id,
 )
 
@@ -59,7 +61,7 @@ pkg_zip(
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
-        "@//datapackets-functions-LIB:dfl_folder",
+        "@//datapackets-functions-LIB:dfl",
     ],
 )
 
