@@ -45,11 +45,18 @@ pkg_files(
     prefix = "data/minecraft/tags/functions",
 )
 
+pkg_files(
+    name = "readme_dir",
+    srcs = glob(["README/*"]),
+    prefix = "README",
+)
+
 pkg_zip(
     name = "datapackets-functions-LIB",
     srcs = [
         "README.md",
         "README-en_us.md",
+        ":readme_dir",
         "LICENSE",
         "pack.png",
         ":pack_function",
@@ -60,7 +67,7 @@ pkg_zip(
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
-    ] + glob(["README/*"]),
+    ],
 )
 
 java_binary(
