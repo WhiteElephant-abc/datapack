@@ -1,63 +1,18 @@
-load("@//rule:expand_enjoy.bzl", "expand_enjoy")
-load("@rules_java//java:defs.bzl", "java_binary")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
-load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+load("@//rule:datapack.bzl", "datapack")
 
-pack_id = "highly_toxic_water"
-
-expand_enjoy(
-    name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/**/*.enjoy.mcfunction" % pack_id]),
-    include_files = ["//template:templates"],
-)
-
-pkg_files(
-    name = "pack_function",
-    srcs = glob(
-        include = ["data/%s/function/**/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    strip_prefix = "data/%s/function" % pack_id,
-    prefix = "data/%s/function" % pack_id,
-)
-
-pkg_files(
-    name = "pack_function_legacy",
-    srcs = glob(
-        include = ["data/%s/function/**/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    strip_prefix = "data/%s/function" % pack_id,
-    prefix = "data/%s/functions" % pack_id,
-)
-
-pkg_files(
-    name = "vanilla_tag",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/function",
-)
-
-pkg_files(
-    name = "vanilla_tag_legacy",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/functions",
-)
-
-pkg_zip(
+datapack(
     name = "highly-toxic-water",
-    srcs = [
+    pack_id = "highly_toxic_water",
+    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
+    functions = glob(
+        include = ["data/highly_toxic_water/function/**/*.mcfunction"],
+        exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
+    ),
+    tags = glob(["data/minecraft/tags/function/*.json"]),
+    deps = [
         "README.md",
         "pack.png",
-        ":pack_function",
-        ":pack_function_legacy",
-        ":vanilla_tag",
-        ":vanilla_tag_legacy",
         "//:license_gpl",
-        "//template:mcmeta",
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
@@ -65,26 +20,7 @@ pkg_zip(
     ],
 )
 
-java_binary(
+alias(
     name = "server",
-    srcs = [],
-    data = [
-        ":highly-toxic-water",
-        "//game:ops_json",
-    ],
-    jvm_flags = [
-        "-Ddev.launch.version=1.21.8",
-        "-Ddev.launch.type=server",
-        "-Ddev.launch.mainClass=net.minecraft.server.Main",
-        "-Xmx4G",
-        "-Ddev.launch.copyFiles=" +
-        "$(rlocationpath //highly-toxic-water:highly-toxic-water):world/datapacks/highly-toxic-water.zip," +
-        "$(rlocationpath //game:ops_json):ops.json",
-    ],
-    main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
-    runtime_deps = [
-        "//game:server",
-        "//rule/dev_launch_wrapper",
-        "@minecraft//:1.21.8_server_libraries",
-    ],
+    actual = ":highly-toxic-water_server",
 )

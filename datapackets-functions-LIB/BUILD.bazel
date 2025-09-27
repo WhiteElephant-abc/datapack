@@ -1,51 +1,5 @@
-load("@//rule:expand_enjoy.bzl", "expand_enjoy")
-load("@rules_java//java:defs.bzl", "java_binary")
+load("@//rule:datapack.bzl", "datapack")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup")
-load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-
-pack_id = "dfl"
-
-expand_enjoy(
-    name = "pack_functions_expanded",
-    srcs = glob(["data/%s/function/**/*.enjoy.mcfunction" % pack_id], allow_empty = True),
-    include_files = ["//template:templates"],
-)
-
-pkg_files(
-    name = "pack_function",
-    srcs = glob(
-        include = ["data/%s/function/**/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    strip_prefix = "data/%s/function" % pack_id,
-    prefix = "data/%s/function" % pack_id,
-)
-
-pkg_files(
-    name = "pack_function_legacy",
-    srcs = glob(
-        include = ["data/%s/function/**/*.mcfunction" % pack_id],
-        exclude = ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
-    ) + [
-        ":pack_functions_expanded",
-    ],
-    strip_prefix = "data/%s/function" % pack_id,
-    prefix = "data/%s/functions" % pack_id,
-)
-
-pkg_files(
-    name = "vanilla_tag",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/function",
-)
-
-pkg_files(
-    name = "vanilla_tag_legacy",
-    srcs = glob(["data/minecraft/tags/function/*.json"]),
-    prefix = "data/minecraft/tags/functions",
-)
 
 pkg_files(
     name = "readme_dir",
@@ -53,56 +7,37 @@ pkg_files(
     prefix = "README",
 )
 
-pkg_filegroup(
-    name = "dfl",
-    visibility = ["//visibility:public"],
-    srcs = [
-        ":pack_function",
-        ":pack_function_legacy",
-        ":vanilla_tag",
-        ":vanilla_tag_legacy",
-    ],
-)
-
-pkg_zip(
+datapack(
     name = "datapackets-functions-LIB",
-    srcs = [
+    pack_id = "dfl",
+    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
+    functions = glob(
+        include = ["data/dfl/function/**/*.mcfunction"],
+        exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
+    ),
+    tags = glob(["data/minecraft/tags/function/*.json"]),
+    deps = [
         "README.md",
         "README-en_us.md",
         ":readme_dir",
         "LICENSE",
         "pack.png",
-        ":pack_function",
-        ":pack_function_legacy",
-        ":vanilla_tag",
-        ":vanilla_tag_legacy",
-        "//template:mcmeta",
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
         "@unif-logger//:unif_logger_tags",
     ],
 )
 
-java_binary(
+pkg_filegroup(
+    name = "dfl",
+    visibility = ["//visibility:public"],
+    srcs = [
+        ":datapackets-functions-LIB_pack_function",
+        ":datapackets-functions-LIB_pack_function_legacy",
+    ],
+)
+
+alias(
     name = "server",
-    srcs = [],
-    data = [
-        ":datapackets-functions-LIB",
-        "//game:ops_json",
-    ],
-    jvm_flags = [
-        "-Ddev.launch.version=1.21.8",
-        "-Ddev.launch.type=server",
-        "-Ddev.launch.mainClass=net.minecraft.server.Main",
-        "-Xmx4G",
-        "-Ddev.launch.copyFiles=" +
-        "$(rlocationpath //datapackets-functions-LIB:datapackets-functions-LIB):world/datapacks/datapackets-functions-LIB.zip," +
-        "$(rlocationpath //game:ops_json):ops.json",
-    ],
-    main_class = "top.fifthlight.fabazel.devlaunchwrapper.DevLaunchWrapper",
-    runtime_deps = [
-        "//game:server",
-        "//rule/dev_launch_wrapper",
-        "@minecraft//:1.21.8_server_libraries",
-    ],
+    actual = ":datapackets-functions-LIB_server",
 )
