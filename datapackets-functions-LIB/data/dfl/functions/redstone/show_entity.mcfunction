@@ -1,4 +1,0 @@
-tellraw @a [{"text":"[DFL]---------------","color":"gray"}]
-tellraw @a [{"type":"translatable","translate":"redstone.show.entity.dfl.entity.entity","fallback":"实体数量：","color":"yellow"},{"score":{"name":"entity","objective":"dfl_scoreboard"},"color":"red"}]
-tellraw @a [{"type":"translatable","translate":"redstone.show.entity.dfl.entity.other.entity","fallback":"非玩家实体数量：","color":"yellow"},{"score":{"name":"other_entity","objective":"dfl_scoreboard"},"color":"red"}]
-tellraw @a [{"type":"translatable","translate":"redstone.show.entity.dfl.entity.item","fallback":"掉落物数量：","color":"yellow"},{"score":{"name":"item","objective":"dfl_scoreboard"},"color":"red"}]

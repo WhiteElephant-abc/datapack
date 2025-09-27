@@ -1,1 +1,6 @@
-{"replace": false,"values": ["dfl:start"]}
+{
+    "replace": false,
+    "values": [
+        "dfl:load"
+    ]
+}

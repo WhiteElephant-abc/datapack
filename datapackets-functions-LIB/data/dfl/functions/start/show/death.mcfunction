@@ -1,2 +1,0 @@
-scoreboard objectives add death deathCount
-scoreboard objectives setdisplay sidebar death
