@@ -1,6 +1,14 @@
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
 pkg_files(
+    name = "unif_logger_license",
+    srcs = ["data/unif.logger/LICENSE"],
+    visibility = ["//visibility:public"],
+    strip_prefix = "data/unif.logger",
+    prefix = "data/unif.logger",
+)
+
+pkg_files(
     name = "unif_logger_functions",
     srcs = glob(["data/unif.logger/functions/**"]),
     visibility = ["//visibility:public"],

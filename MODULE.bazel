@@ -27,6 +27,10 @@ http_archive(
     url = "https://cdn.modrinth.com/data/ATVC2dJr/versions/qESWh4KO/UniF-Logger-1.0.0.zip",
     sha256 = "c65e360caa1bef72801df7026ec0abe4a6a4718fc2a9f7f359ec60563b97d4b2",
     build_file = "@//third_party/unif-logger:BUILD.unif-logger.bazel",
+    patch_strip = 1,
+    patches = [
+        "@//third_party/unif-logger/patches:license.patch",
+    ],
 )
 
 minecraft = use_extension("//repo:minecraft_jar.bzl", "minecraft")
