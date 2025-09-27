@@ -1,26 +1,19 @@
 load("@//rule:datapack.bzl", "datapack")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup")
-
-pkg_files(
-    name = "readme_dir",
-    srcs = glob(["README/*"]),
-    prefix = "README",
-)
+load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 
 datapack(
     name = "datapackets-functions-LIB",
-    pack_id = "dfl",
-    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
     functions = glob(
         include = ["data/dfl/function/**/*.mcfunction"],
         exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
     ),
+    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
+    pack_id = "dfl",
     tags = glob(["data/minecraft/tags/function/*.json"]),
     deps = [
+        "LICENSE",
         "README.md",
         "README-en_us.md",
-        ":readme_dir",
-        "LICENSE",
         "pack.png",
         "@unif-logger//:unif_logger_functions",
         "@unif-logger//:unif_logger_license",
@@ -30,11 +23,11 @@ datapack(
 
 pkg_filegroup(
     name = "dfl",
-    visibility = ["//visibility:public"],
     srcs = [
         ":datapackets-functions-LIB_pack_function",
         ":datapackets-functions-LIB_pack_function_legacy",
     ],
+    visibility = ["//visibility:public"],
 )
 
 alias(
