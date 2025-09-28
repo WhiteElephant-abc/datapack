@@ -107,7 +107,7 @@ public class DevLaunchWrapper {
             case "server" -> {
                 var serverPropertiesPath = Path.of("server.properties");
                 if (!Files.exists(serverPropertiesPath)) {
-                    Files.writeString(serverPropertiesPath, "online-mode=false\n");
+                    Files.writeString(serverPropertiesPath, "online-mode=false\nfunction-permission-level=4\n");
                 }
                 argsList.add("--nogui");
                 var eulaPath = Path.of("eula.txt");
