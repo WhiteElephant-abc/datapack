@@ -41,6 +41,12 @@ def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags,
         prefix = "data/minecraft/tags/functions",
     )
 
+    pkg_files(
+        name = name + "_pack_dialog",
+        srcs = glob(["data/%s/dialog/*.json" % pack_id]),
+        prefix = "data/%s/dialog" % pack_id,
+    )
+
     pkg_zip(
         name = name,
         visibility = visibility,
