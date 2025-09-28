@@ -92,6 +92,7 @@ modrinth_dependency(
 
 upload_modrinth(
     name = "upload_modrinth",
+    changelog = "NEWS.md",
     file = ":datapackets-functions-LIB",
     file_name = "datapackets functions LIB_v%s_1.13-1.21.x.zip" % pack_version,
     game_versions = game_versions,
