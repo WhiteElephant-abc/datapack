@@ -1,0 +1,21 @@
+scoreboard objectives add find_chunk dummy
+
+execute store result score x find_chunk run data get entity @s Pos[0]
+execute store result score y find_chunk run data get entity @s Pos[1]
+execute store result score z find_chunk run data get entity @s Pos[2]
+
+scoreboard players set c16 find_chunk 16
+scoreboard players operation chunk_x find_chunk = x find_chunk
+scoreboard players operation chunk_z find_chunk = z find_chunk
+scoreboard players operation chunk_x find_chunk /= c16 find_chunk
+scoreboard players operation chunk_z find_chunk /= c16 find_chunk
+scoreboard players operation chunk_x find_chunk *= c16 find_chunk
+scoreboard players operation chunk_z find_chunk *= c16 find_chunk
+execute store result storage stone_disappearance:find_chunk pos.a_x int 1 run scoreboard players get chunk_x find_chunk
+execute store result storage stone_disappearance:find_chunk pos.a_z int 1 run scoreboard players get chunk_z find_chunk
+scoreboard players add chunk_x find_chunk 15
+scoreboard players add chunk_z find_chunk 15
+execute store result storage stone_disappearance:find_chunk pos.b_x int 1 run scoreboard players get chunk_x find_chunk
+execute store result storage stone_disappearance:find_chunk pos.b_z int 1 run scoreboard players get chunk_z find_chunk
+
+scoreboard objectives remove find_chunk

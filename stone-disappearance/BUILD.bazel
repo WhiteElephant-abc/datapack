@@ -1,7 +1,7 @@
 load("@//rule:datapack.bzl", "datapack")
 load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
 
-pack_version = "1.0"
+pack_version = "3.1"
 
 game_versions = [
     "1.20",
@@ -30,13 +30,13 @@ modrinth_dependency(
 )
 
 datapack(
-    name = "highly-toxic-water",
+    name = "stone-disappearance",
     functions = glob(
-        include = ["data/highly_toxic_water/function/**/*.mcfunction"],
-        exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
+        include = ["data/stone_disappearance/function/**/*.mcfunction"],
+        exclude = ["data/stone_disappearance/function/**/*.enjoy.mcfunction"],
     ),
-    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
-    pack_id = "highly_toxic_water",
+    functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
+    pack_id = "stone_disappearance",
     tags = glob(["data/minecraft/tags/function/*.json"]),
     deps = [
         "README.md",
@@ -50,20 +50,20 @@ datapack(
 
 alias(
     name = "server",
-    actual = ":highly-toxic-water_server",
+    actual = ":stone-disappearance_server",
 )
 
 upload_modrinth(
     name = "upload_modrinth",
     changelog = "NEWS.md",
-    file = ":highly-toxic-water",
-    file_name = "highly-toxic-water_v%s_1.20+.zip" % pack_version,
+    file = ":stone-disappearance",
+    file_name = "stone-disappearance_v%s_1.20+.zip" % pack_version,
     game_versions = game_versions,
     loaders = ["datapack"],
-    project_id = "WF6VN2Zb",
+    project_id = "WD7HqNGg",
     token_secret_id = "modrinth_token",
     version_id = pack_version,
-    version_name = "[data pack] highly-toxic-water_v%s_1.20+" % pack_version,
+    version_name = "[data pack] stone-disappearance_v%s_1.20+" % pack_version,
     version_type = "release",
     deps = [
         ":localization_resource_pack",

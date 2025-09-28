@@ -1,0 +1,1 @@
+return run function stone_disappearance:new/child_if_loaded with storage stone_disappearance:find_chunk pos
