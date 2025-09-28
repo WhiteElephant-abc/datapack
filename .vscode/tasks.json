@@ -4,7 +4,7 @@
         {
             "id": "projectName",
             "type": "promptString",
-            "description": "输入 Bazel 项目名称（例如 highly-toxic-water）",
+            "description": "输入 Bazel 项目名称",
             "default": "highly-toxic-water"
         }
     ],
@@ -42,6 +42,32 @@
             "args": [
                 "run",
                 "//${input:projectName}:server"
+            ],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [
+                        "/d",
+                        "/c"
+                    ]
+                }
+            },
+            "group": "none",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Bazel Upload Modrinth",
+            "type": "shell",
+            "command": "bazelisk",
+            "args": [
+                "run",
+                "//${input:projectName}:upload_modrinth"
             ],
             "options": {
                 "shell": {
