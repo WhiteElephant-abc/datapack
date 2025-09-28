@@ -1,4 +1,33 @@
 load("@//rule:datapack.bzl", "datapack")
+load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
+
+pack_version = "1.0"
+
+game_versions = [
+    "1.20",
+    "1.20.1",
+    "1.20.2",
+    "1.20.3",
+    "1.20.4",
+    "1.20.5",
+    "1.20.6",
+    "1.21",
+    "1.21.1",
+    "1.21.2",
+    "1.21.3",
+    "1.21.4",
+    "1.21.5",
+    "1.21.6",
+    "1.21.7",
+    "1.21.8",
+]
+
+modrinth_dependency(
+    name = "localization_resource_pack",
+    dependency_type = "required",
+    project_id = "3S0b1XES",
+    version_id = "Td6iicSl",
+)
 
 datapack(
     name = "highly-toxic-water",
@@ -22,4 +51,20 @@ datapack(
 alias(
     name = "server",
     actual = ":highly-toxic-water_server",
+)
+
+upload_modrinth(
+    name = "upload_modrinth",
+    file = ":highly-toxic-water",
+    file_name = "highly-toxic-water_v%s_1.21+.zip" % pack_version,
+    game_versions = game_versions,
+    loaders = ["datapack"],
+    project_id = "WF6VN2Zb",
+    token_secret_id = "modrinth_token",
+    version_id = pack_version,
+    version_name = "[data pack] highly-toxic-water_v%s_1.21+" % pack_version,
+    version_type = "release",
+    deps = [
+        ":localization_resource_pack",
+    ],
 )

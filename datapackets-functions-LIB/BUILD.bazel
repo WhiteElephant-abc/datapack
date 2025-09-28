@@ -96,7 +96,7 @@ upload_modrinth(
     file_name = "datapackets functions LIB_v%s_1.13-1.21.x.zip" % pack_version,
     game_versions = game_versions,
     loaders = ["datapack"],
-    project_id = "hBREgRLV",
+    project_id = "xfcXTP3W",
     token_secret_id = "modrinth_token",
     version_id = pack_version,
     version_name = "[data pack] datapackets functions LIB_v%s_1.13-1.21.x" % pack_version,
