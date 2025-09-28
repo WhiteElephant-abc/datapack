@@ -1,20 +1,9 @@
 load("@rules_java//java:defs.bzl", "java_binary")
-load("@rules_java//java:java_import.bzl", "java_import")
-
-java_import(
-    name = "jfinal_enjoy",
-    jars = [
-        "@jfinal_enjoy_binary//file",
-    ],
-    srcjar = "@jfinal_enjoy_source//file",
-)
 
 java_binary(
     name = "enjoy_expander",
     srcs = ["EnjoyExpander.java"],
     main_class = "EnjoyExpander",
     visibility = ["//visibility:public"],
-    deps = [
-        ":jfinal_enjoy",
-    ],
+    deps = ["@maven//:com_jfinal_enjoy"],
 )

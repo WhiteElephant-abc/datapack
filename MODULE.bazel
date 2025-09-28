@@ -3,41 +3,47 @@ module(
     version = "0.0.1",
 )
 
-bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
-bazel_dep(name = "rules_java", version = "8.15.2")
+bazel_dep(name = "rules_java", version = "8.16.1")
+bazel_dep(name = "rules_jvm_external", version = "6.8")
+bazel_dep(name = "rules_shell", version = "0.6.1")
+bazel_dep(name = "platforms", version = "1.0.0")
 
-http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
-http_file(
-    name = "jfinal_enjoy_binary",
-    url = "https://repo1.maven.org/maven2/com/jfinal/enjoy/5.2.5/enjoy-5.2.5.jar",
-    integrity = "sha256-sS/QkGXkbJbDAvbb44G0Kr1bIwt8Xl1zrukNYx1XUmI=",
-    downloaded_file_path = "enjoy-5.2.5.jar",
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "com.jfinal:enjoy:5.2.5",
+        "com.fasterxml.jackson.core:jackson-core:2.9.6",
+        "com.fasterxml.jackson.core:jackson-annotations:2.9.6",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.6",
+        "de.swiesend:secret-service:2.0.1-alpha",
+        "ch.qos.logback:logback-classic:1.5.18",
+        "com.github.mizosoft.methanol:methanol:1.8.3",
+        "net.java.dev.jna:jna:5.18.0",
+        "net.java.dev.jna:jna-platform:5.18.0",
+    ],
+    fetch_sources = True,
+    lock_file = "//:maven_install.json",
 )
-http_file(
-    name = "jfinal_enjoy_source",
-    url = "https://repo1.maven.org/maven2/com/jfinal/enjoy/5.2.5/enjoy-5.2.5-sources.jar",
-    integrity = "sha256-Dn5yGUFGqBR6l7xz/g8LoPm30CUdMeywxegL1hvTZpM=",
-    downloaded_file_path = "enjoy-5.2.5-sources.jar",
-)
+use_repo(maven, "maven")
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "unif-logger",
-    url = "https://cdn.modrinth.com/data/ATVC2dJr/versions/qESWh4KO/UniF-Logger-1.0.0.zip",
-    sha256 = "c65e360caa1bef72801df7026ec0abe4a6a4718fc2a9f7f359ec60563b97d4b2",
     build_file = "@//third_party/unif-logger:BUILD.unif-logger.bazel",
     patch_strip = 1,
     patches = [
         "@//third_party/unif-logger/patches:license.patch",
     ],
+    sha256 = "c65e360caa1bef72801df7026ec0abe4a6a4718fc2a9f7f359ec60563b97d4b2",
+    url = "https://cdn.modrinth.com/data/ATVC2dJr/versions/qESWh4KO/UniF-Logger-1.0.0.zip",
 )
 
 minecraft = use_extension("//repo:minecraft_jar.bzl", "minecraft")
 minecraft.minecraft_jar(
-    version = "1.21.8",
     type = "server",
-    mapping = True,
+    version = "1.21.8",
 )
 use_repo(minecraft, "minecraft")
-use_repo(minecraft, "minecraft_assets")
