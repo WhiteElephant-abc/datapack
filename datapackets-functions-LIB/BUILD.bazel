@@ -87,7 +87,7 @@ modrinth_dependency(
     name = "localization_resource_pack",
     dependency_type = "required",
     project_id = "3S0b1XES",
-    version_id = "Td6iicSl",
+    version_id = "80LeoUFR",
 )
 
 upload_modrinth(
