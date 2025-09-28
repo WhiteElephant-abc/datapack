@@ -2,19 +2,20 @@ load("@//rule:datapack.bzl", "datapack")
 
 datapack(
     name = "highly-toxic-water",
-    pack_id = "highly_toxic_water",
-    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
     functions = glob(
         include = ["data/highly_toxic_water/function/**/*.mcfunction"],
         exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
     ),
+    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
+    pack_id = "highly_toxic_water",
     tags = glob(["data/minecraft/tags/function/*.json"]),
     deps = [
         "README.md",
         "pack.png",
         "//:license_gpl",
+        "//Localization-Resource-Pack:localization_resource_pack_assets",
+        "//datapackets-functions-LIB:dfl",
         "@unif-logger//:unif-logger",
-        "@//datapackets-functions-LIB:dfl",
     ],
 )
 

@@ -1,0 +1,29 @@
+name: build
+on: [pull_request, push]
+
+jobs:
+    build-with-bazel:
+        runs-on: ubuntu-24.04
+        steps:
+            - name: checkout repository
+              uses: actions/checkout@v4
+            - uses: bazel-contrib/setup-bazel@0.14.0
+              with:
+                  bazelisk-cache: true
+                  disk-cache: ${{ github.workflow }}
+                  repository-cache: true
+            - name: build
+              run: |
+                  bazel build \
+                    --verbose_failures \
+                    //highly-toxic-water \
+                    //datapackets-functions-LIB \
+                    //Localization-Resource-Pack
+            - name: capture build artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: artifacts
+                  path: |
+                      bazel-bin/highly-toxic-water/highly-toxic-water.zip
+                      bazel-bin/datapackets-functions-LIB/datapackets-functions-LIB.zip
+                      bazel-bin/Localization-Resource-Pack/Localization-Resource-Pack.zip
