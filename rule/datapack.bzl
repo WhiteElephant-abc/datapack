@@ -3,7 +3,7 @@ load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags, deps, minecraft_version):
+def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags, dialogs, deps, minecraft_version):
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -43,7 +43,8 @@ def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags,
 
     pkg_files(
         name = name + "_pack_dialog",
-        srcs = glob(["data/%s/dialog/*.json" % pack_id]),
+        visibility = visibility,
+        srcs = dialogs,
         prefix = "data/%s/dialog" % pack_id,
     )
 
@@ -90,6 +91,7 @@ datapack = macro(
         "functions_expand": attr.label_list(default = []),
         "functions": attr.label_list(default = []),
         "tags": attr.label_list(default = []),
+        "dialogs": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.8"),
     },
