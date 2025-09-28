@@ -1,5 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_import")
 load("//rule:extract_jar.bzl", "extract_jar")
-load("@rules_java//java:defs.bzl", "java_library", "java_import")
 
 extract_jar(
     name = "server_file",
@@ -10,12 +10,12 @@ extract_jar(
 
 java_import(
     name = "server",
-    visibility = ["//visibility:public"],
     jars = [":server_file"],
+    visibility = ["//visibility:public"],
 )
 
 alias(
     name = "ops_json",
-    visibility = ["//visibility:public"],
     actual = "ops.json",
+    visibility = ["//visibility:public"],
 )
