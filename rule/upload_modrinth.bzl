@@ -120,7 +120,7 @@ def _upload_modrinth_impl(ctx):
 
         ctx.actions.write(
             output = output_executable,
-            content = sh_toolchain.path + " -c 'PATH=/usr/local/bin:/usr/bin:/bin:/opt/bin:$PATH RUNFILES_MANIFEST_FILE=../%s.bat.runfiles_manifest ../" % ctx.attr.name + output_script.basename + "'",
+            content = "'%s' -c 'PATH=/usr/local/bin:/usr/bin:/bin:/opt/bin:$PATH RUNFILES_MANIFEST_FILE=../%s.bat.runfiles_manifest ../%s'" % (sh_toolchain.path, ctx.attr.name, output_script.basename),
             is_executable = True,
         )
     else:
