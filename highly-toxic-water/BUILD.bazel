@@ -37,6 +37,8 @@ datapack(
         exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
+    minecraft_dialog_tags = glob(["data/minecraft/tags/dialog/*.json"], allow_empty = True),
+    dialogs = glob(["data/highly_toxic_water/dialog/*.json"], allow_empty = True),
     pack_id = "highly_toxic_water",
     deps = [
         "README.md",

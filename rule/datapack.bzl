@@ -4,7 +4,7 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
 def _datapack_impl(name, visibility, pack_id, functions_expand,
-    functions, function_tags, dialogs, dialog_tags, deps, minecraft_version):
+    functions, function_tags, dialogs, minecraft_dialog_tags, deps, minecraft_version):
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -50,10 +50,10 @@ def _datapack_impl(name, visibility, pack_id, functions_expand,
     )
 
     pkg_files(
-        name = name + "_pack_dialog_tag",
+        name = name + "_minecraft_dialog_tag",
         visibility = visibility,
-        srcs = dialog_tags,
-        prefix = "data/%s/tags/dialog" % pack_id,
+        srcs = minecraft_dialog_tags,
+        prefix = "data/minecraft/tags/dialog",
     )
 
     pkg_zip(
@@ -65,7 +65,7 @@ def _datapack_impl(name, visibility, pack_id, functions_expand,
             ":%s_function_tag" % name,
             ":%s_function_tag_legacy" % name,
             ":%s_pack_dialog" % name,
-            ":%s_pack_dialog_tag" % name,
+            ":%s_minecraft_dialog_tag" % name,
             "//template:mcmeta",
         ] + deps
     )
@@ -102,7 +102,7 @@ datapack = macro(
         "functions": attr.label_list(default = []),
         "function_tags": attr.label_list(default = []),
         "dialogs": attr.label_list(default = []),
-        "dialog_tags": attr.label_list(default = []),
+        "minecraft_dialog_tags": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.8"),
     },

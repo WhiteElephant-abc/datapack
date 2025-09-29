@@ -38,8 +38,8 @@ datapack(
         exclude = ["data/stone_disappearance/function/**/*.enjoy.mcfunction"],
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    dialogs = glob(["data/stone_disappearance/dialog/*.json"]),
-    dialog_tags = glob(["data/stone_disappearance/tags/dialog/*.json"]),
+    minecraft_dialog_tags = glob(["data/minecraft/tags/dialog/*.json"], allow_empty = True),
+    dialogs = glob(["data/stone_disappearance/dialog/*.json"], allow_empty = True),
     deps = [
         "README.md",
         "pack.png",

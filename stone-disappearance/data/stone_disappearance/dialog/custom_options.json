@@ -1,0 +1,22 @@
+{
+  "type": "confirmation",
+  "title": "test dialog",
+  "yes": {
+    "label":"yes",
+    "action": {
+      "type": "run_command",
+      "command": "/tp 0 100 0"
+    }
+  },
+  "no": {
+    "label":"no",
+    "action": {
+      "type": "run_command",
+      "command": "/tp 0 ~ 0"
+    }
+  },
+  "body": {
+    "type": "plain_message",
+    "contents": "tp 0 100 0"
+  }
+}

@@ -58,6 +58,8 @@ datapack(
         exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
+    minecraft_dialog_tags = glob(["data/minecraft/tags/dialog/*.json"], allow_empty = True),
+    dialogs = glob(["data/dfl/dialog/*.json"], allow_empty = True),
     pack_id = "dfl",
     deps = [
         "LICENSE",
