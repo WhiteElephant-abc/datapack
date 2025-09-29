@@ -1,6 +1,6 @@
 {
   "type": "confirmation",
-  "title": "test dialog",
+  "title": "测试弹窗",
   "yes": {
     "label":"yes",
     "action": {
