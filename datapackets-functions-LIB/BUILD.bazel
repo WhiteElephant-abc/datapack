@@ -52,13 +52,13 @@ game_versions = [
 
 datapack(
     name = "datapackets-functions-LIB",
+    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
     functions = glob(
         include = ["data/dfl/function/**/*.mcfunction"],
         exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
     ),
-    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
+    function_tags = glob(["data/minecraft/tags/function/*.json"]),
     pack_id = "dfl",
-    tags = glob(["data/minecraft/tags/function/*.json"]),
     deps = [
         "LICENSE",
         "README.md",

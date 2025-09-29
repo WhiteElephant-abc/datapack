@@ -31,13 +31,15 @@ modrinth_dependency(
 
 datapack(
     name = "stone-disappearance",
+    pack_id = "stone_disappearance",
+    functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
     functions = glob(
         include = ["data/stone_disappearance/function/**/*.mcfunction"],
         exclude = ["data/stone_disappearance/function/**/*.enjoy.mcfunction"],
     ),
-    functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
-    pack_id = "stone_disappearance",
-    tags = glob(["data/minecraft/tags/function/*.json"]),
+    function_tags = glob(["data/minecraft/tags/function/*.json"]),
+    dialogs = glob(["data/stone_disappearance/dialog/*.json"]),
+    dialog_tags = glob(["data/stone_disappearance/tags/dialog/*.json"]),
     deps = [
         "README.md",
         "pack.png",

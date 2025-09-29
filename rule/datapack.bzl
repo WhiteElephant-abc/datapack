@@ -3,7 +3,8 @@ load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags, dialogs, deps, minecraft_version):
+def _datapack_impl(name, visibility, pack_id, functions_expand,
+    functions, function_tags, dialogs, dialog_tags, deps, minecraft_version):
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -28,16 +29,16 @@ def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags,
     )
 
     pkg_files(
-        name = name + "_vanilla_tag",
+        name = name + "_function_tag",
         visibility = visibility,
-        srcs = tags,
+        srcs = function_tags,
         prefix = "data/minecraft/tags/function",
     )
 
     pkg_files(
-        name = name + "_vanilla_tag_legacy",
+        name = name + "_function_tag_legacy",
         visibility = visibility,
-        srcs = tags,
+        srcs = function_tags,
         prefix = "data/minecraft/tags/functions",
     )
 
@@ -48,14 +49,23 @@ def _datapack_impl(name, visibility, pack_id, functions_expand, functions, tags,
         prefix = "data/%s/dialog" % pack_id,
     )
 
+    pkg_files(
+        name = name + "_pack_dialog_tag",
+        visibility = visibility,
+        srcs = dialog_tags,
+        prefix = "data/%s/tags/dialog" % pack_id,
+    )
+
     pkg_zip(
         name = name,
         visibility = visibility,
         srcs = [
             ":%s_pack_function" % name,
             ":%s_pack_function_legacy" % name,
-            ":%s_vanilla_tag" % name,
-            ":%s_vanilla_tag_legacy" % name,
+            ":%s_function_tag" % name,
+            ":%s_function_tag_legacy" % name,
+            ":%s_pack_dialog" % name,
+            ":%s_pack_dialog_tag" % name,
             "//template:mcmeta",
         ] + deps
     )
@@ -90,8 +100,9 @@ datapack = macro(
         "pack_id": attr.string(configurable = False, mandatory = True),
         "functions_expand": attr.label_list(default = []),
         "functions": attr.label_list(default = []),
-        "tags": attr.label_list(default = []),
+        "function_tags": attr.label_list(default = []),
         "dialogs": attr.label_list(default = []),
+        "dialog_tags": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.8"),
     },

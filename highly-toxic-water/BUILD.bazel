@@ -31,13 +31,13 @@ modrinth_dependency(
 
 datapack(
     name = "highly-toxic-water",
+    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
     functions = glob(
         include = ["data/highly_toxic_water/function/**/*.mcfunction"],
         exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
     ),
-    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
+    function_tags = glob(["data/minecraft/tags/function/*.json"]),
     pack_id = "highly_toxic_water",
-    tags = glob(["data/minecraft/tags/function/*.json"]),
     deps = [
         "README.md",
         "pack.png",

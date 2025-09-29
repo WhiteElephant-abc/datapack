@@ -18,7 +18,8 @@ jobs:
                     --verbose_failures \
                     //highly-toxic-water \
                     //datapackets-functions-LIB \
-                    //Localization-Resource-Pack
+                    //Localization-Resource-Pack \
+                    //stone-disappearance
             - name: capture build artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -27,3 +28,4 @@ jobs:
                       bazel-bin/highly-toxic-water/highly-toxic-water.zip
                       bazel-bin/datapackets-functions-LIB/datapackets-functions-LIB.zip
                       bazel-bin/Localization-Resource-Pack/Localization-Resource-Pack.zip
+                      bazel-bin/stone-disappearance/stone-disappearance.zip
