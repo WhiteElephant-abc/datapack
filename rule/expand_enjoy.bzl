@@ -9,7 +9,7 @@ def _expand_enjoy_impl(ctx):
 
     output_files = []
     for src in ctx.files.srcs:
-        output_file = ctx.actions.declare_file(src.basename.replace(".enjoy.", "."), sibling = src)
+        output_file = ctx.actions.declare_file(src.basename.replace(".enjoy.", ".raw."), sibling = src)
         output_files.append(output_file)
 
         args = ctx.actions.args()
