@@ -1,23 +1,34 @@
+import top.fifthlight.bazel.worker.api.WorkRequest;
+import top.fifthlight.bazel.worker.api.Worker;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public class McfunctionProcessor {
-    public static void main(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Usage: McfunctionProcessor <input_file> <output_file>");
-            System.exit(1);
+public class McfunctionProcessor extends Worker {
+    public static void main(String[] args) throws Exception {
+        new McfunctionProcessor().run();
+    }
+
+    @Override
+    protected int handleRequest(WorkRequest request, PrintWriter out) {
+        var args = request.arguments();
+        if (args.size() < 2) {
+            out.println("Usage: McfunctionProcessor <input_file> <output_file>");
+            return 1;
         }
 
-        var inputFile = args[0];
-        var outputFile = args[1];
+        var inputFile = args.get(0);
+        var outputFile = args.get(1);
         
         try {
             processFile(inputFile, outputFile);
         } catch (IOException e) {
-            System.err.println("Error processing file: " + e.getMessage());
-            System.exit(1);
+            out.println("Error processing file: " + e.getMessage());
+            e.printStackTrace(out);
+            return 1;
         }
+        return 0;
     }
     
     private static void processFile(String inputPath, String outputPath) throws IOException {

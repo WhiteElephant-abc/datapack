@@ -32,13 +32,23 @@ def _process_mcfunction_impl(ctx):
         if function_pattern in src_path:
             dest_src_map[src_path.replace(function_pattern, function_placement)] = output_file
 
+        args = ctx.actions.args()
+        args.add(src)
+        args.add(output_file)
+
+        args.use_param_file("@%s", use_always = True)
+
         ctx.actions.run(
             inputs = [src],
             outputs = [output_file],
             executable = ctx.executable._mcfunction_processor,
-            arguments = [src.path, output_file.path],
+            arguments = [args],
             mnemonic = "ProcessMcfunction",
             progress_message = "Processing mcfunction file %s" % src.short_path,
+            execution_requirements = {
+                "supports-workers": "1",
+                "requires-worker-protocol": "json",
+            },
         )
 
     return [
