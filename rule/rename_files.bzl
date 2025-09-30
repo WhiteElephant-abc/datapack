@@ -14,14 +14,11 @@ def _rename_files_impl(ctx):
         output_file = ctx.actions.declare_file(output_name, sibling = src)
         output_files.append(output_file)
         
-        # 复制文件并重命名
-        ctx.actions.run(
-            inputs = [src],
-            outputs = [output_file],
-            executable = "cmd",
-            arguments = ["/c", "copy", src.path.replace("/", "\\"), output_file.path.replace("/", "\\")],
-            mnemonic = "RenameFile",
-            progress_message = "Renaming %s to %s" % (src.basename, output_name),
+        # 复制文件并重命名 - 使用 Bazel 内置的文件操作，完全跨平台
+        ctx.actions.expand_template(
+            template = src,
+            output = output_file,
+            substitutions = {},
         )
     
     return [DefaultInfo(files = depset(output_files))]
