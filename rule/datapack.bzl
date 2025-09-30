@@ -1,66 +1,32 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@//rule:process_mcfunction.bzl", "process_mcfunction")
-load("@//rule:rename_files.bzl", "rename_files")
 load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-def _datapack_impl(name, visibility, pack_id, functions_expand,
-    functions, function_tags, dialogs, minecraft_dialog_tags, deps, minecraft_version):
-    # 处理 mcfunction 文件
-    processed_functions = []
-    if functions:
-        process_mcfunction(
-            name = name + "_pack_functions_processed_raw",
-            visibility = visibility,
-            srcs = functions,
-        )
-        
-        # 重命名处理后的文件，去掉 _processed 后缀
-        rename_files(
-            name = name + "_pack_functions_processed",
-            srcs = [name + "_pack_functions_processed_raw"],
-        )
-        processed_functions = [name + "_pack_functions_processed"]
-    
-    # 展开 enjoy 模板
-    expanded_functions = []
-    if functions_expand:
-        expand_enjoy(
-            name = name + "_pack_functions_expanded_raw",
-            visibility = visibility,
-            srcs = functions_expand,
-            include_files = ["//template:templates"],
-        )
-        
-        # 对展开后的文件进行 mcfunction 预处理
-        process_mcfunction(
-            name = name + "_pack_functions_expanded_processed",
-            visibility = visibility,
-            srcs = [name + "_pack_functions_expanded_raw"],
-        )
-        
-        # 重命名处理后的文件，去掉 _processed 后缀
-        rename_files(
-            name = name + "_pack_functions_expanded",
-            srcs = [name + "_pack_functions_expanded_processed"],
-        )
-        expanded_functions = [name + "_pack_functions_expanded"]
-
-    pkg_files(
-        name = name + "_pack_function",
+def _datapack_impl(
+        name,
+        visibility,
+        pack_id,
+        functions_expand,
+        functions,
+        function_tags,
+        dialogs,
+        minecraft_dialog_tags,
+        deps,
+        minecraft_version):
+    expand_enjoy(
+        name = name + "_pack_functions_expanded",
         visibility = visibility,
-        srcs = processed_functions + expanded_functions,
-        strip_prefix = "data/%s/function" % pack_id,
-        prefix = "data/%s/function" % pack_id,
+        srcs = functions_expand,
+        include_files = ["//template:templates"],
     )
 
-    pkg_files(
-        name = name + "_pack_function_legacy",
+    process_mcfunction(
+        name = name + "_pack_function",
         visibility = visibility,
-        srcs = processed_functions + expanded_functions,
-        strip_prefix = "data/%s/function" % pack_id,
-        prefix = "data/%s/functions" % pack_id,
+        pack_id = pack_id,
+        srcs = functions + [":%s_pack_functions_expanded" % name],
     )
 
     pkg_files(
@@ -96,13 +62,12 @@ def _datapack_impl(name, visibility, pack_id, functions_expand,
         visibility = visibility,
         srcs = [
             ":%s_pack_function" % name,
-            ":%s_pack_function_legacy" % name,
             ":%s_function_tag" % name,
             ":%s_function_tag_legacy" % name,
             ":%s_pack_dialog" % name,
             ":%s_minecraft_dialog_tag" % name,
             "//template:mcmeta",
-        ] + deps
+        ] + deps,
     )
 
     java_binary(

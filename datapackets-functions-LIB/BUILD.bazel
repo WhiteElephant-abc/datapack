@@ -52,14 +52,20 @@ game_versions = [
 
 datapack(
     name = "datapackets-functions-LIB",
-    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
+    dialogs = glob(
+        ["data/dfl/dialog/*.json"],
+        allow_empty = True,
+    ),
+    function_tags = glob(["data/minecraft/tags/function/*.json"]),
     functions = glob(
         include = ["data/dfl/function/**/*.mcfunction"],
         exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
     ),
-    function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    minecraft_dialog_tags = glob(["data/minecraft/tags/dialog/*.json"], allow_empty = True),
-    dialogs = glob(["data/dfl/dialog/*.json"], allow_empty = True),
+    functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
+    minecraft_dialog_tags = glob(
+        ["data/minecraft/tags/dialog/*.json"],
+        allow_empty = True,
+    ),
     pack_id = "dfl",
     deps = [
         "LICENSE",
@@ -71,12 +77,9 @@ datapack(
     ],
 )
 
-pkg_filegroup(
+alias(
     name = "dfl",
-    srcs = [
-        ":datapackets-functions-LIB_pack_function",
-        ":datapackets-functions-LIB_pack_function_legacy",
-    ],
+    actual = ":datapackets-functions-LIB_pack_function",
     visibility = ["//visibility:public"],
 )
 

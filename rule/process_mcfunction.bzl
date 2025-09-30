@@ -1,24 +1,37 @@
+load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@rules_pkg//pkg:providers.bzl", "PackageFilesInfo")
+
+def _owner(file):
+    if file.owner == None:
+        fail("File {} ({}) has no owner attribute; cannot continue".format(file, file.path))
+    return file.owner
+
+def _relative_workspace_root(label):
+    return paths.join("..", label.workspace_name) if label.workspace_name else ""
+
+def _path_relative_to_package(file):
+    owner = _owner(file)
+    return paths.relativize(
+        file.short_path,
+        paths.join(_relative_workspace_root(owner), owner.package),
+    )
+
 def _process_mcfunction_impl(ctx):
     """Implementation of the process_mcfunction rule."""
     output_files = []
-    
+    dest_src_map = {}
+    function_pattern = "data/%s/function" % ctx.attr.pack_id
+    function_placement = "data/%s/functions" % ctx.attr.pack_id
+
     for src in ctx.files.srcs:
-        # 为每个输入文件创建对应的输出文件，添加后缀避免冲突
-        if src.is_source:
-            # 对于源文件，在文件名中添加 _processed 后缀
-            output_name = src.basename.replace(".mcfunction", "_processed.mcfunction")
-            output_file = ctx.actions.declare_file(output_name, sibling = src)
-        else:
-            # 对于生成的文件，处理不同的扩展名
-            if ".raw.mcfunction" in src.basename:
-                output_name = src.basename.replace(".raw.mcfunction", "_processed.mcfunction")
-            else:
-                output_name = src.basename.replace(".mcfunction", "_processed.mcfunction")
-            output_file = ctx.actions.declare_file(output_name, sibling = src)
-        
+        output_file = ctx.actions.declare_file(src.basename.replace(".mcfunction", ".processed.mcfunction"), sibling = src)
         output_files.append(output_file)
-        
-        # 运行 McfunctionProcessor 处理文件
+
+        src_path = _path_relative_to_package(src)
+        dest_src_map[src_path] = output_file
+        if function_pattern in src_path:
+            dest_src_map[src_path.replace(function_pattern, function_placement)] = output_file
+
         ctx.actions.run(
             inputs = [src],
             outputs = [output_file],
@@ -27,14 +40,20 @@ def _process_mcfunction_impl(ctx):
             mnemonic = "ProcessMcfunction",
             progress_message = "Processing mcfunction file %s" % src.short_path,
         )
-    
-    return [DefaultInfo(files = depset(output_files))]
+
+    return [
+        PackageFilesInfo(
+            attributes = {},
+            dest_src_map = dest_src_map,
+        ),
+        DefaultInfo(files = depset(output_files)),
+    ]
 
 process_mcfunction = rule(
     implementation = _process_mcfunction_impl,
     attrs = {
         "srcs": attr.label_list(
-            allow_files = [".mcfunction", ".raw.mcfunction"],
+            allow_files = [".mcfunction"],
             mandatory = True,
             doc = "List of .mcfunction files to process",
         ),
@@ -43,6 +62,10 @@ process_mcfunction = rule(
             executable = True,
             cfg = "exec",
         ),
+        "pack_id": attr.string(
+            mandatory = True,
+            doc = "The ID of the pack",
+        ),
     },
-    doc = "Processes .mcfunction files by removing comments, empty lines, and handling line continuations",
+    doc = "Processes .mcfunction files by handling line continuations",
 )
