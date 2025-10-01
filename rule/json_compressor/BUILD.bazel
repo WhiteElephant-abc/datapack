@@ -1,0 +1,12 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_binary(
+    name = "json_compressor",
+    srcs = ["JsonCompressor.java"],
+    main_class = "JsonCompressor",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//rule/worker_api",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+    ],
+)

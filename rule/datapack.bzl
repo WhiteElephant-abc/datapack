@@ -3,6 +3,7 @@ load("@//rule:process_mcfunction.bzl", "process_mcfunction")
 load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+load("@//rule:process_json.bzl", "process_json")
 
 def _datapack_impl(
         name,
@@ -29,32 +30,52 @@ def _datapack_impl(
         srcs = functions + [":%s_pack_functions_expanded" % name],
     )
 
+    process_json(
+        name = name + "_function_tag_compress",
+        srcs = function_tags,
+    )
+
     pkg_files(
         name = name + "_function_tag",
         visibility = visibility,
-        srcs = function_tags,
+        srcs = [":%s_function_tag_compress" % name],
         prefix = "data/minecraft/tags/function",
+    )
+
+    process_json(
+        name = name + "_function_tag_legacy_compress",
+        srcs = function_tags,
     )
 
     pkg_files(
         name = name + "_function_tag_legacy",
         visibility = visibility,
-        srcs = function_tags,
+        srcs = [":%s_function_tag_legacy_compress" % name],
         prefix = "data/minecraft/tags/functions",
+    )
+
+    process_json(
+        name = name + "_dialog_compress",
+        srcs = dialogs,
     )
 
     pkg_files(
         name = name + "_pack_dialog",
         visibility = visibility,
-        srcs = dialogs,
+        srcs = [":%s_dialog_compress" % name],
         prefix = "data/%s/dialog" % pack_id,
         strip_prefix = "data/%s/dialog" % pack_id,
+    )
+
+    process_json(
+        name = name + "_minecraft_dialog_tag_compress",
+        srcs = minecraft_dialog_tags,
     )
 
     pkg_files(
         name = name + "_minecraft_dialog_tag",
         visibility = visibility,
-        srcs = minecraft_dialog_tags,
+        srcs = [":%s_minecraft_dialog_tag_compress" % name],
         prefix = "data/minecraft/tags/dialog",
     )
 
