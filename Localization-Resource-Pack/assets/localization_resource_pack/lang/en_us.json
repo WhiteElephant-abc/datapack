@@ -22,14 +22,9 @@
     "redstone.show.entity.dfl.entity.other.entity": "Non-player:",
     "redstone.show.entity.dfl.entity.item": "Items:",
 
-    "things.stone.disappearance.data.pack.message": "[Datapack]",
-    "things.stone.disappearance.message.enable": "Filling glass ON",
-    "things.stone.disappearance.message.disable": "Filling glass OFF",
-
     "redstone.lucky.block.island.kill.entity": "[Datapack] Cleared entities",
 
-    "dialog.stone_disappearance.new_player.line1": "Stone Disappearance datapack has been loaded into this world!",
-    "dialog.stone_disappearance.new_player.author": "Author: ",
-    "dialog.stone_disappearance.new_player.tech_support": "Technical Support: ",
-    "dialog.stone_disappearance.new_player.license": "This datapack is licensed under the %s."
+    "dialog.stone_disappearance.options.title": "Stone Disappearance Settings",
+    "dialog.stone_disappearance.options.performance.label": "Performance Settings",
+    "dialog.stone_disappearance.options.performance.tooltip": "Configure settings that will affect performance"
 }

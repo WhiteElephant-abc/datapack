@@ -12,5 +12,6 @@
     "dialog.white.elephant.new_player.author": "作者：",
     "dialog.white.elephant.new_player.tech_support": "技术支持：",
     "dialog.white.elephant.new_player.license": "本数据包使用 %s 开源协议",
-    "dialog.white.elephant.new_player.view_license": "查看开源协议"
+    "dialog.white.elephant.new_player.view_license": "查看开源协议",
+    "dialog.white.elephant.options.admin_only": "只有管理员才能修改设置！"
 }

@@ -22,14 +22,9 @@
     "redstone.show.entity.dfl.entity.other.entity": "非玩家实体数量：",
     "redstone.show.entity.dfl.entity.item": "掉落物数量：",
 
-    "things.stone.disappearance.data.pack.message": "[数据包消息]",
-    "things.stone.disappearance.message.enable": "开启了填充玻璃",
-    "things.stone.disappearance.message.disable": "关闭了填充玻璃",
-
     "redstone.lucky.block.island.kill.entity": "[数据包消息] 已清理实体",
 
-    "dialog.stone_disappearance.new_player.line1": "石头消失数据包已加载到此世界中！",
-    "dialog.stone_disappearance.new_player.author": "作者：",
-    "dialog.stone_disappearance.new_player.tech_support": "技术支持：",
-    "dialog.stone_disappearance.new_player.license": "本数据包使用 %s 开源协议"
+    "dialog.stone_disappearance.options.title": "石头消失设置",
+    "dialog.stone_disappearance.options.performance.label": "性能设置",
+    "dialog.stone_disappearance.options.performance.tooltip": "配置一些将会影响性能的设置"
 }

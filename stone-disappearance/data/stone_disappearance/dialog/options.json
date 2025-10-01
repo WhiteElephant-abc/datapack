@@ -1,22 +1,35 @@
 {
-  "type": "confirmation",
-  "title": "测试弹窗",
-  "yes": {
-    "label":"yes",
-    "action": {
-      "type": "run_command",
-      "command": "/tp 0 100 0"
-    }
+  "type": "multi_action",
+  "title": {
+    "translate": "dialog.stone_disappearance.options.title",
+    "fallback": "石头消失设置"
   },
-  "no": {
-    "label":"no",
-    "action": {
-      "type": "run_command",
-      "command": "/tp 0 ~ 0"
+  "body": [
+    {
+      "type": "plain_message",
+      "width": 1000,
+      "contents": {
+        "translate": "dialog.white.elephant.options.admin_only",
+        "fallback": "只有管理员才能修改设置！",
+        "color": "red",
+        "bold": true
+      }
     }
-  },
-  "body": {
-    "type": "plain_message",
-    "contents": "tp 0 100 0"
-  }
+  ],
+  "actions": [
+    {
+      "label": {
+        "translate": "dialog.stone_disappearance.options.performance.label",
+        "fallback": "性能设置"
+      },
+      "tooltip": {
+        "translate": "dialog.stone_disappearance.options.performance.tooltip",
+        "fallback": "配置一些将会影响性能的设置"
+      },
+      "action": {
+        "type": "run_command",
+        "command": ""
+      }
+    }
+  ]
 }
