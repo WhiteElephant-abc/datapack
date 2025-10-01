@@ -1,4 +1,6 @@
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup")
+load("@//rule:process_mcfunction.bzl", "process_mcfunction")
+load("@//rule:process_json.bzl", "process_json")
 
 pkg_files(
     name = "unif_logger_license",
@@ -8,9 +10,15 @@ pkg_files(
     prefix = "data/unif.logger",
 )
 
+process_mcfunction(
+    name = "unif_logger_functions_processed",
+    srcs = glob(["data/unif.logger/functions/**/*.mcfunction"]),
+    pack_id = "unif.logger",
+)
+
 pkg_files(
     name = "unif_logger_functions",
-    srcs = glob(["data/unif.logger/functions/**"]),
+    srcs = [":unif_logger_functions_processed"],
     visibility = ["//visibility:public"],
     strip_prefix = "data/unif.logger/functions",
     prefix = "data/unif.logger/function",
@@ -18,15 +26,20 @@ pkg_files(
 
 pkg_files(
     name = "unif_logger_functions_legacy",
-    srcs = glob(["data/unif.logger/functions/**"]),
+    srcs = [":unif_logger_functions_processed"],
     visibility = ["//visibility:public"],
     strip_prefix = "data/unif.logger/functions",
     prefix = "data/unif.logger/functions",
 )
 
+process_json(
+    name = "unif_logger_tags_processed",
+    srcs = glob(["data/unif.logger/tags/functions/**/*.json"]),
+)
+
 pkg_files(
     name = "unif_logger_tags",
-    srcs = glob(["data/unif.logger/tags/functions/**"]),
+    srcs = [":unif_logger_tags_processed"],
     visibility = ["//visibility:public"],
     strip_prefix = "data/unif.logger/tags/functions",
     prefix = "data/unif.logger/tags/function",
@@ -34,7 +47,7 @@ pkg_files(
 
 pkg_files(
     name = "unif_logger_tags_legacy",
-    srcs = glob(["data/unif.logger/tags/functions/**"]),
+    srcs = [":unif_logger_tags_processed"],
     visibility = ["//visibility:public"],
     strip_prefix = "data/unif.logger/tags/functions",
     prefix = "data/unif.logger/tags/functions",
