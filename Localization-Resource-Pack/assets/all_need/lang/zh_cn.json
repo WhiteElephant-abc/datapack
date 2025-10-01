@@ -1,14 +1,14 @@
 {
-    "license.white.elephant.enable": "数据包加载成功",
-    "license.white.elephant.use": "本数据包使用",
-    "license.white.elephant.open.source":"协议开源",
-    "license.white.elephant.official": "数据包官网",
+    "banner.white.elephant.enabled": "%s 数据包加载成功",
+    "banner.white.elephant.author": "作者：%s",
+    "banner.white.elephant.license": "本数据包使用 %s 协议开源",
+    "banner.white.elephant.official": "数据包官网",
     "no.resource.pack.white.elephant.a":"--------------------",
     "no.resource.pack.white.elephant.nothing":"",
     "need.dfl.white.elephant.no":"缺少前置",
     "need.dfl.white.elephant.please.install":"请安装数据包: ",
     
-    "dialog.white.elephant.new_player.line1": "%s数据包已加载到此世界中！",
+    "dialog.white.elephant.new_player.line1": "%s 数据包已加载到此世界中！",
     "dialog.white.elephant.new_player.author": "作者：",
     "dialog.white.elephant.new_player.tech_support": "技术支持：",
     "dialog.white.elephant.new_player.license": "本数据包使用 %s 开源协议"

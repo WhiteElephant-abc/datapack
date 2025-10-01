@@ -1,10 +1,10 @@
 #define datapack_banner(name, author, author_url, license_name, license_url, official_url)
 tellraw @a "--------------------"
-tellraw @a [{"text": "| #(name) "},{"type":"translatable","translate":"license.white.elephant.enable","fallback":"数据包加载成功","color":"green","bold":true}]
-tellraw @a [{"text": "| "},{"text":"by #(author)","color":"blue","underlined":true,"italic":true,"clickEvent":{"action":"open_url","value":"#(author_url)"},"click_event":{"action":"open_url","url":"#(author_url)"}}]
+tellraw @a ["| ",{"translate":"banner.white.elephant.enabled","fallback":"%s 数据包加载成功","with":[{"text":"#(name)"}],"color":"green","bold":true}]
+tellraw @a ["| ",{"translate":"banner.white.elephant.author","fallback":"作者：%s","with":[{"text":"#(author)","color":"blue","underlined":true,"italic":true,"click_event":{"action":"open_url","url":"#(author_url)"},"hover_event":{"action":"show_text","value":{"text":"#(author_url)"}}}]}]
 tellraw @a "| "
-tellraw @a [{"text": "| "},{"type":"translatable","translate":"license.white.elephant.use","fallback":"本数据包使用","bold": true},{"text": " "},{"text":"#(license_name)","color":"blue","underlined":true,"italic":true,"clickEvent":{"action":"open_url","value":"#(license_url)"},"click_event":{"action":"open_url","url":"#(license_url)"}},{"text": " "},{"type":"translatable","translate":"license.white.elephant.open.source","fallback":"协议开源","bold": true}]
+tellraw @a ["| ",{"translate":"banner.white.elephant.license","fallback":"本数据包使用 %s 协议开源","with":[{"text":"#(license_name)","color":"blue","underlined":true,"italic":true,"click_event":{"action":"open_url","url":"#(license_url)"},"hover_event":{"action":"show_text","value":{"text":"#(license_url)"}}}],"bold":true}]
 tellraw @a "| "
-tellraw @a [{"text": "| "},{"type":"translatable","translate":"license.white.elephant.official","fallback":"数据包官网","color":"blue","underlined":true,"italic":true,"clickEvent":{"action":"open_url","value":"#(official_url)"},"click_event":{"action":"open_url","url":"#(official_url)"}}]
+tellraw @a ["| ",{"translate":"banner.white.elephant.official","fallback":"数据包官网","color":"blue","underlined":true,"italic":true,"click_event":{"action":"open_url","url":"#(official_url)"},"hover_event":{"action":"show_text","value":{"text":"#(official_url)"}}}]
 tellraw @a {"type":"translatable","translate":"no.resource.pack.white.elephant.a","fallback":"| "}
 #end

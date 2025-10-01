@@ -1,0 +1,526 @@
+{
+    "type": "notice",
+    "title": "GNU General Public License v3.0",
+    "body": [
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "                    GNU GENERAL PUBLIC LICENSE"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "                       Version 3, 29 June 2007"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": " Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": " Everyone is permitted to copy and distribute verbatim copies"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": " of this license document, but changing it is not allowed."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "                            Preamble"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  The GNU General Public License is a free, copyleft license for"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "software and other kinds of works."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  The licenses for most software and other practical works are designed"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "to take away your freedom to share and change the works.  By contrast,"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "the GNU General Public License is intended to guarantee your freedom to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "share and change all versions of a program--to make sure it remains free"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "software for all its users.  We, the Free Software Foundation, use the"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "GNU General Public License for most of our software; it applies also to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "any other work released this way by its authors.  You can apply it to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "your programs, too."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  When we speak of free software, we are referring to freedom, not"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "price.  Our General Public Licenses are designed to make sure that you"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "have the freedom to distribute copies of free software (and charge for"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "them if you wish), that you receive source code or can get it if you"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "want it, that you can change the software or use pieces of it in new"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "free programs, and that you know you can do these things."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  To protect your rights, we need to prevent others from denying you"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "these rights or asking you to surrender the rights.  Therefore, you have"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "certain responsibilities if you distribute copies of the software, or if"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "you modify it: responsibilities to respect the freedom of others."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  For example, if you distribute copies of such a program, whether"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "gratis or for a fee, you must pass on to the recipients the same"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "freedoms that you received.  You must make sure that they, too, receive"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "or can get the source code.  And you must show them these terms so they"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "know their rights."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  Developers that use the GNU GPL protect your rights with two steps:"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "(1) assert copyright on the software, and (2) offer you this License"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "giving you legal permission to copy, distribute and/or modify it."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  For the developers' and authors' protection, the GPL clearly explains"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "that there is no warranty for this free software.  For both users' and"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "authors' sake, the GPL requires that modified versions be marked as"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "changed, so that their problems will not be attributed erroneously to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "authors of previous versions."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  Some devices are designed to deny users access to install or run"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "modified versions of the software inside them, although the manufacturer"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "can do so.  This is fundamentally incompatible with the aim of"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "protecting users' freedom to change the software.  The systematic"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "pattern of such abuse occurs in the area of products for individuals to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "use, which is precisely where it is most unacceptable.  Therefore, we"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "have designed this version of the GPL to prohibit the practice for those"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "products.  If such problems arise substantially in other domains, we"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "stand ready to extend this provision to those domains in future versions"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "of the GPL, as needed to protect the freedom of users."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  Finally, every program is threatened constantly by software patents."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "States should not allow patents to restrict development and use of"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "software on general-purpose computers, but in those that do, we wish to"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "avoid the special danger that patents applied to a free program could"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "make it effectively proprietary.  To prevent this, the GPL assures that"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "patents cannot be used to render the program non-free."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  The precise terms and conditions for copying, distribution and"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "modification follow."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "                       TERMS AND CONDITIONS"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  0. Definitions."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  \"This License\" refers to version 3 of the GNU General Public License."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  \"Copyright\" also means copyright-like laws that apply to other kinds of"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "works, such as semiconductor masks."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  \"The Program\" refers to any copyrightable work licensed under this"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "License.  Each licensee is addressed as \"you\".  \"Licensees\" and"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "\"recipients\" may be individuals or organizations."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  To \"modify\" a work means to copy from or adapt all or part of the work"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "in a fashion requiring copyright permission, other than the making of an"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "exact copy.  The resulting work is called a \"modified version\" of the"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "earlier work or a work \"based on\" the earlier work."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  A \"covered work\" means either the unmodified Program or a work based"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "on the Program."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  To \"propagate\" a work means to do anything with it that, without"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "permission, would make you directly or secondarily liable for"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "infringement under applicable copyright law, except executing it on a"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "computer or modifying a private copy.  Propagation includes copying,"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "distribution (with or without modification), making available to the"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "public, and in some countries other activities as well."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  To \"convey\" a work means any kind of propagation that enables other"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "parties to make or receive copies.  Mere interaction with a user through"
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "a computer network, with no transfer of a copy, is not conveying."
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": ""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "  An interactive user interface displays \"Appropriate Legal Notices\""
+        },
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": "to the extent that it includes "
+        }
+    ]
+}

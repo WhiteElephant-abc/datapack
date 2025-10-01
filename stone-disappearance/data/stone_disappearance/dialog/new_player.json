@@ -4,14 +4,23 @@
   "body": [
     {
       "type": "plain_message",
+      "width": 1000,
       "contents": {
         "translate": "dialog.white.elephant.new_player.line1",
-        "fallback": "%s数据包已加载到此世界中！",
+        "fallback": "%s 数据包已加载到此世界中！",
         "with": [
           {
             "text": "Stone Disappearance",
             "color": "aqua",
-            "bold": true
+            "bold": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/WhiteElephant-abc/datapack"
+            },
+            "hover_event": {
+              "action": "show_text",
+              "value": "https://github.com/WhiteElephant-abc/datapack"
+            }
           }
         ],
         "color": "green",
@@ -20,6 +29,7 @@
     },
     {
       "type": "plain_message",
+      "width": 1000,
       "contents": [
         {
           "translate": "dialog.white.elephant.new_player.author",
@@ -33,12 +43,17 @@
           "click_event": {
             "action": "open_url",
             "url": "https://modrinth.com/user/white_elephant"
+          },
+          "hover_event": {
+            "action": "show_text",
+            "value": "https://modrinth.com/user/white_elephant"
           }
         }
       ]
     },
     {
       "type": "plain_message",
+      "width": 1000,
       "contents": [
         {
           "translate": "dialog.white.elephant.new_player.tech_support",
@@ -52,6 +67,10 @@
           "click_event": {
             "action": "open_url",
             "url": "https://modrinth.com/user/fifth_light"
+          },
+          "hover_event": {
+            "action": "show_text",
+            "value": "https://modrinth.com/user/fifth_light"
           }
         }
       ]
@@ -61,7 +80,7 @@
       "width": 1000,
       "contents": {
         "translate": "dialog.white.elephant.new_player.license",
-        "fallback": "本数据包使用%s开源协议",
+        "fallback": "本数据包使用 %s 开源协议",
         "with": [
           {
             "text": "GNU General Public License",

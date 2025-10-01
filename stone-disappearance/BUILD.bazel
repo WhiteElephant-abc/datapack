@@ -44,9 +44,9 @@ datapack(
         "README.md",
         "pack.png",
         "//:license_gpl",
-        "//datapackets-functions-LIB:dfl",
         "@unif-logger//:unif-logger",
     ],
+    datapack_deps = ["//datapackets-functions-LIB:dfl"],
 )
 
 alias(

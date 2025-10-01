@@ -1,8 +1,8 @@
 {
-    "license.white.elephant.enable": "has been loaded !",
-    "license.white.elephant.use": "This data pack uses",
-    "license.white.elephant.open.source": "open-source protocol",
-    "license.white.elephant.official": "Official Website",
+    "banner.white.elephant.enabled": "%s enabled successfully",
+    "banner.white.elephant.author": "by %s",
+    "banner.white.elephant.license": "License: %s",
+    "banner.white.elephant.official": "Official Website",
     "no.resource.pack.white.elephant.a": "--------------------",
     "no.resource.pack.white.elephant.nothing": "",
     "need.dfl.white.elephant.no": "Missing pre",

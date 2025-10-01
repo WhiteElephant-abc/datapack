@@ -13,6 +13,7 @@ def _datapack_impl(
         function_tags,
         dialogs,
         minecraft_dialog_tags,
+        datapack_deps,
         deps,
         minecraft_version):
     expand_enjoy(
@@ -48,6 +49,7 @@ def _datapack_impl(
         visibility = visibility,
         srcs = dialogs,
         prefix = "data/%s/dialog" % pack_id,
+        strip_prefix = "data/%s/dialog" % pack_id,
     )
 
     pkg_files(
@@ -57,8 +59,8 @@ def _datapack_impl(
         prefix = "data/minecraft/tags/dialog",
     )
 
-    pkg_zip(
-        name = name,
+    native.filegroup(
+        name = name + "_components",
         visibility = visibility,
         srcs = [
             ":%s_pack_function" % name,
@@ -66,8 +68,19 @@ def _datapack_impl(
             ":%s_function_tag_legacy" % name,
             ":%s_pack_dialog" % name,
             ":%s_minecraft_dialog_tag" % name,
+        ],
+    )
+
+    pkg_zip(
+        name = name,
+        visibility = visibility,
+        srcs = [
+            ":%s_components" % name,
             "//template:mcmeta",
-        ] + deps,
+        ] + deps + [
+            dep + "_components"
+            for dep in datapack_deps
+        ],
     )
 
     java_binary(
@@ -103,6 +116,7 @@ datapack = macro(
         "function_tags": attr.label_list(default = []),
         "dialogs": attr.label_list(default = []),
         "minecraft_dialog_tags": attr.label_list(default = []),
+        "datapack_deps": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
     },
