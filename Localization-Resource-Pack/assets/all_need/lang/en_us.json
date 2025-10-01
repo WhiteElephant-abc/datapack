@@ -6,5 +6,10 @@
     "no.resource.pack.white.elephant.a": "--------------------",
     "no.resource.pack.white.elephant.nothing": "",
     "need.dfl.white.elephant.no": "Missing pre",
-    "need.dfl.white.elephant.please.install": "Please install: "
+    "need.dfl.white.elephant.please.install": "Please install: ",
+    
+    "dialog.white.elephant.new_player.line1": "%s datapack has been loaded into this world!",
+    "dialog.white.elephant.new_player.author": "Author: ",
+    "dialog.white.elephant.new_player.tech_support": "Technical Support: ",
+    "dialog.white.elephant.new_player.license": "This datapack is licensed under the %s."
 }

@@ -1,6 +1,8 @@
 {
   "pack": {
-    "pack_format": 48,
+    "pack_format": 81,
+    "min_format": 1,
+    "max_format": 81,
     "description": [
       {
         "text": "by - ",
@@ -17,7 +19,7 @@
     ],
     "supported_formats": [
       1,
-      1024
+      81
     ]
   }
 }
