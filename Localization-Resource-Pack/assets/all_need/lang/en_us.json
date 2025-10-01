@@ -11,5 +11,6 @@
     "dialog.white.elephant.new_player.line1": "%s datapack has been loaded into this world!",
     "dialog.white.elephant.new_player.author": "Author: ",
     "dialog.white.elephant.new_player.tech_support": "Technical Support: ",
-    "dialog.white.elephant.new_player.license": "This datapack is licensed under the %s."
+    "dialog.white.elephant.new_player.license": "This datapack is licensed under the %s.",
+    "dialog.white.elephant.new_player.view_license": "View License"
 }

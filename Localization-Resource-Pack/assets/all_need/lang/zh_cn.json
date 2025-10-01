@@ -11,5 +11,6 @@
     "dialog.white.elephant.new_player.line1": "%s 数据包已加载到此世界中！",
     "dialog.white.elephant.new_player.author": "作者：",
     "dialog.white.elephant.new_player.tech_support": "技术支持：",
-    "dialog.white.elephant.new_player.license": "本数据包使用 %s 开源协议"
+    "dialog.white.elephant.new_player.license": "本数据包使用 %s 开源协议",
+    "dialog.white.elephant.new_player.view_license": "查看开源协议"
 }
