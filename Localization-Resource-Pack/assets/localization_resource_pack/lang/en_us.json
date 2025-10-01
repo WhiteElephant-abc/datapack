@@ -26,5 +26,7 @@
 
     "dialog.stone_disappearance.options.title": "Stone Disappearance Settings",
     "dialog.stone_disappearance.options.performance.label": "Performance Settings",
-    "dialog.stone_disappearance.options.performance.tooltip": "Configure settings that will affect performance"
+    "dialog.stone_disappearance.options.performance.tooltip": "Configure settings that will affect performance",
+    "dialog.stone_disappearance.options.advanced.label": "Advanced Settings",
+    "dialog.stone_disappearance.options.advanced.tooltip": "Customize some behaviors of the data pack"
 }

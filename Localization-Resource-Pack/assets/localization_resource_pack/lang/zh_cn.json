@@ -26,5 +26,7 @@
 
     "dialog.stone_disappearance.options.title": "石头消失设置",
     "dialog.stone_disappearance.options.performance.label": "性能设置",
-    "dialog.stone_disappearance.options.performance.tooltip": "配置一些将会影响性能的设置"
+    "dialog.stone_disappearance.options.performance.tooltip": "配置一些将会影响性能的设置",
+    "dialog.stone_disappearance.options.advanced.label": "高级设置",
+    "dialog.stone_disappearance.options.advanced.tooltip": "自定义数据包的一些行为"
 }

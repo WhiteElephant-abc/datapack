@@ -28,7 +28,29 @@
       },
       "action": {
         "type": "run_command",
-        "command": ""
+        "command": "function stone_disappearance:dialog/performance"
+      }
+    },
+    {
+      "label": {
+        "translate": "dialog.stone_disappearance.options.advanced.label",
+        "fallback": "高级设置"
+      },
+      "tooltip": {
+        "translate": "dialog.stone_disappearance.options.advanced.tooltip",
+        "fallback": "自定义数据包的一些行为"
+      },
+      "action": {
+        "type": "run_command",
+        "command": "function stone_disappearance:dialog/advanced"
+      }
+    },
+    {
+      "label": "关于",
+      "tooltip": "查看数据包的一些相关信息",
+      "action": {
+        "type": "show_dialog",
+        "dialog": "stone_disappearance:about"
       }
     }
   ]
