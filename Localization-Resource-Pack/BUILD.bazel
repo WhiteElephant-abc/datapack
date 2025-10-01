@@ -63,7 +63,7 @@ pkg_zip(
         ":README.md",
         ":localization_resource_pack_assets",
         ":pack.png",
-        "//template:mcmeta",
+        ":pack.mcmeta",
     ],
 )
 

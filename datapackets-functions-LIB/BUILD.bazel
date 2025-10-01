@@ -72,7 +72,6 @@ datapack(
         "README.md",
         "README-en_us.md",
         "pack.png",
-        "//Localization-Resource-Pack:localization_resource_pack_assets",
         "@unif-logger//:unif-logger",
     ],
 )

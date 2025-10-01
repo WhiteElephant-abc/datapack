@@ -44,7 +44,6 @@ datapack(
         "README.md",
         "pack.png",
         "//:license_gpl",
-        "//Localization-Resource-Pack:localization_resource_pack_assets",
         "//datapackets-functions-LIB:dfl",
         "@unif-logger//:unif-logger",
     ],
