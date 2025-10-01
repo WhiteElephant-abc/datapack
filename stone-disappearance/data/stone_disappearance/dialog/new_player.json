@@ -1,7 +1,8 @@
 {
   "type": "notice",
   "title": "Stone Disappearance",
-  "after_action":"close",
+  "after_action": "none",
+  "pause": false,
   "body": [
     {
       "type": "plain_message",
@@ -92,14 +93,14 @@
       }
     }
   ],
-  "action":{
+  "action": {
     "label": {
       "translate": "dialog.white.elephant.new_player.view_license",
       "fallback": "查看开源协议"
     },
     "action": {
       "type": "show_dialog",
-      "dialog":"dfl:gpl"
+      "dialog": "dfl:gpl"
     }
   }
 }
