@@ -76,9 +76,12 @@ datapack(
     ],
 )
 
-alias(
+pkg_filegroup(
     name = "dfl",
-    actual = ":datapackets-functions-LIB_pack_function",
+    srcs = [
+        ":datapackets-functions-LIB_pack_dialog",
+        ":datapackets-functions-LIB_pack_function",
+    ],
     visibility = ["//visibility:public"],
 )
 

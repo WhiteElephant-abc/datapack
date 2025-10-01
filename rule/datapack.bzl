@@ -1,7 +1,7 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@//rule:process_mcfunction.bzl", "process_mcfunction")
 load("@rules_java//java:defs.bzl", "java_binary")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
 def _datapack_impl(
@@ -13,7 +13,6 @@ def _datapack_impl(
         function_tags,
         dialogs,
         minecraft_dialog_tags,
-        datapack_deps,
         deps,
         minecraft_version):
     expand_enjoy(
@@ -59,7 +58,7 @@ def _datapack_impl(
         prefix = "data/minecraft/tags/dialog",
     )
 
-    native.filegroup(
+    pkg_filegroup(
         name = name + "_components",
         visibility = visibility,
         srcs = [
@@ -77,10 +76,7 @@ def _datapack_impl(
         srcs = [
             ":%s_components" % name,
             "//template:mcmeta",
-        ] + deps + [
-            dep + "_components"
-            for dep in datapack_deps
-        ],
+        ] + deps,
     )
 
     java_binary(
@@ -116,7 +112,6 @@ datapack = macro(
         "function_tags": attr.label_list(default = []),
         "dialogs": attr.label_list(default = []),
         "minecraft_dialog_tags": attr.label_list(default = []),
-        "datapack_deps": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
     },

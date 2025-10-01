@@ -31,22 +31,28 @@ modrinth_dependency(
 
 datapack(
     name = "stone-disappearance",
-    pack_id = "stone_disappearance",
-    functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
+    dialogs = glob(
+        ["data/stone_disappearance/dialog/*.json"],
+        allow_empty = True,
+    ),
+    function_tags = glob(["data/minecraft/tags/function/*.json"]),
     functions = glob(
         include = ["data/stone_disappearance/function/**/*.mcfunction"],
         exclude = ["data/stone_disappearance/function/**/*.enjoy.mcfunction"],
     ),
-    function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    minecraft_dialog_tags = glob(["data/minecraft/tags/dialog/*.json"], allow_empty = True),
-    dialogs = glob(["data/stone_disappearance/dialog/*.json"], allow_empty = True),
+    functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
+    minecraft_dialog_tags = glob(
+        ["data/minecraft/tags/dialog/*.json"],
+        allow_empty = True,
+    ),
+    pack_id = "stone_disappearance",
     deps = [
         "README.md",
         "pack.png",
         "//:license_gpl",
+        "//datapackets-functions-LIB:dfl",
         "@unif-logger//:unif-logger",
     ],
-    datapack_deps = ["//datapackets-functions-LIB:dfl"],
 )
 
 alias(
