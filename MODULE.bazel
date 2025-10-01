@@ -44,6 +44,6 @@ http_archive(
 minecraft = use_extension("//repo:minecraft_jar.bzl", "minecraft")
 minecraft.minecraft_jar(
     type = "server",
-    version = "1.21.8",
+    version = "1.21.9",
 )
 use_repo(minecraft, "minecraft")

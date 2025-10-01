@@ -104,7 +104,7 @@ datapack = macro(
         "dialogs": attr.label_list(default = []),
         "minecraft_dialog_tags": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
-        "minecraft_version": attr.string(configurable = False, default = "1.21.8"),
+        "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
     },
     implementation = _datapack_impl,
 )

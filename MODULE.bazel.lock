@@ -188,17 +188,17 @@
   "moduleExtensions": {
     "//repo:minecraft_jar.bzl%minecraft": {
       "general": {
-        "bzlTransitiveDigest": "jFpx9iDpwOacNeBS1RUo8TSlyylV1faEYPiDnwn2ark=",
-        "usagesDigest": "iz03ojkU5fxjKhipnS3A8BHFsA90/Y6Y9yDfdL86iCM=",
+        "bzlTransitiveDigest": "x0oMfEoL62/Y8+pljSqozWdXHea1M+WNyc/EEy2VMJ8=",
+        "usagesDigest": "Lhqre78PZ7i2MHhcVoIIlOiYYRzEXBiKyU1ANVceS08=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
-          "minecraft_1.21.8_server": {
+          "minecraft_1.21.9_server": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://piston-data.mojang.com/v1/objects/6bce4ef400e4efaa63a13d5e6f6b500be969ef81/server.jar",
-              "integrity": "sha1-a85O9ADk76pjoT1eb2tQC+lp74E=",
+              "url": "https://piston-data.mojang.com/v1/objects/11e54c2081420a4d49db3007e66c80a22579ff2a/server.jar",
+              "integrity": "sha1-EeVMIIFCCk1J2zAH5myAoiV5/yo=",
               "downloaded_file_path": "server.jar"
             }
           },
@@ -290,12 +290,12 @@
               "downloaded_file_path": "com/microsoft/azure/msal4j/1.17.2/msal4j-1.17.2.jar"
             }
           },
-          "minecraft_com_mojang_authlib_6_0_58": {
+          "minecraft_com_mojang_authlib_7_0_61": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://libraries.minecraft.net/com/mojang/authlib/6.0.58/authlib-6.0.58.jar",
-              "integrity": "sha1-kmGm1T5ilGn6sgE2uWi/UgLZwPc=",
-              "downloaded_file_path": "com/mojang/authlib/6.0.58/authlib-6.0.58.jar"
+              "url": "https://libraries.minecraft.net/com/mojang/authlib/7.0.61/authlib-7.0.61.jar",
+              "integrity": "sha1-7+4ea1ToYxCFdus7OucRRGJqrvw=",
+              "downloaded_file_path": "com/mojang/authlib/7.0.61/authlib-7.0.61.jar"
             }
           },
           "minecraft_com_mojang_blocklist_1_0_10": {
@@ -322,36 +322,44 @@
               "downloaded_file_path": "com/mojang/datafixerupper/8.0.16/datafixerupper-8.0.16.jar"
             }
           },
-          "minecraft_com_mojang_jtracy_1_0_29": {
+          "minecraft_com_mojang_jtracy_1_0_36": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.29/jtracy-1.0.29.jar",
-              "integrity": "sha1-bwfctqLllcfuLKQ7Z+XRwBjKB3A=",
-              "downloaded_file_path": "com/mojang/jtracy/1.0.29/jtracy-1.0.29.jar"
+              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.36/jtracy-1.0.36.jar",
+              "integrity": "sha1-IKY9BrYhv+s8sh71G3+kDA/CICE=",
+              "downloaded_file_path": "com/mojang/jtracy/1.0.36/jtracy-1.0.36.jar"
             }
           },
-          "minecraft_com_mojang_jtracy_1_0_29_natives-linux": {
+          "minecraft_com_mojang_jtracy_1_0_36_natives-linux": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-linux.jar",
-              "integrity": "sha1-9Dtvpc0Oz45qM7wwoksRfNDrv6E=",
-              "downloaded_file_path": "com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-linux.jar"
+              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-linux.jar",
+              "integrity": "sha1-jylnwTmwJL+AAko+q2PpBsPuLls=",
+              "downloaded_file_path": "com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-linux.jar"
             }
           },
-          "minecraft_com_mojang_jtracy_1_0_29_natives-macos": {
+          "minecraft_com_mojang_jtracy_1_0_36_natives-macos": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-macos.jar",
-              "integrity": "sha1-1iDluUyoF4O0CdUMSLc+Duf9y30=",
-              "downloaded_file_path": "com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-macos.jar"
+              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-macos.jar",
+              "integrity": "sha1-/BSsaswwhl05DoesV/x1jkOT72A=",
+              "downloaded_file_path": "com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-macos.jar"
             }
           },
-          "minecraft_com_mojang_jtracy_1_0_29_natives-windows": {
+          "minecraft_com_mojang_jtracy_1_0_36_natives-macos-arm64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
-              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-windows.jar",
-              "integrity": "sha1-4FMyyzHHrlgtyNi9G//UfC/3Y28=",
-              "downloaded_file_path": "com/mojang/jtracy/1.0.29/jtracy-1.0.29-natives-windows.jar"
+              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-macos-arm64.jar",
+              "integrity": "sha1-S+knDcFOsCGVREXoiV3/Ijh1rOY=",
+              "downloaded_file_path": "com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-macos-arm64.jar"
+            }
+          },
+          "minecraft_com_mojang_jtracy_1_0_36_natives-windows": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "url": "https://libraries.minecraft.net/com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-windows.jar",
+              "integrity": "sha1-tCvHcasNOKkgJY3Xcer088CAEfo=",
+              "downloaded_file_path": "com/mojang/jtracy/1.0.36/jtracy-1.0.36-natives-windows.jar"
             }
           },
           "minecraft_com_mojang_logging_1_5_10": {
@@ -440,6 +448,14 @@
               "url": "https://libraries.minecraft.net/io/netty/netty-buffer/4.1.118.Final/netty-buffer-4.1.118.Final.jar",
               "integrity": "sha1-cCKZCvHg1En51TIgNYmXReGXNcU=",
               "downloaded_file_path": "io/netty/netty-buffer/4.1.118.Final/netty-buffer-4.1.118.Final.jar"
+            }
+          },
+          "minecraft_io_netty_netty-codec-http_4_1_118_Final": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "url": "https://libraries.minecraft.net/io/netty/netty-codec-http/4.1.118.Final/netty-codec-http-4.1.118.Final.jar",
+              "integrity": "sha1-7aCKcSlK/njHebhf1pa8E0kVB6g=",
+              "downloaded_file_path": "io/netty/netty-codec-http/4.1.118.Final/netty-codec-http-4.1.118.Final.jar"
             }
           },
           "minecraft_io_netty_netty-codec_4_1_118_Final": {
@@ -1110,10 +1126,10 @@
             "repoRuleId": "@@//repo:minecraft_jar.bzl%minecraft_repo",
             "attributes": {
               "version_repo_names": [
-                "1.21.8_server"
+                "1.21.9_server"
               ],
               "version_libraries": {
-                "1.21.8_server": "\"@minecraft_ca_weblite_java-objc-bridge_1_1//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-annotations_2_13_4//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-core_2_13_4//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-databind_2_13_4_2//file\",\n        \"@minecraft_com_github_oshi_oshi-core_6_6_5//file\",\n        \"@minecraft_com_github_stephenc_jcip_jcip-annotations_1_0-1//file\",\n        \"@minecraft_com_google_code_gson_gson_2_11_0//file\",\n        \"@minecraft_com_google_guava_failureaccess_1_0_2//file\",\n        \"@minecraft_com_google_guava_guava_33_3_1-jre//file\",\n        \"@minecraft_com_ibm_icu_icu4j_76_1//file\",\n        \"@minecraft_com_microsoft_azure_msal4j_1_17_2//file\",\n        \"@minecraft_com_mojang_authlib_6_0_58//file\",\n        \"@minecraft_com_mojang_blocklist_1_0_10//file\",\n        \"@minecraft_com_mojang_brigadier_1_3_10//file\",\n        \"@minecraft_com_mojang_datafixerupper_8_0_16//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_29//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_29_natives-linux//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_29_natives-macos//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_29_natives-windows//file\",\n        \"@minecraft_com_mojang_logging_1_5_10//file\",\n        \"@minecraft_com_mojang_patchy_2_2_10//file\",\n        \"@minecraft_com_mojang_text2speech_1_18_11//file\",\n        \"@minecraft_com_nimbusds_content-type_2_3//file\",\n        \"@minecraft_com_nimbusds_lang-tag_1_7//file\",\n        \"@minecraft_com_nimbusds_nimbus-jose-jwt_9_40//file\",\n        \"@minecraft_com_nimbusds_oauth2-oidc-sdk_11_18//file\",\n        \"@minecraft_commons-codec_commons-codec_1_17_1//file\",\n        \"@minecraft_commons-io_commons-io_2_17_0//file\",\n        \"@minecraft_commons-logging_commons-logging_1_3_4//file\",\n        \"@minecraft_io_netty_netty-buffer_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-codec_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-common_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-handler_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-resolver_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport-classes-epoll_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport-native-epoll_4_1_118_Final_linux-aarch_64//file\",\n        \"@minecraft_io_netty_netty-transport-native-epoll_4_1_118_Final_linux-x86_64//file\",\n        \"@minecraft_io_netty_netty-transport-native-unix-common_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport_4_1_118_Final//file\",\n        \"@minecraft_it_unimi_dsi_fastutil_8_5_15//file\",\n        \"@minecraft_net_java_dev_jna_jna-platform_5_15_0//file\",\n        \"@minecraft_net_java_dev_jna_jna_5_15_0//file\",\n        \"@minecraft_net_minidev_accessors-smart_2_5_1//file\",\n        \"@minecraft_net_minidev_json-smart_2_5_1//file\",\n        \"@minecraft_net_sf_jopt-simple_jopt-simple_5_0_4//file\",\n        \"@minecraft_org_apache_commons_commons-compress_1_27_1//file\",\n        \"@minecraft_org_apache_commons_commons-lang3_3_17_0//file\",\n        \"@minecraft_org_apache_httpcomponents_httpclient_4_5_14//file\",\n        \"@minecraft_org_apache_httpcomponents_httpcore_4_4_16//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-api_2_24_1//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-core_2_24_1//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-slf4j2-impl_2_24_1//file\",\n        \"@minecraft_org_jcraft_jorbis_0_0_17//file\",\n        \"@minecraft_org_joml_joml_1_10_8//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-macos-patch//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lz4_lz4-java_1_8_0//file\",\n        \"@minecraft_org_ow2_asm_asm_9_6//file\",\n        \"@minecraft_org_slf4j_slf4j-api_2_0_16//file\""
+                "1.21.9_server": "\"@minecraft_ca_weblite_java-objc-bridge_1_1//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-annotations_2_13_4//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-core_2_13_4//file\",\n        \"@minecraft_com_fasterxml_jackson_core_jackson-databind_2_13_4_2//file\",\n        \"@minecraft_com_github_oshi_oshi-core_6_6_5//file\",\n        \"@minecraft_com_github_stephenc_jcip_jcip-annotations_1_0-1//file\",\n        \"@minecraft_com_google_code_gson_gson_2_11_0//file\",\n        \"@minecraft_com_google_guava_failureaccess_1_0_2//file\",\n        \"@minecraft_com_google_guava_guava_33_3_1-jre//file\",\n        \"@minecraft_com_ibm_icu_icu4j_76_1//file\",\n        \"@minecraft_com_microsoft_azure_msal4j_1_17_2//file\",\n        \"@minecraft_com_mojang_authlib_7_0_61//file\",\n        \"@minecraft_com_mojang_blocklist_1_0_10//file\",\n        \"@minecraft_com_mojang_brigadier_1_3_10//file\",\n        \"@minecraft_com_mojang_datafixerupper_8_0_16//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_36//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_36_natives-linux//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_36_natives-macos//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_36_natives-macos-arm64//file\",\n        \"@minecraft_com_mojang_jtracy_1_0_36_natives-windows//file\",\n        \"@minecraft_com_mojang_logging_1_5_10//file\",\n        \"@minecraft_com_mojang_patchy_2_2_10//file\",\n        \"@minecraft_com_mojang_text2speech_1_18_11//file\",\n        \"@minecraft_com_nimbusds_content-type_2_3//file\",\n        \"@minecraft_com_nimbusds_lang-tag_1_7//file\",\n        \"@minecraft_com_nimbusds_nimbus-jose-jwt_9_40//file\",\n        \"@minecraft_com_nimbusds_oauth2-oidc-sdk_11_18//file\",\n        \"@minecraft_commons-codec_commons-codec_1_17_1//file\",\n        \"@minecraft_commons-io_commons-io_2_17_0//file\",\n        \"@minecraft_commons-logging_commons-logging_1_3_4//file\",\n        \"@minecraft_io_netty_netty-buffer_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-codec-http_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-codec_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-common_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-handler_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-resolver_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport-classes-epoll_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport-native-epoll_4_1_118_Final_linux-aarch_64//file\",\n        \"@minecraft_io_netty_netty-transport-native-epoll_4_1_118_Final_linux-x86_64//file\",\n        \"@minecraft_io_netty_netty-transport-native-unix-common_4_1_118_Final//file\",\n        \"@minecraft_io_netty_netty-transport_4_1_118_Final//file\",\n        \"@minecraft_it_unimi_dsi_fastutil_8_5_15//file\",\n        \"@minecraft_net_java_dev_jna_jna-platform_5_15_0//file\",\n        \"@minecraft_net_java_dev_jna_jna_5_15_0//file\",\n        \"@minecraft_net_minidev_accessors-smart_2_5_1//file\",\n        \"@minecraft_net_minidev_json-smart_2_5_1//file\",\n        \"@minecraft_net_sf_jopt-simple_jopt-simple_5_0_4//file\",\n        \"@minecraft_org_apache_commons_commons-compress_1_27_1//file\",\n        \"@minecraft_org_apache_commons_commons-lang3_3_17_0//file\",\n        \"@minecraft_org_apache_httpcomponents_httpclient_4_5_14//file\",\n        \"@minecraft_org_apache_httpcomponents_httpcore_4_4_16//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-api_2_24_1//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-core_2_24_1//file\",\n        \"@minecraft_org_apache_logging_log4j_log4j-slf4j2-impl_2_24_1//file\",\n        \"@minecraft_org_jcraft_jorbis_0_0_17//file\",\n        \"@minecraft_org_joml_joml_1_10_8//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-macos-patch//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-freetype_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-glfw_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-jemalloc_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-openal_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-opengl_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-stb_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl-tinyfd_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-linux//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-macos//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-macos-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows-arm64//file\",\n        \"@minecraft_org_lwjgl_lwjgl_3_3_3_natives-windows-x86//file\",\n        \"@minecraft_org_lz4_lz4-java_1_8_0//file\",\n        \"@minecraft_org_ow2_asm_asm_9_6//file\",\n        \"@minecraft_org_slf4j_slf4j-api_2_0_16//file\""
               }
             }
           },
