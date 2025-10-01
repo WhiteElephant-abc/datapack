@@ -1,3 +1,5 @@
+## 执行fill并返回成败
+
 # fill计数
 scoreboard objectives add temp.fill dummy
 # 执行fill

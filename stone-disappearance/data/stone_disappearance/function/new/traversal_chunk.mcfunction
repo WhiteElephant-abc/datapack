@@ -1,3 +1,5 @@
+## 主区块遍历函数
+
 # 检测n是否到达设定上限
 execute if score n temp.chunk >= n sd.settings run \
     function #unif.logger:logger/v1/debug \

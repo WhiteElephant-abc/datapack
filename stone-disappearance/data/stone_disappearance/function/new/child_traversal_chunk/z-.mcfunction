@@ -1,4 +1,6 @@
-# n-1
+## 递归fill z-16
+
+# 已遍历次数-1
 scoreboard players remove n temp.chunk.child 1
 # z坐标-16
 scoreboard players remove z.a temp.chunk 16

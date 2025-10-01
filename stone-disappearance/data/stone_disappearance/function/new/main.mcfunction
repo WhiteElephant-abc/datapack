@@ -1,3 +1,5 @@
+## 主执行函数
+
 # 计算玩家所在的chunk，输出到nbt
 function stone_disappearance:new/find_chunk
 # chunk未加载报错
