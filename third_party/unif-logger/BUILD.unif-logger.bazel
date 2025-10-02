@@ -14,6 +14,7 @@ process_mcfunction(
     name = "unif_logger_functions_processed",
     srcs = glob(["data/unif.logger/functions/**/*.mcfunction"]),
     pack_id = "unif.logger",
+    keep_original_name = True,
 )
 
 pkg_files(

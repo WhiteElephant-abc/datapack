@@ -37,7 +37,10 @@ def _process_mcfunction_impl(ctx):
     function_placement = "data/%s/functions" % ctx.attr.pack_id
 
     for src in ctx.files.srcs:
-        output_file = ctx.actions.declare_file(src.basename.replace(".mcfunction", ".processed.mcfunction"), sibling = src)
+        if ctx.attr.keep_original_name:
+            output_file = ctx.actions.declare_file(src.basename, sibling = src)
+        else:
+            output_file = ctx.actions.declare_file(src.basename.replace(".mcfunction", ".processed.mcfunction"), sibling = src)
         output_files.append(output_file)
 
         src_path = _path_relative_to_package(src)
@@ -88,6 +91,10 @@ process_mcfunction = rule(
         "pack_id": attr.string(
             mandatory = True,
             doc = "The ID of the pack",
+        ),
+        "keep_original_name": attr.bool(
+            default = False,
+            doc = "Whether to keep the original file name without adding .processed suffix",
         ),
     },
     doc = "Processes .mcfunction files by handling line continuations",
