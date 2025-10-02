@@ -8,8 +8,8 @@ execute if score n temp.chunk >= n sd.settings run return run scoreboard players
 # n+1
 scoreboard players add n temp.chunk 1
 # 计算2n
-scoreboard players operation 2n temp.chunk = n temp.chunk 
-scoreboard players operation 2n temp.chunk += n temp.chunk 
+scoreboard players operation 2n temp.chunk = n temp.chunk
+scoreboard players operation 2n temp.chunk += n temp.chunk
 
 # x+1
 scoreboard players set n temp.chunk.child 1
