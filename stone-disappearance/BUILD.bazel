@@ -87,6 +87,7 @@ alias(
 
 upload_modrinth(
     name = "upload_modrinth",
+    changelog = "NEWS.md",
     file = ":stone-disappearance",
     file_name = "stone-disappearance_v%s_1.20+.zip" % pack_version,
     game_versions = game_versions,
