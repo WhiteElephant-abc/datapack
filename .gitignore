@@ -2,3 +2,4 @@ bazel-*
 .idea
 .bazelbsp
 .vscode/settings.json
+.bazel

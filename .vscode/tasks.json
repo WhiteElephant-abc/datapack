@@ -12,11 +12,8 @@
         {
             "label": "Bazel Build",
             "type": "shell",
-            "command": "bazelisk",
-            "args": [
-                "build",
-                "@//${input:projectName}"
-            ],
+            "command": "bazelisk build @//${input:projectName} & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "args": [],
             "options": {
                 "shell": {
                     "executable": "cmd.exe",
@@ -38,11 +35,8 @@
         {
             "label": "Bazel Run Server",
             "type": "shell",
-            "command": "bazelisk",
-            "args": [
-                "run",
-                "//${input:projectName}:server"
-            ],
+            "command": "bazelisk run //${input:projectName}:server & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "args": [],
             "options": {
                 "shell": {
                     "executable": "cmd.exe",
@@ -67,11 +61,8 @@
         {
             "label": "Bazel Upload Modrinth",
             "type": "shell",
-            "command": "bazelisk",
-            "args": [
-                "run",
-                "//${input:projectName}:upload_modrinth"
-            ],
+            "command": "bazelisk run //${input:projectName}:upload_modrinth & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "args": [],
             "options": {
                 "shell": {
                     "executable": "cmd.exe",
