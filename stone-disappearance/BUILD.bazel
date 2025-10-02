@@ -1,4 +1,5 @@
 load("@//rule:datapack.bzl", "datapack")
+load("@//rule:process_dialog.bzl", "process_dialog")
 load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
 
 pack_version = "3.1"
@@ -36,10 +37,14 @@ datapack(
         allow_empty = True,
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
+    # Exclude dialog mcfunctions here; they will be provided via process_dialog
     functions = glob(
         include = ["data/stone_disappearance/function/**/*.mcfunction"],
-        exclude = ["data/stone_disappearance/function/**/*.enjoy.mcfunction"],
-    ),
+        exclude = [
+            "data/stone_disappearance/function/**/*.enjoy.mcfunction",
+            "data/stone_disappearance/function/dialog/*.mcfunction",
+        ],
+    ) + [":stone_disappearance_dialog_processed"],
     functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
     minecraft_dialog_tags = glob(
         ["data/minecraft/tags/dialog/*.json"],
@@ -75,4 +80,15 @@ upload_modrinth(
     deps = [
         ":localization_resource_pack",
     ],
+)
+
+# Dialog pairing and processing under data/stone_disappearance/function/dialog
+process_dialog(
+    name = "stone_disappearance_dialog_processed",
+    functions = glob([
+        "data/stone_disappearance/function/dialog/*.mcfunction",
+    ], allow_empty = True),
+    jsons = glob([
+        "data/stone_disappearance/function/dialog/*.json",
+    ], allow_empty = True),
 )

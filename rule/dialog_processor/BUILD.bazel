@@ -1,0 +1,12 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_binary(
+    name = "dialog_processor",
+    srcs = ["DialogProcessor.java"],
+    main_class = "DialogProcessor",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//rule/worker_api",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+    ],
+)
