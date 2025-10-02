@@ -188,7 +188,7 @@
   "moduleExtensions": {
     "//repo:minecraft_jar.bzl%minecraft": {
       "general": {
-        "bzlTransitiveDigest": "jFpx9iDpwOacNeBS1RUo8TSlyylV1faEYPiDnwn2ark=",
+        "bzlTransitiveDigest": "CJr5LQrXXNdVaxdBzLDThOIbJYtsbOcQicbPzSPr43k=",
         "usagesDigest": "D4KDy46Ry1TG+VTxYQtd5/LrVCz2cWgDjnVXZfj+pGw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

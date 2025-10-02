@@ -1,4 +1,5 @@
 load("@//rule:datapack.bzl", "datapack")
+load("@//rule:process_dialog.bzl", "process_dialog")
 load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
 
 pack_version = "1.0"
@@ -29,6 +30,30 @@ modrinth_dependency(
     version_id = "80LeoUFR",
 )
 
+# 检查是否存在 dialog 文件
+_dialog_functions = glob(
+    [
+        "data/highly_toxic_water/function/dialog/*.mcfunction",
+    ],
+    allow_empty = True,
+)
+
+_dialog_jsons = glob(
+    [
+        "data/highly_toxic_water/function/dialog/*.json",
+    ],
+    allow_empty = True,
+)
+
+# 基础函数文件（排除 dialog 和 enjoy 文件）
+_base_functions = glob(
+    include = ["data/highly_toxic_water/function/**/*.mcfunction"],
+    exclude = [
+        "data/highly_toxic_water/function/**/*.enjoy.mcfunction",
+        "data/highly_toxic_water/function/dialog/*.mcfunction",
+    ],
+)
+
 datapack(
     name = "highly-toxic-water",
     dialogs = glob(
@@ -36,9 +61,9 @@ datapack(
         allow_empty = True,
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    functions = glob(
-        include = ["data/highly_toxic_water/function/**/*.mcfunction"],
-        exclude = ["data/highly_toxic_water/function/**/*.enjoy.mcfunction"],
+    # 条件性地包含 dialog 处理结果
+    functions = _base_functions + (
+        [":highly_toxic_water_dialog_processed"] if _dialog_functions or _dialog_jsons else []
     ),
     functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
     minecraft_dialog_tags = glob(
@@ -62,7 +87,6 @@ alias(
 
 upload_modrinth(
     name = "upload_modrinth",
-    changelog = "NEWS.md",
     file = ":highly-toxic-water",
     file_name = "highly-toxic-water_v%s_1.20+.zip" % pack_version,
     game_versions = game_versions,
@@ -75,4 +99,12 @@ upload_modrinth(
     deps = [
         ":localization_resource_pack",
     ],
+)
+
+# Dialog pairing and processing under data/highly_toxic_water/function/dialog
+# 只有在存在 dialog 文件时才定义此规则
+process_dialog(
+    name = "highly_toxic_water_dialog_processed",
+    functions = _dialog_functions,
+    jsons = _dialog_jsons,
 )

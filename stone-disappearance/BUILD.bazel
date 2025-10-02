@@ -30,6 +30,30 @@ modrinth_dependency(
     version_id = "80LeoUFR",
 )
 
+# 检查是否存在 dialog 文件
+_dialog_functions = glob(
+    [
+        "data/stone_disappearance/function/dialog/*.mcfunction",
+    ],
+    allow_empty = True,
+)
+
+_dialog_jsons = glob(
+    [
+        "data/stone_disappearance/function/dialog/*.json",
+    ],
+    allow_empty = True,
+)
+
+# 基础函数文件（排除 dialog 和 enjoy 文件）
+_base_functions = glob(
+    include = ["data/stone_disappearance/function/**/*.mcfunction"],
+    exclude = [
+        "data/stone_disappearance/function/**/*.enjoy.mcfunction",
+        "data/stone_disappearance/function/dialog/*.mcfunction",
+    ],
+)
+
 datapack(
     name = "stone-disappearance",
     dialogs = glob(
@@ -37,14 +61,10 @@ datapack(
         allow_empty = True,
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    # Exclude dialog mcfunctions here; they will be provided via process_dialog
-    functions = glob(
-        include = ["data/stone_disappearance/function/**/*.mcfunction"],
-        exclude = [
-            "data/stone_disappearance/function/**/*.enjoy.mcfunction",
-            "data/stone_disappearance/function/dialog/*.mcfunction",
-        ],
-    ) + [":stone_disappearance_dialog_processed"],
+    # 条件性地包含 dialog 处理结果
+    functions = _base_functions + (
+        [":stone_disappearance_dialog_processed"] if _dialog_functions or _dialog_jsons else []
+    ),
     functions_expand = glob(["data/stone_disappearance/function/**/*.enjoy.mcfunction"]),
     minecraft_dialog_tags = glob(
         ["data/minecraft/tags/dialog/*.json"],
@@ -67,7 +87,6 @@ alias(
 
 upload_modrinth(
     name = "upload_modrinth",
-    changelog = "NEWS.md",
     file = ":stone-disappearance",
     file_name = "stone-disappearance_v%s_1.20+.zip" % pack_version,
     game_versions = game_versions,
@@ -83,12 +102,9 @@ upload_modrinth(
 )
 
 # Dialog pairing and processing under data/stone_disappearance/function/dialog
+# 只有在存在 dialog 文件时才定义此规则
 process_dialog(
     name = "stone_disappearance_dialog_processed",
-    functions = glob([
-        "data/stone_disappearance/function/dialog/*.mcfunction",
-    ], allow_empty = True),
-    jsons = glob([
-        "data/stone_disappearance/function/dialog/*.json",
-    ], allow_empty = True),
+    functions = _dialog_functions,
+    jsons = _dialog_jsons,
 )

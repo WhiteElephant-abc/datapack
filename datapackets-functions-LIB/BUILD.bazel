@@ -1,4 +1,5 @@
 load("@//rule:datapack.bzl", "datapack")
+load("@//rule:process_dialog.bzl", "process_dialog")
 load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup")
 
@@ -50,6 +51,37 @@ game_versions = [
     "1.21.8",
 ]
 
+modrinth_dependency(
+    name = "localization_resource_pack",
+    dependency_type = "required",
+    project_id = "3S0b1XES",
+    version_id = "80LeoUFR",
+)
+
+# 检查是否存在 dialog 文件
+_dialog_functions = glob(
+    [
+        "data/dfl/function/dialog/*.mcfunction",
+    ],
+    allow_empty = True,
+)
+
+_dialog_jsons = glob(
+    [
+        "data/dfl/function/dialog/*.json",
+    ],
+    allow_empty = True,
+)
+
+# 基础函数文件（排除 dialog 和 enjoy 文件）
+_base_functions = glob(
+    include = ["data/dfl/function/**/*.mcfunction"],
+    exclude = [
+        "data/dfl/function/**/*.enjoy.mcfunction",
+        "data/dfl/function/dialog/*.mcfunction",
+    ],
+)
+
 datapack(
     name = "datapackets-functions-LIB",
     dialogs = glob(
@@ -57,9 +89,9 @@ datapack(
         allow_empty = True,
     ),
     function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    functions = glob(
-        include = ["data/dfl/function/**/*.mcfunction"],
-        exclude = ["data/dfl/function/**/*.enjoy.mcfunction"],
+    # 条件性地包含 dialog 处理结果
+    functions = _base_functions + (
+        [":dfl_dialog_processed"] if _dialog_functions or _dialog_jsons else []
     ),
     functions_expand = glob(["data/dfl/function/**/*.enjoy.mcfunction"]),
     minecraft_dialog_tags = glob(
@@ -90,13 +122,6 @@ alias(
     actual = ":datapackets-functions-LIB_server",
 )
 
-modrinth_dependency(
-    name = "localization_resource_pack",
-    dependency_type = "required",
-    project_id = "3S0b1XES",
-    version_id = "80LeoUFR",
-)
-
 upload_modrinth(
     name = "upload_modrinth",
     changelog = "NEWS.md",
@@ -112,4 +137,11 @@ upload_modrinth(
     deps = [
         ":localization_resource_pack",
     ],
+)
+
+# 条件性 dialog 处理规则
+process_dialog(
+    name = "dfl_dialog_processed",
+    functions = _dialog_functions,
+    jsons = _dialog_jsons,
 )
