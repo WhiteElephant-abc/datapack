@@ -36,6 +36,17 @@ def _bytes_to_base64(bytes):
     return "".join(result)
 
 def hex_sha1_to_sri(hex_str):
+    """将十六进制 SHA1 哈希值转换为 SRI（子资源完整性）格式。
+    
+    Args:
+      hex_str: 表示 SHA1 哈希值的十六进制字符串（40个字符）。
+        
+    Returns:
+      SRI 格式的字符串（例如："sha1-base64编码值"）。
+        
+    Raises:
+      fail: 如果十六进制字符串不是正好 20 字节（40个十六进制字符）。
+    """
     bytes = _hex_to_bytes(hex_str)
     if len(bytes) != 20:
         fail("SHA1 must be 20 bytes (40 hex chars)")

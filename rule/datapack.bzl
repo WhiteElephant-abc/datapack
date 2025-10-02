@@ -1,3 +1,15 @@
+"""Minecraft 数据包构建规则。
+
+此模块定义了用于构建 Minecraft 数据包的 Bazel 宏和规则，包括：
+- 函数文件的扩展和处理
+- JSON 文件的压缩处理
+- 对话系统的处理
+- 数据包的打包和部署
+- 开发服务器的启动配置
+
+主要提供 datapack 宏，用于定义完整的数据包构建流程。
+"""
+
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
 load("@//rule:process_json.bzl", "process_json")
 load("@//rule:process_mcfunction.bzl", "process_mcfunction")

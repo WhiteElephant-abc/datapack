@@ -1,3 +1,15 @@
+"""Enjoy 模板扩展规则。
+
+此模块定义了用于扩展 .enjoy.mcfunction 模板文件的 Bazel 规则。
+主要功能包括：
+- 处理 .enjoy.mcfunction 模板文件
+- 支持宏定义和替换
+- 包含文件的处理
+- 生成最终的 .mcfunction 文件
+
+提供 expand_enjoy 规则，用于将模板文件转换为标准的 Minecraft 函数文件。
+"""
+
 def _expand_macros(pair):
     return "-D%s=%s" % pair
 

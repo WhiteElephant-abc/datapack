@@ -1,3 +1,16 @@
+"""Minecraft 函数文件处理规则。
+
+此模块定义了用于处理 .mcfunction 文件的 Bazel 规则。
+主要功能包括：
+- 处理 .mcfunction 文件的行连续符
+- 支持数据包 ID 配置
+- 自动处理函数文件路径映射
+- 使用 Worker 协议提高构建性能
+
+提供 process_mcfunction 规则，用于在构建过程中预处理 Minecraft 函数文件，
+确保函数文件格式正确并优化构建性能。
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@rules_pkg//pkg:providers.bzl", "PackageFilesInfo")
 

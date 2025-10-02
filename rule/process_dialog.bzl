@@ -1,3 +1,16 @@
+"""对话系统处理规则。
+
+此模块定义了用于处理 Minecraft 对话系统的 Bazel 规则。
+主要功能包括：
+- 配对处理 .mcfunction 和 .json 对话文件
+- 生成 $dialog 命令
+- 支持未配对的 mcfunction 文件直接传递
+- 忽略仅有 JSON 的文件
+
+提供 process_dialog 规则，用于在构建过程中处理对话文件对，
+将对话配置转换为可执行的 Minecraft 函数。
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
 def _owner(file):

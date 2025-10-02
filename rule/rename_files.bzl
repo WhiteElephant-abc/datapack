@@ -1,3 +1,16 @@
+"""文件重命名规则。
+
+此模块定义了用于重命名文件的 Bazel 规则。
+主要功能包括：
+- 重命名处理过的 mcfunction 文件
+- 移除文件名中的处理标记（如 _processed、.raw）
+- 支持批量文件重命名操作
+- 保持文件内容不变，仅修改文件名
+
+提供 rename_files 规则，用于在构建过程中清理文件名，
+将临时处理文件名恢复为标准的 Minecraft 函数文件名。
+"""
+
 def _rename_files_impl(ctx):
     """Implementation of the rename_files rule."""
     output_files = []

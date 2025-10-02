@@ -1,3 +1,14 @@
+"""JAR 文件提取规则。
+
+此模块定义了用于从 JAR 或 ZIP 归档文件中提取单个文件的 Bazel 规则。
+主要功能包括：
+- 从 JAR/ZIP 文件中提取指定路径的文件
+- 支持自定义输出文件名
+- 提供进度信息显示
+
+提供 extract_jar 规则，用于在构建过程中从归档文件中提取所需的文件。
+"""
+
 def _extract_jar_impl(ctx):
     output_file = ctx.actions.declare_file(ctx.attr.filename)
     args = ctx.actions.args()

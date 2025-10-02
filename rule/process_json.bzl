@@ -1,3 +1,16 @@
+"""JSON 文件压缩处理规则。
+
+此模块定义了用于压缩 JSON 文件的 Bazel 规则。
+主要功能包括：
+- 压缩 JSON 文件为单行格式
+- 支持批量处理多个 JSON 文件
+- 提供包文件信息用于后续打包
+- 使用 Worker 协议提高构建性能
+
+提供 process_json 规则，用于在构建过程中压缩 JSON 文件，
+减少数据包的文件大小并提高加载性能。
+"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@rules_pkg//pkg:providers.bzl", "PackageFilesInfo")
 

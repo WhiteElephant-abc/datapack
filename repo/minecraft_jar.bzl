@@ -1,3 +1,14 @@
+"""Minecraft JAR 下载和管理的 Bazel 模块扩展。
+
+此模块提供了下载和管理 Minecraft 相关文件的功能，包括：
+- Minecraft 客户端和服务器 JAR 文件
+- 依赖库文件
+- 映射文件（用于反混淆）
+- 游戏资源文件
+
+使用此模块可以在 Bazel 构建中自动获取指定版本的 Minecraft 文件。
+"""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 load("//private:bytes_util.bzl", "hex_sha1_to_sri")
 
