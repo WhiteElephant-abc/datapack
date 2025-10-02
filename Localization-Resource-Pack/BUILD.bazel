@@ -62,8 +62,8 @@ pkg_zip(
     srcs = [
         ":README.md",
         ":localization_resource_pack_assets",
-        ":pack.png",
         ":pack.mcmeta",
+        ":pack.png",
     ],
 )
 

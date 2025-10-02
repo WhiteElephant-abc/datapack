@@ -1,9 +1,9 @@
 load("@//rule:expand_enjoy.bzl", "expand_enjoy")
+load("@//rule:process_json.bzl", "process_json")
 load("@//rule:process_mcfunction.bzl", "process_mcfunction")
 load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-load("@//rule:process_json.bzl", "process_json")
 
 def _datapack_impl(
         name,
