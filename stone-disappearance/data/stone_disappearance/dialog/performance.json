@@ -1,0 +1,20 @@
+{
+    "type": "confirmation",
+    "title": "石头消失性能设置",
+    "no": {
+        "label": "取消",
+        "tooltip": "放弃当前更改"
+    },
+    "yes": {
+        "label": "保存并退出",
+        "tooltip": "保存当前设置"
+    },
+    "inputs": [
+        {
+            "type": "boolean",
+            "label": "将石头替换为玻璃而不是直接清除",
+            "key": "overworld_block",
+            "initial": true
+        }
+    ]
+}
