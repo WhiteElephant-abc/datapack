@@ -6,18 +6,18 @@
 
     "tick.ban.dfl.ban":"您已被此服务器软封禁",
     "tick.ban.dfl.from":"通过数据包",
-    
+
     "tick.show.entity.dfl.entity.num":"实体数量：",
-    
+
     "tick.kill.dfl.too.many": "实体过多，已清除",
     "tick.kill.dfl.entity.num": "个实体",
     "tick.kill.dfl.need.tag": "想要防止实体被清除可以为实体",
     "tick.kill.dfl.add": "添加",
     "tick.kill.dfl.tag": "标签",
-    
+
     "redstone.kill.item.dfl.entity.clear": "清除了",
     "redstone.kill.item.dfl.entity.item": "个掉落物",
-    
+
     "redstone.show.entity.dfl.entity.entity": "实体数量：",
     "redstone.show.entity.dfl.entity.other.entity": "非玩家实体数量：",
     "redstone.show.entity.dfl.entity.item": "掉落物数量：",
@@ -31,7 +31,13 @@
     "dialog.stone_disappearance.options.advanced.tooltip": "自定义数据包的一些行为",
     "dialog.stone_disappearance.options.about.label": "关于",
     "dialog.stone_disappearance.options.about.tooltip": "查看数据包的一些相关信息",
-    
+
+    "dialog.stone_disappearance.performance.title": "石头消失性能设置",
+    "dialog.stone_disappearance.performance.replace_with_glass": "将石头替换为玻璃而不是直接清除",
+    "dialog.stone_disappearance.performance.clear_distance": "单位为区块，清除区块的最远距离",
+    "dialog.stone_disappearance.performance.wait_ticks": "每次清除后等待的tick数",
+    "dialog.stone_disappearance.performance.fill_falling_block": "将可下落的方块替换为玻璃",
+
     "dialog.stone_disappearance.advanced.title": "石头消失高级设置",
     "dialog.stone_disappearance.advanced.warning": "不正确的设置可能导致错误！",
     "dialog.stone_disappearance.advanced.common.label": "通用",

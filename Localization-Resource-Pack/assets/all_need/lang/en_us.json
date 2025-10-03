@@ -11,7 +11,13 @@
     "dialog.white.elephant.new_player.line1": "%s datapack has been loaded into this world!",
     "dialog.white.elephant.new_player.author": "Author: ",
     "dialog.white.elephant.new_player.tech_support": "Technical Support: ",
-    "dialog.white.elephant.new_player.license": "This datapack is licensed under the %s.",
+    "dialog.white.elephant.new_player.license": "This datapack is open source under %s license",
     "dialog.white.elephant.new_player.view_license": "View License",
-    "dialog.white.elephant.options.admin_only": "Only administrators can change the settings!"
+    "dialog.white.elephant.options.admin_only": "Only administrators can modify settings!",
+    
+    "dialog.white.elephant.common.cancel": "Cancel",
+    "dialog.white.elephant.common.save_and_exit": "Save and Exit",
+    "dialog.white.elephant.common.cancel_tooltip": "Discard current changes",
+    "dialog.white.elephant.common.save_tooltip": "Save current settings",
+    "dialog.white.elephant.common.technical_limitation": "Due to technical limitations, the settings shown here are all default values"
 }

@@ -31,7 +31,13 @@
     "dialog.stone_disappearance.options.advanced.tooltip": "Customize some behaviors of the data pack",
     "dialog.stone_disappearance.options.about.label": "About",
     "dialog.stone_disappearance.options.about.tooltip": "View information about this data pack",
-    
+
+    "dialog.stone_disappearance.performance.title": "Stone Disappearance Performance Settings",
+    "dialog.stone_disappearance.performance.replace_with_glass": "Replace stone with glass instead of clearing directly",
+    "dialog.stone_disappearance.performance.clear_distance": "Maximum distance in chunks to clear blocks",
+    "dialog.stone_disappearance.performance.wait_ticks": "Ticks to wait after each clearing",
+    "dialog.stone_disappearance.performance.fill_falling_block": "Replace falling blocks with glass",
+
     "dialog.stone_disappearance.advanced.title": "Stone Disappearance Advanced Settings",
     "dialog.stone_disappearance.advanced.warning": "Incorrect settings may cause errors!",
     "dialog.stone_disappearance.advanced.common.label": "Common",
