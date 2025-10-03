@@ -83,7 +83,7 @@ _base_functions = glob(
 )
 
 datapack(
-    name = "datapackets-functions-LIB",
+    name = "datapack-function-library",
     dialogs = glob(
         ["data/dfl/dialog/*.json"],
         allow_empty = True,
@@ -111,21 +111,21 @@ datapack(
 pkg_filegroup(
     name = "dfl",
     srcs = [
-        ":datapackets-functions-LIB_pack_dialog",
-        ":datapackets-functions-LIB_pack_function",
+        ":datapack-function-library_pack_dialog",
+        ":datapack-function-library_pack_function",
     ],
     visibility = ["//visibility:public"],
 )
 
 alias(
     name = "server",
-    actual = ":datapackets-functions-LIB_server",
+    actual = ":datapack-function-library_server",
 )
 
 upload_modrinth(
     name = "upload_modrinth",
     changelog = "NEWS.md",
-    file = ":datapackets-functions-LIB",
+    file = ":datapack-function-library",
     file_name = "datapackets functions LIB_v%s_1.13-1.21.x.zip" % pack_version,
     game_versions = game_versions,
     loaders = ["datapack"],

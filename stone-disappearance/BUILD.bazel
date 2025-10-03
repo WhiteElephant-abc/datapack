@@ -75,7 +75,7 @@ datapack(
         "README.md",
         "pack.png",
         "//:license_gpl",
-        "//datapackets-functions-LIB:dfl",
+        "//datapack-function-library:dfl",
         "@unif-logger//:unif-logger",
     ],
 )

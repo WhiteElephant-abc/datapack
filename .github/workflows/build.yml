@@ -17,7 +17,7 @@ jobs:
                   bazel build \
                     --verbose_failures \
                     //highly-toxic-water \
-                    //datapackets-functions-LIB \
+                    //datapack-function-library \
                     //Localization-Resource-Pack \
                     //stone-disappearance
             - name: capture build artifacts
@@ -26,6 +26,6 @@ jobs:
                   name: artifacts
                   path: |
                       bazel-bin/highly-toxic-water/highly-toxic-water.zip
-                      bazel-bin/datapackets-functions-LIB/datapackets-functions-LIB.zip
+                      bazel-bin/datapack-function-library/datapack-function-library.zip
                       bazel-bin/Localization-Resource-Pack/Localization-Resource-Pack.zip
                       bazel-bin/stone-disappearance/stone-disappearance.zip
