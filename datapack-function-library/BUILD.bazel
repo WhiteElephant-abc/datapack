@@ -1,4 +1,5 @@
 load("@//rule:datapack.bzl", "MINECRAFT_VERSIONS_1_13_TO_1_21", "complete_datapack_config")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup")
 
 pack_version = "4.4"
 
@@ -20,8 +21,11 @@ complete_datapack_config(
 )
 
 # 创建只包含dfl命名空间的目标，供其他数据包依赖
-alias(
+pkg_filegroup(
     name = "dfl",
-    actual = ":datapack-function-library_components",
+    srcs = [
+        ":datapack-function-library_pack_function",
+        ":datapack-function-library_pack_dialog",
+    ],
     visibility = ["//visibility:public"],
 )
