@@ -30,7 +30,7 @@ execute if score @n dfl_enable matches 1
 
 **Functions with `{xx:"xx"}` are [macro functions](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F). Pass parameters via `{<param_name>:"<content>"}` (default parameters in usage are tested/recommended values). Parameter names (e.g., `num`) appear as `{num}` in descriptions. Format follows examples unless specified otherwise.**
 
-Report issues [here](https://github.com/WhiteElephant-abc/datapack-function-library/issues/new/choose).
+Report issues [here](https://github.com/WhiteElephant-abc/datapack/issues/new/choose).
 
 # Function Documentation
 
@@ -89,7 +89,7 @@ Function: `/function dfl:start/show/health_list`
 - Shows health bars in Tab list
 - Effect:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 1](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/Scoreboard_Display_List_Hearts.gif?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 1](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/Scoreboard_Display_List_Hearts.gif?raw=true)
 
 ### Quick Team Setup
 
@@ -115,7 +115,7 @@ Function: `/function dfl:tick/ban`
 
 Effect:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 2](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.ban.png?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 2](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.ban.png?raw=true)
 
 ### Beacon Elytra Launch
 
@@ -158,7 +158,7 @@ Function: `/function dfl:tick/kill {num:"1000"}`
 - Creates `dfl_scoreboard` objective
 - Chat notification:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 3](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.kill.png?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 3](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.kill.png?raw=true)
 
 ### Clear High-Density Entities
 
@@ -189,7 +189,7 @@ Prerequisite: `/function dfl:lib/entity`
 
 Effect:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 4](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.show_entity.png?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 4](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.show_entity.png?raw=true)
 
 ### Disable Friendly Fire & Collisions
 
@@ -300,7 +300,7 @@ Function: `/function dfl:redstone/kill_item`
 
 Effect:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 5](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.kill_item.png?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 5](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.kill_item.png?raw=true)
 
 ### Display Entity Stats
 
@@ -316,7 +316,7 @@ Prerequisites:
 
 Effect:
 
-![[DFL] Datapack Function Library (datapackets functions LIB)-Image 6](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.show_entity.png?raw=true)
+![[DFL] Datapack Function Library (datapack function library)-Image 6](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.show_entity.png?raw=true)
 
 ## Lib
 

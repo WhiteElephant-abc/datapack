@@ -1,4 +1,4 @@
-**Click [here](https://github.com/WhiteElephant-abc/datapack-function-library/blob/main/README-en_us.md) to view the English version.**
+**Click [here](https://github.com/WhiteElephant-abc/datapack/blob/main/datapack-function-library/README-en_us.md) to view the English version.**
 
 # 前言
 
@@ -32,7 +32,7 @@ execute if score @n dfl_enable matches 1
 
 **有些函数用法后带有 {xx:"xx"} 这些函数为[宏函数](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F)，在使用时需通过 {<参数名>:"<内容>"} 传入参数（用法中的参数为默认参数，为作者开发时测试过的推荐参数，或作者测试使用的参数），参数名（如 num）在正文中表现为：{num}。参数格式可参考函数用法，特殊格式会说明。**
 
-如果遇到任何问题，请点击 [这里](https://github.com/WhiteElephant-abc/datapack-function-library/issues/new/choose) 反馈。
+如果遇到任何问题，请点击 [这里](https://github.com/WhiteElephant-abc/datapack/issues/new/choose) 反馈。
 
 # 函数说明
 
@@ -91,7 +91,7 @@ execute if score @n dfl_enable matches 1
 - 会在 Tab 栏（玩家列表栏）显示每名玩家的血条。
 - 效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第1张图片](https://zh.minecraft.wiki/images/Scoreboard_Display_List_Hearts.gif)
+![[DFL]数据包函数支持库 (datapack function library)-第1张图片](https://zh.minecraft.wiki/images/Scoreboard_Display_List_Hearts.gif)
 
 ### 快速新建队伍
 
@@ -118,7 +118,7 @@ execute if score @n dfl_enable matches 1
 
 效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第2张图片](https://i.mcmod.cn/editor/upload/20241124/1732460069_829263_PTUj.webp)
+![[DFL]数据包函数支持库 (datapack function library)-第2张图片](https://i.mcmod.cn/editor/upload/20241124/1732460069_829263_PTUj.webp)
 
 ### 信标鞘翅起飞
 
@@ -163,7 +163,7 @@ execute if score @n dfl_enable matches 1
 - 创建名为 dfl_scoreboard 的记分项。
 - 执行后会在聊天栏提示，效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第3张图片](https://i.mcmod.cn/editor/upload/20241128/1732782965_829263_DgBT.webp)
+![[DFL]数据包函数支持库 (datapack function library)-第3张图片](https://i.mcmod.cn/editor/upload/20241128/1732782965_829263_DgBT.webp)
 
 ### 实体密度过大清除实体
 
@@ -195,7 +195,7 @@ execute if score @n dfl_enable matches 1
 - 在玩家动作栏（快捷栏上方）显示实时实体数量。
 - 效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第4张图片](https://i.mcmod.cn/editor/upload/20241124/1732462874_829263_RoxS.webp)
+![[DFL]数据包函数支持库 (datapack function library)-第4张图片](https://i.mcmod.cn/editor/upload/20241124/1732462874_829263_RoxS.webp)
 
 ### 关闭玩家友伤及碰撞
 
@@ -308,7 +308,7 @@ execute if score @n dfl_enable matches 1
 - 不会清除带有 need 标签的掉落物。
 - 效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第5张图片](https://i.mcmod.cn/editor/upload/20241125/1732464116_829263_BxRx.webp)
+![[DFL]数据包函数支持库 (datapack function library)-第5张图片](https://i.mcmod.cn/editor/upload/20241125/1732464116_829263_BxRx.webp)
 
 ### 显示实体数量信息
 
@@ -324,7 +324,7 @@ execute if score @n dfl_enable matches 1
 
 此函数效果如下：
 
-![[DFL]数据包函数支持库 (datapackets functions LIB)-第6张图片](https://i.mcmod.cn/editor/upload/20241125/1732464350_829263_dYNP.webp)
+![[DFL]数据包函数支持库 (datapack function library)-第6张图片](https://i.mcmod.cn/editor/upload/20241125/1732464350_829263_dYNP.webp)
 
 ## Lib
 
