@@ -1,0 +1,20 @@
+## 设置重置函数
+
+# 重置设置
+data modify storage stone_disappearance:data settings set value \
+    {\
+        overworld_block:"glass",\
+        nether_block:"glass",\
+        end_block:"glass",\
+\
+        overworld_min:-64,\
+        overworld_max:319,\
+        nether_min:0,\
+        nether_max:255,\
+        end_min:0,\
+        end_max:255\
+\
+        \
+    }
+# 标记为已重置
+scoreboard players set loaded sd.settings 1
