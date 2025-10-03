@@ -12,30 +12,7 @@
         {
             "label": "Bazel Build",
             "type": "shell",
-            "command": "bazelisk build @//Localization-Resource-Pack && bazelisk build @//${input:projectName} & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
-            "args": [],
-            "options": {
-                "shell": {
-                    "executable": "cmd.exe",
-                    "args": [
-                        "/d",
-                        "/c"
-                    ]
-                }
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Bazel Run Server",
-            "type": "shell",
-            "command": "bazelisk build @//Localization-Resource-Pack && bazelisk run //${input:projectName}:server & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "command": "bazelisk build //Localization-Resource-Pack && bazelisk build //${input:projectName} & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
             "args": [],
             "options": {
                 "shell": {
@@ -59,9 +36,32 @@
             "problemMatcher": []
         },
         {
+            "label": "Bazel Run Server",
+            "type": "shell",
+            "command": "bazelisk build //Localization-Resource-Pack && bazelisk run //${input:projectName}:server & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "args": [],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [
+                        "/d",
+                        "/c"
+                    ]
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Bazel Upload Modrinth",
             "type": "shell",
-            "command": "bazelisk build @//Localization-Resource-Pack && bazelisk run //${input:projectName}:upload_modrinth & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
+            "command": "bazelisk build //Localization-Resource-Pack && bazelisk run //${input:projectName}:upload_modrinth & if exist .bazel\\datapack rmdir /s /q .bazel\\datapack",
             "args": [],
             "options": {
                 "shell": {
