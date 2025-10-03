@@ -7,17 +7,17 @@ scoreboard players add x.a temp.chunk 16
 scoreboard players add x.b temp.chunk 16
 
 # 坐标写入nbt
-execute store result storage stone_disappearance:temp.chunk a_x int 1 run \
+execute store result storage stone_disappearance:data temp.chunk.a_x int 1 run \
     scoreboard players get x.a temp.chunk
-execute store result storage stone_disappearance:temp.chunk a_z int 1 run \
+execute store result storage stone_disappearance:data temp.chunk.a_z int 1 run \
     scoreboard players get z.a temp.chunk
-execute store result storage stone_disappearance:temp.chunk b_x int 1 run \
+execute store result storage stone_disappearance:data temp.chunk.b_x int 1 run \
     scoreboard players get x.b temp.chunk
-execute store result storage stone_disappearance:temp.chunk b_z int 1 run \
+execute store result storage stone_disappearance:data temp.chunk.b_z int 1 run \
     scoreboard players get z.b temp.chunk
 
 # 未加载则退出
-execute store success score loaded temp.chunk.child run function stone_disappearance:new/child_if_loaded with storage stone_disappearance:temp.chunk
+execute store success score loaded temp.chunk.child run function stone_disappearance:new/child_if_loaded with storage stone_disappearance:data temp.chunk
 execute if score loaded temp.chunk.child matches 0 run \
     function #unif.logger:logger/v1/warn \
     {"msg":'loaded在递归x+中检测失败',"namespace":"Stone-Disappearance"}
@@ -27,7 +27,7 @@ execute if score loaded temp.chunk.child matches 0 run return 1
 
 # 填充
 execute store success score success temp.chunk run \
-    function stone_disappearance:new/fill with storage stone_disappearance:temp.chunk
+    function stone_disappearance:new/fill with storage stone_disappearance:data temp.chunk
 
 # 成功后退出
 execute if score success temp.chunk matches 1 run return 1
