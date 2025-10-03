@@ -33,8 +33,8 @@
     "dialog.stone_disappearance.options.about.tooltip": "View information about this data pack",
 
     "dialog.stone_disappearance.performance.title": "Stone Disappearance Performance Settings",
-    "dialog.stone_disappearance.performance.replace_with_glass": "Replace stone with glass instead of clearing directly",
-    "dialog.stone_disappearance.performance.clear_distance": "Maximum distance in chunks to clear blocks",
+    "dialog.stone_disappearance.performance.replace_with_glass": "Replace stone with glass instead of air",
+    "dialog.stone_disappearance.performance.clear_distance": "Max clear distance in chunks",
     "dialog.stone_disappearance.performance.wait_ticks": "Ticks to wait after each clearing",
     "dialog.stone_disappearance.performance.fill_falling_block": "Replace falling blocks with glass",
 
@@ -50,9 +50,9 @@
     "dialog.stone_disappearance.advanced.end.tooltip": "These settings only apply to the end",
 
     "dialog.stone_disappearance.advanced_common.title": "Stone Disappearance Advanced Settings: Common",
-    "dialog.stone_disappearance.advanced_common.success_num": "The number of blocks cleared at one time is considered a successful cleanup",
+    "dialog.stone_disappearance.advanced_common.success_num": "Min blocks for a successful clear",
     "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Block used to replace falling blocks",
-    "dialog.stone_disappearance.advanced_common.tick_fill": "Real-time clearing of stones in a 3x3x3 area near the player",
+    "dialog.stone_disappearance.advanced_common.tick_fill": "Continuously clear a 3x3x3 area around the player",
     "dialog.stone_disappearance.advanced_overworld.title": "Stone Disappearance Advanced Settings: Overworld",
     "dialog.stone_disappearance.advanced.replace_stone_with": "Replace stone with:",
     "dialog.stone_disappearance.advanced_overworld.min": "Overworld Min",
