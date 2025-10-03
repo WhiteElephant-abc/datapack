@@ -65,6 +65,7 @@ MINECRAFT_VERSIONS_1_13_TO_1_21 = [
     "1.21.6",
     "1.21.7",
     "1.21.8",
+    "1.21.9",
 ]
 
 MINECRAFT_VERSIONS_1_20_PLUS = [
@@ -84,14 +85,15 @@ MINECRAFT_VERSIONS_1_20_PLUS = [
     "1.21.6",
     "1.21.7",
     "1.21.8",
+    "1.21.9",
 ]
 
 def datapack_functions(pack_id):
     """生成数据包函数文件的 glob 模式。
-    
+
     Args:
         pack_id: 数据包 ID
-        
+
     Returns:
         包含基础函数和扩展函数的配置字典
     """
@@ -103,10 +105,10 @@ def datapack_functions(pack_id):
 
 def datapack_standard_files(pack_id):
     """生成数据包的标准文件 glob 模式。
-    
+
     Args:
         pack_id: 数据包 ID
-        
+
     Returns:
         包含各种标准文件的配置字典
     """
@@ -118,7 +120,7 @@ def datapack_standard_files(pack_id):
 
 def standard_localization_dependency():
     """获取标准的本地化资源包依赖配置。
-    
+
     Returns:
         本地化依赖的配置字典
     """
@@ -126,7 +128,6 @@ def standard_localization_dependency():
         "name": "localization_resource_pack",
         "dependency_type": "required",
         "project_id": "3S0b1XES",
-        "version_id": "80LeoUFR",
     }
 
 def _datapack_impl(
@@ -275,7 +276,7 @@ def datapack_modrinth_upload(
         changelog = "NEWS.md",
         deps = None):
     """创建 Modrinth 上传配置的简化宏。
-    
+
     Args:
         name: 上传目标的名称
         datapack_target: 数据包目标（如 ":my-datapack"）
@@ -290,10 +291,10 @@ def datapack_modrinth_upload(
     """
     if game_versions == None:
         game_versions = MINECRAFT_VERSIONS_1_20_PLUS
-    
+
     if deps == None:
         deps = [":localization_resource_pack"]
-    
+
     # 确定游戏版本范围字符串
     if game_versions == MINECRAFT_VERSIONS_1_13_TO_1_21:
         game_range = "1.13-1.21.x"
@@ -302,7 +303,7 @@ def datapack_modrinth_upload(
     else:
         # 自定义版本列表，使用首尾版本
         game_range = "%s-%s" % (game_versions[0], game_versions[-1])
-    
+
     # 设置默认模板
     if file_name_template == None:
         file_name_template = "%s_v%s_%s.zip" % (name, pack_version, game_range)
@@ -312,7 +313,7 @@ def datapack_modrinth_upload(
             version = pack_version,
             game_range = game_range,
         )
-    
+
     if version_name_template == None:
         version_name_template = "[data pack] %s_v%s_%s" % (name, pack_version, game_range)
     else:
@@ -321,7 +322,7 @@ def datapack_modrinth_upload(
             version = pack_version,
             game_range = game_range,
         )
-    
+
     upload_modrinth(
         name = "upload_modrinth",
         changelog = changelog,
@@ -338,23 +339,23 @@ def datapack_modrinth_upload(
     )
 
 def complete_datapack_config(
-    pack_id,
-    pack_version,
-    target_name = None,
-    game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
-    modrinth_project_id = None,
-    changelog = None,
-    version_type = "release",
-    include_localization_dependency = True,
-    **kwargs):
+        pack_id,
+        pack_version,
+        target_name = None,
+        game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
+        modrinth_project_id = None,
+        changelog = None,
+        version_type = "release",
+        modrinth_deps = [],
+        include_localization_dependency = True,
+        **kwargs):
     """完整的数据包配置宏，包含所有常用设置。
-    
+
     这个宏会生成完整的数据包配置，包括：
     - 数据包规则
     - 服务器别名
     - Modrinth 上传配置（可选）
-    - 本地化依赖（可选）
-    
+
     Args:
         pack_id: 命名空间 ID
         pack_version: 数据包版本
@@ -363,24 +364,32 @@ def complete_datapack_config(
         modrinth_project_id: Modrinth 项目 ID
         changelog: 更新日志
         version_type: 版本类型 (release, beta, alpha)
-        include_localization_dependency: 是否包含本地化依赖
+        modrinth_deps: Modrinth 依赖字典列表
+        include_localization_dependency: 是否自动包含本地化资源包作为依赖
         **kwargs: 传递给 datapack 规则的其他参数
     """
+
     # 确定目标名称，默认使用当前包名称
     if target_name == None:
         target_name = native.package_name().split("/")[-1]
-    
+
     # 获取函数文件配置
     func_config = datapack_functions(pack_id)
-    
+
     # 获取标准文件配置
     std_files = datapack_standard_files(pack_id)
-    
-    # 创建本地化依赖（如果需要）
+
+    # 准备 Modrinth 依赖列表
+    effective_modrinth_deps = list(modrinth_deps)
     if include_localization_dependency:
-        loc_dep = standard_localization_dependency()
-        modrinth_dependency(**loc_dep)
-    
+        effective_modrinth_deps.append(standard_localization_dependency())
+
+    # 创建 Modrinth 依赖
+    dep_labels = []
+    for dep in effective_modrinth_deps:
+        modrinth_dependency(**dep)
+        dep_labels.append(":" + dep["name"])
+
     # 创建数据包
     datapack(
         name = target_name,
@@ -395,13 +404,13 @@ def complete_datapack_config(
         minecraft_dialog_tags = native.glob(std_files["minecraft_dialog_tags_pattern"], allow_empty = True),
         **kwargs
     )
-    
+
     # 创建服务器别名
     native.alias(
         name = "server",
         actual = ":%s_server" % target_name,
     )
-    
+
     # 创建 Modrinth 上传配置（如果提供了项目 ID）
     if modrinth_project_id:
         datapack_modrinth_upload(
@@ -412,4 +421,5 @@ def complete_datapack_config(
             game_versions = game_versions,
             version_type = version_type,
             changelog = changelog,
+            deps = dep_labels,
         )
