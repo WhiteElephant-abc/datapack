@@ -340,6 +340,7 @@ def datapack_modrinth_upload(
 def complete_datapack_config(
     pack_id,
     pack_version,
+    target_name = None,
     game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
     modrinth_project_id = None,
     changelog = None,
@@ -355,8 +356,9 @@ def complete_datapack_config(
     - 本地化依赖（可选）
     
     Args:
-        pack_id: 数据包 ID
+        pack_id: 命名空间 ID
         pack_version: 数据包版本
+        target_name: 主要目标名称，默认为当前包名称
         game_versions: 支持的游戏版本列表
         modrinth_project_id: Modrinth 项目 ID
         changelog: 更新日志
@@ -364,6 +366,10 @@ def complete_datapack_config(
         include_localization_dependency: 是否包含本地化依赖
         **kwargs: 传递给 datapack 规则的其他参数
     """
+    # 确定目标名称，默认使用当前包名称
+    if target_name == None:
+        target_name = native.package_name().split("/")[-1]
+    
     # 获取函数文件配置
     func_config = datapack_functions(pack_id)
     
@@ -377,7 +383,7 @@ def complete_datapack_config(
     
     # 创建数据包
     datapack(
-        name = pack_id,
+        name = target_name,
         pack_id = pack_id,
         functions = native.glob(
             include = func_config["functions_include"],
@@ -393,14 +399,14 @@ def complete_datapack_config(
     # 创建服务器别名
     native.alias(
         name = "server",
-        actual = ":%s_server" % pack_id,
+        actual = ":%s_server" % target_name,
     )
     
     # 创建 Modrinth 上传配置（如果提供了项目 ID）
     if modrinth_project_id:
         datapack_modrinth_upload(
-            name = pack_id,
-            datapack_target = ":" + pack_id,
+            name = target_name,
+            datapack_target = ":" + target_name,
             pack_version = pack_version,
             project_id = modrinth_project_id,
             game_versions = game_versions,

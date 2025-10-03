@@ -2,6 +2,7 @@ load("@//rule:datapack.bzl", "MINECRAFT_VERSIONS_1_13_TO_1_21", "complete_datapa
 
 pack_version = "4.4"
 
+# 主要的数据包配置，目标名称为包名称
 complete_datapack_config(
     changelog = "NEWS.md",
     game_versions = MINECRAFT_VERSIONS_1_13_TO_1_21,
@@ -16,4 +17,11 @@ complete_datapack_config(
         "pack.png",
         "@unif-logger//:unif-logger",
     ],
+)
+
+# 创建只包含dfl命名空间的目标，供其他数据包依赖
+alias(
+    name = "dfl",
+    actual = ":datapack-function-library_components",
+    visibility = ["//visibility:public"],
 )
