@@ -46,8 +46,14 @@
       }
     },
     {
-      "label": "关于",
-      "tooltip": "查看数据包的一些相关信息",
+      "label": {
+        "translate": "dialog.stone_disappearance.options.about.label",
+        "fallback": "关于"
+      },
+      "tooltip": {
+        "translate": "dialog.stone_disappearance.options.about.tooltip",
+        "fallback": "查看数据包的一些相关信息"
+      },
       "action": {
         "type": "show_dialog",
         "dialog": "stone_disappearance:about"
