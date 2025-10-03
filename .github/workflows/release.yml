@@ -64,8 +64,10 @@ jobs:
       - name: Find build artifact
         id: find_artifact
         run: |
+          # Get bazel-bin path
+          BAZEL_BIN_PATH=$(bazel info bazel-bin)
           # Find the built zip file
-          ARTIFACT_PATH=$(find bazel-bin/${{ steps.extract_tag.outputs.project_name }} -name "*.zip" | head -1)
+          ARTIFACT_PATH=$(find $BAZEL_BIN_PATH/${{ steps.extract_tag.outputs.project_name }} -name "*.zip" | head -1)
           if [ -z "$ARTIFACT_PATH" ]; then
             echo "Error: No zip file found for project ${{ steps.extract_tag.outputs.project_name }}"
             exit 1
