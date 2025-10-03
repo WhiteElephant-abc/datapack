@@ -89,3 +89,4 @@ jobs:
           files: ${{ steps.find_artifact.outputs.artifact_path }}
           draft: false
           prerelease: false
+          discussion_category_name: Announcements
