@@ -1,0 +1,77 @@
+name: Handle Build Failure
+
+on:
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  handle-failure:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build log
+        uses: actions/download-artifact@v4
+        with:
+          name: build-log
+          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Get commit information
+        id: commit_info
+        run: |
+          echo "short_sha=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log --format=%B -n 1 ${{ github.event.workflow_run.head_sha }})" >> $GITHUB_OUTPUT
+
+      - name: Check for existing issue
+        id: check_issue
+        run: |
+          issue_count=$(gh issue list --repo ${{ github.repository }} --label "build-failure" --search "in:title ${{ steps.commit_info.outputs.short_sha }}" | wc -l)
+          if [ $issue_count -gt 0 ]; then
+            echo "issue_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "issue_exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create issue if it does not exist
+        if: steps.check_issue.outputs.issue_exists == 'false'
+        run: |
+          gh issue create --repo ${{ github.repository }} \
+            --title "${{ steps.commit_info.outputs.short_sha }} 构建失败" \
+            --body "构建在 commit [${{ steps.commit_info.outputs.short_sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }}) 失败。
+
+            **Commit Message:**
+            ${{ steps.commit_info.outputs.commit_message }}
+
+            [查看失败的构建](${{ github.event.workflow_run.html_url }})" \
+            --label "build-failure"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release with build log
+        if: steps.check_issue.outputs.issue_exists == 'false'
+        run: |
+          gh release create "build-failure-${{ steps.commit_info.outputs.short_sha }}" \
+            --repo ${{ github.repository }} \
+            --title "构建失败: ${{ steps.commit_info.outputs.short_sha }}" \
+            --notes "自动发布的构建失败日志，对应 commit [${{ steps.commit_info.outputs.short_sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }})。
+
+            **Commit Message:**
+            ${{ steps.commit_info.outputs.commit_message }}
+
+            [查看失败的构建](${{ github.event.workflow_run.html_url }})" \
+            --target ${{ github.event.workflow_run.head_sha }} \
+            build.log
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

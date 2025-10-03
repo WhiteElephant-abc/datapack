@@ -19,8 +19,9 @@ jobs:
                     //highly-toxic-water \
                     //datapack-function-library \
                     //Localization-Resource-Pack \
-                    //stone-disappearance
+                    //stone-disappearance > build.log 2>&1
             - name: capture build artifacts
+              if: success()
               uses: actions/upload-artifact@v4
               with:
                   name: artifacts
@@ -29,3 +30,9 @@ jobs:
                       bazel-bin/datapack-function-library/datapack-function-library.zip
                       bazel-bin/Localization-Resource-Pack/Localization-Resource-Pack.zip
                       bazel-bin/stone-disappearance/stone-disappearance.zip
+            - name: Upload build log on failure
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-log
+                  path: build.log
