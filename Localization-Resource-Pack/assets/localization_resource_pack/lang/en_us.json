@@ -52,5 +52,9 @@
     "dialog.stone_disappearance.advanced_common.title": "Stone Disappearance Advanced Settings: Common",
     "dialog.stone_disappearance.advanced_common.success_num": "The number of blocks cleared at one time is considered a successful cleanup",
     "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Block used to replace falling blocks",
-    "dialog.stone_disappearance.advanced_common.tick_fill": "Real-time clearing of stones in a 3x3x3 area near the player"
+    "dialog.stone_disappearance.advanced_common.tick_fill": "Real-time clearing of stones in a 3x3x3 area near the player",
+    "dialog.stone_disappearance.advanced_overworld.title": "Stone Disappearance Advanced Settings: Overworld",
+    "dialog.stone_disappearance.advanced.replace_stone_with": "Replace stone with:",
+    "dialog.stone_disappearance.advanced_overworld.min": "Overworld Min",
+    "dialog.stone_disappearance.advanced_overworld.max": "Overworld Max"
 }
