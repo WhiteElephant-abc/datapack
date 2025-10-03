@@ -28,3 +28,5 @@ execute store result score n sd.debug run function stone_disappearance:new/trave
 # 移除临时记分板
 scoreboard objectives remove temp.chunk
 scoreboard objectives remove temp.chunk.child
+# 移除临时命令存储
+data remove storage stone_disappearance:data temp
