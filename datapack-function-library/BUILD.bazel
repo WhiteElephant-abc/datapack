@@ -68,7 +68,7 @@ _dialog_functions = glob(
 
 _dialog_jsons = glob(
     [
-        "data/dfl/function/dialog/*.json",
+        "data/dfl/dialog/snbt/*.json",
     ],
     allow_empty = True,
 )

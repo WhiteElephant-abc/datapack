@@ -37,17 +37,27 @@ public class DialogProcessor extends Worker {
     }
 
     private static void processPair(String mcfunctionPath, String jsonPath, String outputPath) throws Exception {
-        // Read selector from mcfunction (look for #<selector>#)
+        // Read selector and replacement rules from mcfunction
         var lines = Files.readAllLines(Paths.get(mcfunctionPath));
+        
+        // 第一行仍然为选择器
         var selector = findSelector(lines);
         if (selector == null || selector.isEmpty()) {
             // Default to @s if not found to keep pipeline functional
             selector = "@s";
         }
+        
+        // 解析替换规则
+        Map<String, String> replacementRules = parseReplacementRules(lines);
 
-        // Read JSON and convert to compact SNBT-like format
+        // 先读取JSON并转换为SNBT格式
         var jsonText = Files.readString(Paths.get(jsonPath));
         var snbt = toSnbt(jsonText);
+        
+        // 在SNBT上应用替换规则
+        for (Map.Entry<String, String> rule : replacementRules.entrySet()) {
+            snbt = snbt.replace(rule.getKey(), rule.getValue());
+        }
 
         var command = "$dialog show " + selector + " " + snbt;
 
@@ -60,17 +70,45 @@ public class DialogProcessor extends Worker {
     }
 
     private static String findSelector(List<String> lines) {
+        if (lines.isEmpty()) {
+            return null;
+        }
+
+        // 只检查第一行
+        String firstLine = lines.get(0);
         Pattern p = Pattern.compile("#(.*?)#");
-        for (var line : lines) {
-            Matcher m = p.matcher(line);
-            if (m.find()) {
-                var s = m.group(1).trim();
-                if (!s.isEmpty()) {
-                    return s;
-                }
+        Matcher m = p.matcher(firstLine);
+        if (m.find()) {
+            var s = m.group(1).trim();
+            if (!s.isEmpty()) {
+                return s;
             }
         }
         return null;
+    }
+
+    private static Map<String, String> parseReplacementRules(List<String> lines) {
+        Map<String, String> rules = new HashMap<>();
+
+        // 跳过第一行（选择器行）
+        for (int i = 1; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
+
+            // 检查是否是替换规则行（以#开头）
+            if (line.startsWith("#") && line.contains(":")) {
+                int colonIndex = line.indexOf(':');
+                if (colonIndex > 1) { // 确保冒号前有内容
+                    String target = line.substring(1, colonIndex).trim();
+                    String replacement = line.substring(colonIndex + 1).trim();
+
+                    if (!target.isEmpty()) {
+                        rules.put(target, replacement);
+                    }
+                }
+            }
+        }
+
+        return rules;
     }
 
     private static String toSnbt(String json) throws Exception {

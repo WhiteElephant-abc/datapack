@@ -1,0 +1,77 @@
+{
+    "type": "multi_action",
+    "title": {
+        "translate": "dialog.stone_disappearance.advanced.title",
+        "fallback": "石头消失高级设置"
+    },
+    "body": [
+        {
+            "type": "plain_message",
+            "width": 1000,
+            "contents": {
+                "translate": "dialog.stone_disappearance.advanced.warning",
+                "fallback": "不正确的设置可能导致错误！",
+                "color": "red",
+                "bold": true
+            }
+        }
+    ],
+    "actions": [
+        {
+            "label": {
+                "translate": "dialog.stone_disappearance.advanced.common.label",
+                "fallback": "通用"
+            },
+            "tooltip": {
+                "translate": "dialog.stone_disappearance.advanced.common.tooltip",
+                "fallback": "这些设置会在所有维度生效"
+            },
+            "action": {
+                "type": "run_command",
+                "command": "function stone_disappearance:dialog/advanced with storage stone_disappearance:data settings"
+            }
+        },
+        {
+            "label": {
+                "translate": "dialog.stone_disappearance.advanced.overworld.label",
+                "fallback": "主世界"
+            },
+            "tooltip": {
+                "translate": "dialog.stone_disappearance.advanced.overworld.tooltip",
+                "fallback": "这些设置仅在主世界生效"
+            },
+            "action": {
+                "type": "run_command",
+                "command": "function stone_disappearance:dialog/advanced_overworld with storage stone_disappearance:data settings"
+            }
+        },
+        {
+            "label": {
+                "translate": "dialog.stone_disappearance.advanced.nether.label",
+                "fallback": "下界"
+            },
+            "tooltip": {
+                "translate": "dialog.stone_disappearance.advanced.nether.tooltip",
+                "fallback": "这些设置仅在下界生效"
+            },
+            "action": {
+                "type": "run_command",
+                "command": "function stone_disappearance:dialog/advanced_nether with storage stone_disappearance:data settings"
+            }
+        },
+        {
+            "label": {
+                "translate": "dialog.stone_disappearance.advanced.end.label",
+                "fallback": "末地"
+            },
+            "tooltip": {
+                "translate": "dialog.stone_disappearance.advanced.end.tooltip",
+                "fallback": "这些设置仅在末地生效"
+            },
+            "action": {
+                "type": "run_command",
+                "command": "function stone_disappearance:dialog/advanced_end with storage stone_disappearance:data settings"
+            }
+        }
+    ]
+}

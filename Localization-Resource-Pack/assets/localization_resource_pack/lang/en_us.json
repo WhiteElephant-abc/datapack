@@ -30,5 +30,16 @@
     "dialog.stone_disappearance.options.advanced.label": "Advanced Settings",
     "dialog.stone_disappearance.options.advanced.tooltip": "Customize some behaviors of the data pack",
     "dialog.stone_disappearance.options.about.label": "About",
-    "dialog.stone_disappearance.options.about.tooltip": "View information about this data pack"
+    "dialog.stone_disappearance.options.about.tooltip": "View information about this data pack",
+    
+    "dialog.stone_disappearance.advanced.title": "Stone Disappearance Advanced Settings",
+    "dialog.stone_disappearance.advanced.warning": "Incorrect settings may cause errors!",
+    "dialog.stone_disappearance.advanced.common.label": "Common",
+    "dialog.stone_disappearance.advanced.common.tooltip": "These settings apply to all dimensions",
+    "dialog.stone_disappearance.advanced.overworld.label": "Overworld",
+    "dialog.stone_disappearance.advanced.overworld.tooltip": "These settings only apply to the overworld",
+    "dialog.stone_disappearance.advanced.nether.label": "Nether",
+    "dialog.stone_disappearance.advanced.nether.tooltip": "These settings only apply to the nether",
+    "dialog.stone_disappearance.advanced.end.label": "End",
+    "dialog.stone_disappearance.advanced.end.tooltip": "These settings only apply to the end"
 }

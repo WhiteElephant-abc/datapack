@@ -41,8 +41,8 @@
         "fallback": "自定义数据包的一些行为"
       },
       "action": {
-        "type": "run_command",
-        "command": "function stone_disappearance:dialog/advanced"
+        "type": "show_dialog",
+        "dialog": "stone_disappearance:advanced"
       }
     },
     {

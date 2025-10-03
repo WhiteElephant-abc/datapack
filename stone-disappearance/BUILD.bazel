@@ -40,7 +40,7 @@ _dialog_functions = glob(
 
 _dialog_jsons = glob(
     [
-        "data/stone_disappearance/function/dialog/*.json",
+        "data/stone_disappearance/dialog/snbt/*.json",
     ],
     allow_empty = True,
 )

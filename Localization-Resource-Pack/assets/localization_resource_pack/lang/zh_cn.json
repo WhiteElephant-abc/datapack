@@ -30,5 +30,16 @@
     "dialog.stone_disappearance.options.advanced.label": "高级设置",
     "dialog.stone_disappearance.options.advanced.tooltip": "自定义数据包的一些行为",
     "dialog.stone_disappearance.options.about.label": "关于",
-    "dialog.stone_disappearance.options.about.tooltip": "查看数据包的一些相关信息"
+    "dialog.stone_disappearance.options.about.tooltip": "查看数据包的一些相关信息",
+    
+    "dialog.stone_disappearance.advanced.title": "石头消失高级设置",
+    "dialog.stone_disappearance.advanced.warning": "不正确的设置可能导致错误！",
+    "dialog.stone_disappearance.advanced.common.label": "通用",
+    "dialog.stone_disappearance.advanced.common.tooltip": "这些设置会在所有维度生效",
+    "dialog.stone_disappearance.advanced.overworld.label": "主世界",
+    "dialog.stone_disappearance.advanced.overworld.tooltip": "这些设置仅在主世界生效",
+    "dialog.stone_disappearance.advanced.nether.label": "下界",
+    "dialog.stone_disappearance.advanced.nether.tooltip": "这些设置仅在下界生效",
+    "dialog.stone_disappearance.advanced.end.label": "末地",
+    "dialog.stone_disappearance.advanced.end.tooltip": "这些设置仅在末地生效"
 }

@@ -40,7 +40,7 @@ _dialog_functions = glob(
 
 _dialog_jsons = glob(
     [
-        "data/highly_toxic_water/function/dialog/*.json",
+        "data/highly_toxic_water/dialog/snbt/*.json",
     ],
     allow_empty = True,
 )

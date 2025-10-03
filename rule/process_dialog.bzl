@@ -3,9 +3,12 @@
 此模块定义了用于处理 Minecraft 对话系统的 Bazel 规则。
 主要功能包括：
 - 配对处理 .mcfunction 和 .json 对话文件
+- 从命名空间/function/dialog下寻找mcfunction文件
+- 从命名空间/dialog/snbt下寻找json文件
 - 生成 $dialog 命令
 - 支持未配对的 mcfunction 文件直接传递
 - 忽略仅有 JSON 的文件
+- 在目录不存在时自动跳过处理
 
 提供 process_dialog 规则，用于在构建过程中处理对话文件对，
 将对话配置转换为可执行的 Minecraft 函数。
@@ -28,22 +31,38 @@ def _path_relative_to_package(file):
         paths.join(_relative_workspace_root(owner), owner.package),
     )
 
-def _basename_without_ext(path):
-    # Return file name without extension
+def _get_file_key(path, is_mcfunction):
+    # 提取文件名（不含扩展名）作为配对键
     base = paths.basename(path)
-    for ext in [".mcfunction", ".json"]:
-        if base.endswith(ext):
-            return base[:-len(ext)]
+    if is_mcfunction:
+        if base.endswith(".mcfunction"):
+            return base[:-11]  # 移除 .mcfunction 扩展名
+    else:
+        if base.endswith(".json"):
+            return base[:-5]  # 移除 .json 扩展名
     return base
 
 def _process_dialog_impl(ctx):
-    # Map basenames to files
+    # 如果文件列表为空，直接返回空结果（目录不存在时自动跳过处理）
+    if not ctx.files.functions and not ctx.files.jsons:
+        return [DefaultInfo(files = depset([]))]
+    
+    # Map 文件名到文件
     mc_map = {}
     for f in ctx.files.functions:
-        mc_map[_basename_without_ext(_path_relative_to_package(f))] = f
+        # 从命名空间/function/dialog下寻找mcfunction文件
+        rel_path = _path_relative_to_package(f)
+        if "function/dialog/" in rel_path:
+            key = _get_file_key(rel_path, True)
+            mc_map[key] = f
+    
     json_map = {}
     for f in ctx.files.jsons:
-        json_map[_basename_without_ext(_path_relative_to_package(f))] = f
+        # 从命名空间/dialog/snbt下寻找json文件
+        rel_path = _path_relative_to_package(f)
+        if "dialog/snbt/" in rel_path:
+            key = _get_file_key(rel_path, False)
+            json_map[key] = f
 
     output_files = []
 
