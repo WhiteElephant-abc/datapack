@@ -28,5 +28,7 @@
     "dialog.stone_disappearance.options.performance.label": "性能设置",
     "dialog.stone_disappearance.options.performance.tooltip": "配置一些将会影响性能的设置",
     "dialog.stone_disappearance.options.advanced.label": "高级设置",
-    "dialog.stone_disappearance.options.advanced.tooltip": "自定义数据包的一些行为"
+    "dialog.stone_disappearance.options.advanced.tooltip": "自定义数据包的一些行为",
+    "dialog.stone_disappearance.options.about.label": "关于",
+    "dialog.stone_disappearance.options.about.tooltip": "查看数据包的一些相关信息"
 }
