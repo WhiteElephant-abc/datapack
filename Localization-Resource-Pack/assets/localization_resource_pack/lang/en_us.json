@@ -56,5 +56,11 @@
     "dialog.stone_disappearance.advanced_overworld.title": "Stone Disappearance Advanced Settings: Overworld",
     "dialog.stone_disappearance.advanced.replace_stone_with": "Replace stone with:",
     "dialog.stone_disappearance.advanced_overworld.min": "Overworld Min",
-    "dialog.stone_disappearance.advanced_overworld.max": "Overworld Max"
+    "dialog.stone_disappearance.advanced_overworld.max": "Overworld Max",
+  "dialog.stone_disappearance.advanced_nether.title": "Stone Disappearance Advanced Settings: Nether",
+  "dialog.stone_disappearance.advanced_nether.min": "Nether Min",
+  "dialog.stone_disappearance.advanced_nether.max": "Nether Max",
+  "dialog.stone_disappearance.advanced_end.title": "Stone Disappearance Advanced Settings: End",
+  "dialog.stone_disappearance.advanced_end.min": "End Min",
+  "dialog.stone_disappearance.advanced_end.max": "End Max"
 }

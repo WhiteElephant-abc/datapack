@@ -56,5 +56,11 @@
     "dialog.stone_disappearance.advanced_overworld.title": "石头消失高级设置：主世界设置",
     "dialog.stone_disappearance.advanced.replace_stone_with": "将石头替换为：",
     "dialog.stone_disappearance.advanced_overworld.min": "主世界下限",
-    "dialog.stone_disappearance.advanced_overworld.max": "主世界上限"
+    "dialog.stone_disappearance.advanced_overworld.max": "主世界上限",
+  "dialog.stone_disappearance.advanced_nether.title": "石头消失高级设置：下界设置",
+  "dialog.stone_disappearance.advanced_nether.min": "下界下限",
+  "dialog.stone_disappearance.advanced_nether.max": "下界上限",
+  "dialog.stone_disappearance.advanced_end.title": "石头消失高级设置：末地设置",
+  "dialog.stone_disappearance.advanced_end.min": "末地下限",
+  "dialog.stone_disappearance.advanced_end.max": "末地上限"
 }
