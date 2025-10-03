@@ -27,8 +27,8 @@
         "fallback": "配置一些将会影响性能的设置"
       },
       "action": {
-        "type": "run_command",
-        "command": "function stone_disappearance:dialog/performance"
+        "type": "show_dialog",
+        "dialog": "stone_disappearance:performance"
       }
     },
     {

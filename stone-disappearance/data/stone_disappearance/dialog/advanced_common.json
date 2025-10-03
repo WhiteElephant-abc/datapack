@@ -1,0 +1,106 @@
+{
+  "type": "notice",
+  "title": "Stone Disappearance - 通用设置",
+  "after_action": "none",
+  "pause": false,
+  "body": [
+    {
+      "type": "plain_message",
+      "width": 1000,
+      "contents": {
+        "translate": "dialog.white.elephant.new_player.line1",
+        "fallback": "%s 数据包已加载到此世界中！",
+        "with": [
+          {
+            "text": "Stone Disappearance",
+            "color": "aqua",
+            "bold": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/WhiteElephant-abc/datapack"
+            },
+            "hover_event": {
+              "action": "show_text",
+              "value": "https://github.com/WhiteElephant-abc/datapack"
+            }
+          }
+        ],
+        "color": "green",
+        "bold": true
+      }
+    },
+    {
+      "type": "plain_message",
+      "width": 1000,
+      "contents": [
+        {
+          "translate": "dialog.white.elephant.new_player.author",
+          "fallback": "作者："
+        },
+        {
+          "text": "@white_elephant_",
+          "color": "blue",
+          "underlined": true,
+          "italic": true,
+          "click_event": {
+            "action": "open_url",
+            "url": "https://modrinth.com/user/white_elephant"
+          },
+          "hover_event": {
+            "action": "show_text",
+            "value": "https://modrinth.com/user/white_elephant"
+          }
+        }
+      ]
+    },
+    {
+      "type": "plain_message",
+      "width": 1000,
+      "contents": [
+        {
+          "translate": "dialog.white.elephant.new_player.tech_support",
+          "fallback": "技术支持："
+        },
+        {
+          "text": "@fifth_light",
+          "color": "blue",
+          "underlined": true,
+          "italic": true,
+          "click_event": {
+            "action": "open_url",
+            "url": "https://modrinth.com/user/fifth_light"
+          },
+          "hover_event": {
+            "action": "show_text",
+            "value": "https://modrinth.com/user/fifth_light"
+          }
+        }
+      ]
+    },
+    {
+      "type": "plain_message",
+      "width": 1000,
+      "contents": {
+        "translate": "dialog.white.elephant.new_player.license",
+        "fallback": "本数据包使用 %s 开源协议",
+        "with": [
+          {
+            "text": "GNU General Public License",
+            "color": "yellow",
+            "bold": true
+          }
+        ]
+      }
+    }
+  ],
+  "action": {
+    "label": {
+      "translate": "dialog.white.elephant.new_player.view_license",
+      "fallback": "查看开源协议"
+    },
+    "action": {
+      "type": "show_dialog",
+      "dialog": "dfl:gpl"
+    }
+  }
+}

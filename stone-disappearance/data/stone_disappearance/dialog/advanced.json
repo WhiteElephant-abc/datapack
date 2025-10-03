@@ -27,8 +27,8 @@
                 "fallback": "这些设置会在所有维度生效"
             },
             "action": {
-                "type": "run_command",
-                "command": "function stone_disappearance:dialog/advanced with storage stone_disappearance:data settings"
+                "type": "show_dialog",
+                "dialog": "stone_disappearance:advanced_common"
             }
         },
         {
@@ -41,8 +41,8 @@
                 "fallback": "这些设置仅在主世界生效"
             },
             "action": {
-                "type": "run_command",
-                "command": "function stone_disappearance:dialog/advanced_overworld with storage stone_disappearance:data settings"
+                "type": "show_dialog",
+                "dialog": "stone_disappearance:advanced_overworld"
             }
         },
         {
@@ -55,8 +55,8 @@
                 "fallback": "这些设置仅在下界生效"
             },
             "action": {
-                "type": "run_command",
-                "command": "function stone_disappearance:dialog/advanced_nether with storage stone_disappearance:data settings"
+                "type": "show_dialog",
+                "dialog": "stone_disappearance:advanced_nether"
             }
         },
         {
@@ -69,8 +69,8 @@
                 "fallback": "这些设置仅在末地生效"
             },
             "action": {
-                "type": "run_command",
-                "command": "function stone_disappearance:dialog/advanced_end with storage stone_disappearance:data settings"
+                "type": "show_dialog",
+                "dialog": "stone_disappearance:advanced_end"
             }
         }
     ]
