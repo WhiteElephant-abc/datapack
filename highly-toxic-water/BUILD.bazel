@@ -1,84 +1,18 @@
-load("@//rule:datapack.bzl", "datapack")
-load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
+load("@//rule:datapack.bzl", "MINECRAFT_VERSIONS_1_20_PLUS", "complete_datapack_config")
 
 pack_version = "1.0"
 
-game_versions = [
-    "1.20",
-    "1.20.1",
-    "1.20.2",
-    "1.20.3",
-    "1.20.4",
-    "1.20.5",
-    "1.20.6",
-    "1.21",
-    "1.21.1",
-    "1.21.2",
-    "1.21.3",
-    "1.21.4",
-    "1.21.5",
-    "1.21.6",
-    "1.21.7",
-    "1.21.8",
-]
-
-modrinth_dependency(
-    name = "localization_resource_pack",
-    dependency_type = "required",
-    project_id = "3S0b1XES",
-    version_id = "80LeoUFR",
-)
-
-# 基础函数文件（排除 enjoy 文件）
-_base_functions = glob(
-    include = ["data/highly_toxic_water/function/**/*.mcfunction"],
-    exclude = [
-        "data/highly_toxic_water/function/**/*.enjoy.mcfunction",
-    ],
-)
-
-datapack(
-    name = "highly-toxic-water",
-    dialogs = glob(
-        ["data/highly_toxic_water/dialog/*.json"],
-        allow_empty = True,
-    ),
-    function_tags = glob(["data/minecraft/tags/function/*.json"]),
-    # 条件性地包含 dialog 处理结果
-    functions = _base_functions,
-    functions_expand = glob(["data/highly_toxic_water/function/**/*.enjoy.mcfunction"]),
-    minecraft_dialog_tags = glob(
-        ["data/minecraft/tags/dialog/*.json"],
-        allow_empty = True,
-    ),
+complete_datapack_config(
+    changelog = "NEWS.md",
+    game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
+    modrinth_project_id = "WF6VN2Zb",
     pack_id = "highly_toxic_water",
+    pack_version = pack_version,
     deps = [
         "README.md",
         "pack.png",
         "//:license_gpl",
         "//datapack-function-library:dfl",
         "@unif-logger//:unif-logger",
-    ],
-)
-
-alias(
-    name = "server",
-    actual = ":highly-toxic-water_server",
-)
-
-upload_modrinth(
-    name = "upload_modrinth",
-    changelog = "NEWS.md",
-    file = ":highly-toxic-water",
-    file_name = "highly-toxic-water_v%s_1.20+.zip" % pack_version,
-    game_versions = game_versions,
-    loaders = ["datapack"],
-    project_id = "WF6VN2Zb",
-    token_secret_id = "modrinth_token",
-    version_id = pack_version,
-    version_name = "[data pack] highly-toxic-water_v%s_1.20+" % pack_version,
-    version_type = "release",
-    deps = [
-        ":localization_resource_pack",
     ],
 )
