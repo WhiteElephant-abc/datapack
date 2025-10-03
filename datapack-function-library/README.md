@@ -394,7 +394,6 @@ execute if score @n dfl_enable matches 1
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将游戏时间写入 gametime 的 dfl_scoreboard 记分项；
-- 将写入所有玩家的 dfl_gametime 记分项；
 - 游戏时间 - 世界总共流逝的游戏刻数。
 
 ### 获取玩家数

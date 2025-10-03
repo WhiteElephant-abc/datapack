@@ -18,11 +18,14 @@ scoreboard objectives add temp.chunk dummy
 scoreboard objectives add temp.chunk.child dummy
 # 初始化n
 scoreboard players set n temp.chunk 0
+# 加载设置
+execute store result score n sd.settings run data get storage stone_disappearance:data settings.n
 # 存储chunk坐标至临时命令存储
 execute store result score x.a temp.chunk run data get storage stone_disappearance:data temp.find_chunk.a_x
 execute store result score z.a temp.chunk run data get storage stone_disappearance:data temp.find_chunk.a_z
 execute store result score x.b temp.chunk run data get storage stone_disappearance:data temp.find_chunk.b_x
 execute store result score z.b temp.chunk run data get storage stone_disappearance:data temp.find_chunk.b_z
+
 # 遍历并存储n
 execute store result score n sd.debug run function stone_disappearance:new/traversal_chunk
 # 移除临时记分板

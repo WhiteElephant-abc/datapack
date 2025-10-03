@@ -12,9 +12,12 @@ data modify storage stone_disappearance:data settings set value \
         nether_min:0,\
         nether_max:255,\
         end_min:0,\
-        end_max:255\
+        end_max:255,\
 \
-        \
+        n:1,\
+        tick:20,\
+        falling_block:"fill",\
+        fill_falling_block:"glass",\
     }
 # 标记为已重置
 scoreboard players set loaded sd.settings 1
