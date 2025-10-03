@@ -16,8 +16,12 @@ data modify storage stone_disappearance:data settings set value \
 \
         n:1,\
         tick:20,\
-        falling_block:"fill",\
-        fill_falling_block:"glass",\
+        success_num:50,\
+\
+        fill_falling_block:"true",\
+        fill_falling_block_with:"glass",\
+\
+        tick_fill:"true"\
     }
 # 标记为已重置
 scoreboard players set loaded sd.settings 1
