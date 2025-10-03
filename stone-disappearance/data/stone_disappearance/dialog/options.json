@@ -2,6 +2,10 @@
   "type": "multi_action",
   "title": {
     "translate": "dialog.stone_disappearance.options.title",
+    "fallback": "石头消失数据包设置"
+  },
+  "external_title": {
+    "translate": "dialog.sd.options.title",
     "fallback": "石头消失设置"
   },
   "body": [
