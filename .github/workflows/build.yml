@@ -13,23 +13,13 @@ jobs:
                   disk-cache: ${{ github.workflow }}
                   repository-cache: true
             - name: build
-              run: |
-                  bazel build \
-                    --verbose_failures \
-                    //highly-toxic-water \
-                    //datapack-function-library \
-                    //Localization-Resource-Pack \
-                    //stone-disappearance > build.log 2>&1
+              run: bazel build --verbose_failures //... > build.log 2>&1
             - name: capture build artifacts
               if: success()
               uses: actions/upload-artifact@v4
               with:
                   name: artifacts
-                  path: |
-                      bazel-bin/highly-toxic-water/highly-toxic-water.zip
-                      bazel-bin/datapack-function-library/datapack-function-library.zip
-                      bazel-bin/Localization-Resource-Pack/Localization-Resource-Pack.zip
-                      bazel-bin/stone-disappearance/stone-disappearance.zip
+                  path: .bazel/bazel-out/k8-fastbuild/bin/**/*.zip
             - name: Upload build log on failure
               if: failure()
               uses: actions/upload-artifact@v4
