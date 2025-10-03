@@ -47,5 +47,10 @@
     "dialog.stone_disappearance.advanced.nether.label": "Nether",
     "dialog.stone_disappearance.advanced.nether.tooltip": "These settings only apply to the nether",
     "dialog.stone_disappearance.advanced.end.label": "End",
-    "dialog.stone_disappearance.advanced.end.tooltip": "These settings only apply to the end"
+    "dialog.stone_disappearance.advanced.end.tooltip": "These settings only apply to the end",
+
+    "dialog.stone_disappearance.advanced_common.title": "Stone Disappearance Advanced Settings: Common",
+    "dialog.stone_disappearance.advanced_common.success_num": "The number of blocks cleared at one time is considered a successful cleanup",
+    "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Block used to replace falling blocks",
+    "dialog.stone_disappearance.advanced_common.tick_fill": "Real-time clearing of stones in a 3x3x3 area near the player"
 }

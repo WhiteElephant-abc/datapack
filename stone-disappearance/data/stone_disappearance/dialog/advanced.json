@@ -10,7 +10,7 @@
             "width": 1000,
             "contents": {
                 "translate": "dialog.stone_disappearance.advanced.warning",
-                "fallback": "不正确的设置可能导致错误！",
+                "fallback": "不正确的设置可能导致数据包崩溃！",
                 "color": "red",
                 "bold": true
             }
