@@ -299,7 +299,7 @@ def datapack_modrinth_upload(
         pack_version: 数据包版本
         project_id: Modrinth 项目 ID
         file_name_template: 文件名模板，默认为 "{name}_v{version}_{game_range}.zip"
-        version_name_template: 版本名模板，默认为 "[data pack] {name}_v{version}_{game_range}"
+        version_name_template: 版本名模板，默认为 "{name}_v{version}_{game_range}"
         game_versions: 支持的游戏版本列表，默认为从 1.20 开始的所有版本
         version_type: 版本类型（alpha, beta, release），默认为 release
         changelog: 更新日志文件，默认为 "NEWS.md"
@@ -325,7 +325,7 @@ def datapack_modrinth_upload(
         )
 
     if version_name_template == None:
-        version_name_template = "[data pack] %s_v%s_%s" % (name, pack_version, game_range)
+        version_name_template = "%s_v%s_%s" % (name, pack_version, game_range)
     else:
         version_name_template = version_name_template.format(
             name = name,
