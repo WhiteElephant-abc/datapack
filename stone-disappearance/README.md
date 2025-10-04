@@ -38,3 +38,44 @@
 - `fill_falling_block`：是否替换沙子、红沙、沙砾
 - `fill_falling_block_with`：用于替换三种沙子的方块
 - `tick_fill`：是否实时清除玩家附近3*3*3区域内的石头
+
+---
+
+## Introduction
+
+This datapack replaces stones in the world with other blocks. It has minimum compatibility with Minecraft 1.20.3, but only Minecraft 1.21.6 and above can experience the full functionality.
+
+## Features
+
+By default, the datapack replaces four types of stones in all three dimensions with glass. Each replacement is done chunk by chunk, traversing from the player's current chunk outward until successfully clearing one chunk or traversing all chunks within the loaded range. The default traversal distance is 1, which covers 9 chunks centered on the player.
+
+## Configuration
+
+This datapack has rich configuration options. You can access the datapack's configuration interface through the game menu, but versions below 1.21.6 can only be configured through commands. This won't be explained here. If needed, you can modify the default configuration in the `new/reset_settings` function file and enter `/function stone_disappearance:new/reset_settings` to initialize the configuration.
+
+### Replacement Blocks
+
+- `overworld_block`: Block used to replace stones in the Overworld
+- `nether_block`: Block used to replace stones in the Nether
+- `end_block`: Block used to replace stones in the End
+
+### World Height Limits
+
+- `overworld_min`: Minimum building height in the Overworld
+- `overworld_max`: Maximum building height in the Overworld
+- `nether_min`: Minimum building height in the Nether
+- `nether_max`: Maximum building height in the Nether
+- `end_min`: Minimum building height in the End
+- `end_max`: Maximum building height in the End
+
+### Traversal Parameters
+
+- `n`: Traversal distance
+- `tick`: Number of ticks to wait after each clearing
+- `success_num`: Number of blocks that need to be replaced for a chunk clearing to be considered successful
+
+### Optimization Settings
+
+- `fill_falling_block`: Whether to replace sand, red sand, and gravel
+- `fill_falling_block_with`: Block used to replace the three types of sand
+- `tick_fill`: Whether to clear stones in real-time within a 3×3×3 area around the player
