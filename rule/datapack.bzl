@@ -20,8 +20,8 @@ load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-# 常用的游戏版本列表
-MINECRAFT_VERSIONS_1_13_TO_1_21 = [
+# 完整的 Minecraft 版本列表（按发布顺序排列）
+_ALL_MINECRAFT_VERSIONS = [
     "1.13",
     "1.13.1",
     "1.13.2",
@@ -68,42 +68,41 @@ MINECRAFT_VERSIONS_1_13_TO_1_21 = [
     "1.21.9",
 ]
 
-MINECRAFT_VERSIONS_1_20_PLUS = [
-    "1.20",
-    "1.20.1",
-    "1.20.2",
-    "1.20.3",
-    "1.20.4",
-    "1.20.5",
-    "1.20.6",
-    "1.21",
-    "1.21.1",
-    "1.21.2",
-    "1.21.3",
-    "1.21.4",
-    "1.21.5",
-    "1.21.6",
-    "1.21.7",
-    "1.21.8",
-    "1.21.9",
-]
+def minecraft_versions_range(start_version, end_version = None):
+    """根据起始和结束版本获取版本列表。
 
-MINECRAFT_VERSIONS_1_20_3_PLUS = [
-    "1.20.3",
-    "1.20.4",
-    "1.20.5",
-    "1.20.6",
-    "1.21",
-    "1.21.1",
-    "1.21.2",
-    "1.21.3",
-    "1.21.4",
-    "1.21.5",
-    "1.21.6",
-    "1.21.7",
-    "1.21.8",
-    "1.21.9",
-]
+    Args:
+        start_version: 起始版本（包含）
+        end_version: 结束版本（包含），如果为 None 则取到最新版本
+
+    Returns:
+        包含指定范围内所有版本的列表
+
+    Example:
+        minecraft_versions_range("1.20.3", "1.21.5")
+        # 返回从 1.20.3 到 1.21.5 的所有版本
+
+        minecraft_versions_range("1.20.3")
+        # 返回从 1.20.3 到最新版本的所有版本
+    """
+    if start_version not in _ALL_MINECRAFT_VERSIONS:
+        fail("起始版本 '%s' 不在支持的版本列表中" % start_version)
+
+    start_index = _ALL_MINECRAFT_VERSIONS.index(start_version)
+
+    if end_version == None:
+        # 如果没有指定结束版本，则取到最新版本
+        return _ALL_MINECRAFT_VERSIONS[start_index:]
+
+    if end_version not in _ALL_MINECRAFT_VERSIONS:
+        fail("结束版本 '%s' 不在支持的版本列表中" % end_version)
+
+    end_index = _ALL_MINECRAFT_VERSIONS.index(end_version)
+
+    if start_index > end_index:
+        fail("起始版本 '%s' 不能晚于结束版本 '%s'" % (start_version, end_version))
+
+    return _ALL_MINECRAFT_VERSIONS[start_index:end_index + 1]
 
 def datapack_functions(pack_id):
     """生成数据包函数文件的 glob 模式。
@@ -301,25 +300,19 @@ def datapack_modrinth_upload(
         project_id: Modrinth 项目 ID
         file_name_template: 文件名模板，默认为 "{name}_v{version}_{game_range}.zip"
         version_name_template: 版本名模板，默认为 "[data pack] {name}_v{version}_{game_range}"
-        game_versions: 支持的游戏版本列表，默认为 MINECRAFT_VERSIONS_1_20_PLUS
+        game_versions: 支持的游戏版本列表，默认为从 1.20 开始的所有版本
         version_type: 版本类型（alpha, beta, release），默认为 release
         changelog: 更新日志文件，默认为 "NEWS.md"
         deps: 依赖列表，默认包含本地化资源包
     """
     if game_versions == None:
-        game_versions = MINECRAFT_VERSIONS_1_20_PLUS
+        game_versions = minecraft_versions_range("1.20")
 
     if deps == None:
         deps = [":localization_resource_pack"]
 
-    # 确定游戏版本范围字符串
-    if game_versions == MINECRAFT_VERSIONS_1_13_TO_1_21:
-        game_range = "1.13-1.21.x"
-    elif game_versions == MINECRAFT_VERSIONS_1_20_PLUS:
-        game_range = "1.20+"
-    else:
-        # 自定义版本列表，使用首尾版本
-        game_range = "%s-%s" % (game_versions[0], game_versions[-1])
+    # 确定游戏版本范围字符串，使用首尾版本
+    game_range = "%s-%s" % (game_versions[0], game_versions[-1])
 
     # 设置默认模板
     if file_name_template == None:
@@ -359,7 +352,7 @@ def complete_datapack_config(
         pack_id,
         pack_version,
         target_name = None,
-        game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
+        game_versions = None,
         modrinth_project_id = None,
         changelog = None,
         version_type = "release",
@@ -389,6 +382,10 @@ def complete_datapack_config(
     # 确定目标名称，默认使用当前包名称
     if target_name == None:
         target_name = native.package_name().split("/")[-1]
+
+    # 设置默认游戏版本
+    if game_versions == None:
+        game_versions = minecraft_versions_range("1.20")
 
     # 获取函数文件配置
     func_config = datapack_functions(pack_id)

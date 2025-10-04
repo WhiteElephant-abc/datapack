@@ -1,10 +1,10 @@
-load("@//rule:datapack.bzl", "MINECRAFT_VERSIONS_1_20_PLUS", "complete_datapack_config")
+load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 
 pack_version = "1.0"
 
 complete_datapack_config(
     changelog = "NEWS.md",
-    game_versions = MINECRAFT_VERSIONS_1_20_PLUS,
+    game_versions = minecraft_versions_range("1.20"),  # 从 1.20 到最新版本
     modrinth_project_id = "WF6VN2Zb",
     pack_id = "highly_toxic_water",
     pack_version = pack_version,
