@@ -92,6 +92,7 @@ def _upload_modrinth_impl(ctx):
         "{FILE_PATH}": input_file.short_path,
         "{EXEC_PATH}": ctx.executable._modrinth_uploader_binary.short_path,
         "{ARGS}": "\n".join([arg.replace("'", "\\'") for arg in args]),
+        "{GIT_TAG_NAME}": ctx.attr.git_tag_name if ctx.attr.git_tag_name else "",
     }
 
     if ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]):
@@ -199,6 +200,10 @@ upload_modrinth = rule(
         "file_name": attr.string(
             doc = "The name of the file to upload.",
             mandatory = True,
+        ),
+        "git_tag_name": attr.string(
+            doc = "The Git tag name to create before uploading. If None, no tag will be created.",
+            mandatory = False,
         ),
         "_modrinth_uploader_binary": attr.label(
             default = "//rule/modrinth_uploader",

@@ -290,7 +290,8 @@ def datapack_modrinth_upload(
         game_versions = None,
         version_type = "release",
         changelog = "NEWS.md",
-        deps = None):
+        deps = None,
+        auto_tag = True):
     """创建 Modrinth 上传配置的简化宏。
 
     Args:
@@ -304,6 +305,7 @@ def datapack_modrinth_upload(
         version_type: 版本类型（alpha, beta, release），默认为 release
         changelog: 更新日志文件，默认为 "NEWS.md"
         deps: 依赖列表，默认包含本地化资源包
+        auto_tag: 是否在上传前自动创建并推送 Git 标签，默认为 True
     """
     if game_versions == None:
         game_versions = minecraft_versions_range("1.20")
@@ -333,6 +335,9 @@ def datapack_modrinth_upload(
             game_range = game_range,
         )
 
+    # 生成 Git 标签名称
+    git_tag_name = "%s_v%s" % (name, pack_version) if auto_tag else None
+
     upload_modrinth(
         name = "upload_modrinth",
         changelog = changelog,
@@ -346,6 +351,7 @@ def datapack_modrinth_upload(
         version_name = version_name_template,
         version_type = version_type,
         deps = deps,
+        git_tag_name = git_tag_name,
     )
 
 def complete_datapack_config(

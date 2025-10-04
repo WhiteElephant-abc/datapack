@@ -17,6 +17,7 @@ workspace_name='{WORKSPACE_NAME}'
 changelog_path="$(rlocation "$workspace_name"/'{CHANGELOG_PATH}')"
 file_path="$(rlocation "$workspace_name"/'{FILE_PATH}')"
 exec_path="$(rlocation "$workspace_name"/'{EXEC_PATH}')"
+git_tag_name='{GIT_TAG_NAME}'
 
 TEMP_FILE="$(mktemp)"
 trap 'rm -f "$TEMP_FILE"' EXIT
@@ -31,5 +32,23 @@ then
     args=("--changelog" "$changelog_path" "${args[@]}")
 fi
 args=("${args[@]}" "$file_path")
+
+# 如果指定了 Git 标签名称，则在上传前创建并推送标签
+if [ -n "$git_tag_name" ]; then
+    echo "Creating Git tag: $git_tag_name"
+    if git tag "$git_tag_name" 2>/dev/null; then
+        echo "Git tag '$git_tag_name' created successfully"
+        echo "Pushing Git tag to origin..."
+        if git push origin "$git_tag_name" 2>/dev/null; then
+            echo "Git tag '$git_tag_name' pushed successfully"
+        else
+            echo "Warning: Failed to push Git tag '$git_tag_name' to origin"
+            echo "Continuing with Modrinth upload..."
+        fi
+    else
+        echo "Warning: Failed to create Git tag '$git_tag_name' (may already exist)"
+        echo "Continuing with Modrinth upload..."
+    fi
+fi
 
 JAVA_RUNFILES="$(realpath ..)" "$exec_path" "${args[@]}"
