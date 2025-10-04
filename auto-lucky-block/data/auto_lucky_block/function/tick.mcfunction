@@ -13,4 +13,6 @@ scoreboard players operation gametime alb.temp %= countdown alb.settings
 execute if score gametime alb.temp matches 0 as @a at @s run function auto_lucky_block:setblock
 
 # 倒计时
-title @a actionbar [{"text":"lucky block :","color":"yellow"},{"text":" 1","color":"red"},{"text":"s","color":"yellow"}]
+title @a actionbar [{"text":"lucky block : ","color":"yellow"},{type:"score",score:{name:"gametime",objective:"alb.temp"},,"color":"red"},{"text":"s","color":"yellow"}]
+# 移除临时记分板
+scoreboard objectives remove alb.temp
