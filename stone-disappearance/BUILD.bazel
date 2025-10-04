@@ -1,6 +1,6 @@
 load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 
-pack_version = "4.0"
+pack_version = "4.1"
 
 complete_datapack_config(
     changelog = "NEWS.md",
