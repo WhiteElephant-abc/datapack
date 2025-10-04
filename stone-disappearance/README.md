@@ -1,4 +1,4 @@
-# [SD]石头消失（Stone Disappearance）
+# [SD]石头消失 (Stone Disappearance)
 
 ## 简介
 
