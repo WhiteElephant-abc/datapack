@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ["build"]
     types:
-      - completed
+      - failure
 
 permissions:
   issues: write
@@ -13,7 +13,6 @@ permissions:
 jobs:
   handle-failure:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'failure'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,34 +46,37 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create issue if it does not exist
+      - name: Create issue with log
         if: steps.check_issue.outputs.issue_exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_MESSAGE: ${{ steps.commit_info.outputs.commit_message }}
+          SHORT_SHA: ${{ steps.commit_info.outputs.short_sha }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          REPO: ${{ github.repository }}
+          SERVER_URL: ${{ github.server_url }}
         run: |
-          gh issue create --repo ${{ github.repository }} \
-            --title "${{ steps.commit_info.outputs.short_sha }} 构建失败" \
-            --body "构建在 commit [${{ steps.commit_info.outputs.short_sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }}) 失败。
+          LOG_BODY=$(tail -c 40000 build.log)
 
-            **Commit Message:**
-            ${{ steps.commit_info.outputs.commit_message }}
+          cat <<EOF > issue-body.md
+          构建在 commit [$SHORT_SHA]($SERVER_URL/$REPO/commit/$HEAD_SHA) 失败。
 
-            [查看失败的构建](${{ github.event.workflow_run.html_url }})" \
+          **Commit Message:**
+          $COMMIT_MESSAGE
+
+          [查看失败的构建]($RUN_URL)
+
+          <details>
+          <summary>构建日志 (末尾 40kb)</summary>
+
+          ```
+          $LOG_BODY
+          ```
+          </details>
+          EOF
+
+          gh issue create --repo $REPO \
+            --title "$SHORT_SHA 构建失败" \
+            --body-file issue-body.md \
             --label "bug"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release with build log
-        if: steps.check_issue.outputs.issue_exists == 'false'
-        run: |
-          gh release create "build-failure-${{ steps.commit_info.outputs.short_sha }}" \
-            --repo ${{ github.repository }} \
-            --title "构建失败: ${{ steps.commit_info.outputs.short_sha }}" \
-            --notes "自动发布的构建失败日志，对应 commit [${{ steps.commit_info.outputs.short_sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }})。
-
-            **Commit Message:**
-            ${{ steps.commit_info.outputs.commit_message }}
-
-            [查看失败的构建](${{ github.event.workflow_run.html_url }})" \
-            --target ${{ github.event.workflow_run.head_sha }} \
-            build.log
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
