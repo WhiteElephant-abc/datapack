@@ -360,7 +360,7 @@ def complete_datapack_config(
         target_name = None,
         game_versions = None,
         modrinth_project_id = None,
-        changelog = None,
+        changelog = "NEWS.md",
         version_type = "release",
         modrinth_deps = [],
         include_localization_dependency = True,
@@ -378,7 +378,7 @@ def complete_datapack_config(
         target_name: 主要目标名称，默认为当前包名称
         game_versions: 支持的游戏版本列表
         modrinth_project_id: Modrinth 项目 ID
-        changelog: 更新日志
+        changelog: 更新日志，默认为 "NEWS.md"
         version_type: 版本类型 (release, beta, alpha)
         modrinth_deps: Modrinth 依赖字典列表
         include_localization_dependency: 是否自动包含本地化资源包作为依赖
