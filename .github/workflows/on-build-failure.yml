@@ -30,7 +30,10 @@ jobs:
         id: commit_info
         run: |
           echo "short_sha=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
-          echo "commit_message=$(git log --format=%B -n 1 ${{ github.event.workflow_run.head_sha }})" >> $GITHUB_OUTPUT
+          commit_message=$(git log --format=%B -n 1 ${{ github.event.workflow_run.head_sha }})
+          echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$commit_message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Check for existing issue
         id: check_issue
