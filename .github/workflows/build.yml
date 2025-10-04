@@ -104,7 +104,4 @@ jobs:
           \`\`\`
           </details>
           EOF
-          gh issue create --repo $REPO \\
-            --title "$SHORT_SHA 构建失败" \\
-            --body-file issue-body.md \\
-            --label "bug"
+          gh issue create --repo $REPO --title "$SHORT_SHA 构建失败" --body-file issue-body.md --label "bug"
