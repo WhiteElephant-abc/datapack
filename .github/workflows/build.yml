@@ -1,40 +1,110 @@
 name: Build Project
 on: [pull_request, push]
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
-    build-with-bazel:
-        runs-on: ubuntu-24.04
-        steps:
-            - name: checkout repository
-              uses: actions/checkout@v4
-            - uses: bazel-contrib/setup-bazel@0.14.0
-              with:
-                  bazelisk-cache: true
-                  disk-cache: ${{ github.workflow }}
-                  repository-cache: true
-            - name: build
-              run: bazel build --verbose_failures //... > build.log 2>&1
-            - name: Prepare artifacts for upload
-              run: |
-                mkdir -p release_artifacts
-                BIN_PATH=$(bazel info bazel-bin)
-                for dir in "$BIN_PATH"/*/ ; do
-                  dir_name=$(basename "$dir")
-                  zip_file="$dir/${dir_name}.zip"
-                  if [ -f "$zip_file" ]; then
-                    echo "Found artifact: $zip_file"
-                    cp "$zip_file" release_artifacts/
-                  fi
-                done
-            - name: capture build artifacts
-              if: success()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: artifacts
-                  path: release_artifacts/
-            - name: Upload build log on failure
-              if: failure()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: build-log
-                  path: build.log
+  build-with-bazel:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - name: build
+        run: bazel build --verbose_failures //... > build.log 2>&1
+      - name: Prepare artifacts for upload
+        run: |
+          mkdir -p release_artifacts
+          BIN_PATH=$(bazel info bazel-bin)
+          for dir in "$BIN_PATH"/*/ ; do
+            dir_name=$(basename "$dir")
+            zip_file="$dir/${dir_name}.zip"
+            if [ -f "$zip_file" ]; then
+              echo "Found artifact: $zip_file"
+              cp "$zip_file" release_artifacts/
+            fi
+          done
+      - name: capture build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: release_artifacts/
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+
+  handle-failure:
+    runs-on: ubuntu-latest
+    needs: build-with-bazel
+    if: needs.build-with-bazel.result == \'failure\'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download build log
+        uses: actions/download-artifact@v4
+        with:
+          name: build-log
+          path: .
+      - name: Get commit information
+        id: commit_info
+        run: |
+          echo "short_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$commit_message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Check for existing issue
+        id: check_issue
+        run: |
+          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "in:title ${{ steps.commit_info.outputs.short_sha }}" | wc -l)
+          if [ $issue_count -gt 0 ]; then
+            echo "issue_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "issue_exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create issue with log
+        if: steps.check_issue.outputs.issue_exists == \'false\'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_MESSAGE: ${{ steps.commit_info.outputs.commit_message }}
+          SHORT_SHA: ${{ steps.commit_info.outputs.short_sha }}
+          HEAD_SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REPO: ${{ github.repository }}
+          SERVER_URL: ${{ github.server_url }}
+        run: |
+          LOG_BODY=$(tail -c 40000 build.log)
+          cat <<EOF > issue-body.md
+          构建在 commit [$SHORT_SHA]($SERVER_URL/$REPO/commit/$HEAD_SHA) 失败。
+
+          **Commit Message:**
+          $COMMIT_MESSAGE
+
+          [查看失败的构建]($RUN_URL)
+
+          <details>
+          <summary>构建日志 (末尾 40kb)</summary>
+
+          \`\`\`
+          $LOG_BODY
+          \`\`\`
+          </details>
+          EOF
+          gh issue create --repo $REPO \\
+            --title "$SHORT_SHA 构建失败" \\
+            --body-file issue-body.md \\
+            --label "bug"
