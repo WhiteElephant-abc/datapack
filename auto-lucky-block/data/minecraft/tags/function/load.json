@@ -1,6 +1,6 @@
 {
     "replace": false,
     "values": [
-        "auto_lucky_block:start"
+        "auto_lucky_block:load"
     ]
 }
