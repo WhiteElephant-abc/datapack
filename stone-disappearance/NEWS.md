@@ -1,3 +1,3 @@
-- 使用完 gametime dfl_scoreboard 记分项后进行恢复，避免其他使用此记分项的项目出现问题
+- 修改完 gametime dfl_scoreboard 记分项后进行恢复，避免其他使用此记分项的项目出现问题
 ---
-- Restore the gametime dfl_scoreboard objective after use to avoid problems with other projects that use this objective
+- Restore the gametime dfl_scoreboard objective after modification to avoid problems with other projects that use this objective
