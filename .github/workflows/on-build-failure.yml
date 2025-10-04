@@ -2,7 +2,7 @@ name: Handle Build Failure
 
 on:
   workflow_run:
-    workflows: ["build"]
+    workflows: ["build.yml"]
     types:
       - failure
 
