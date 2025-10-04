@@ -1,1 +1,6 @@
-{"replace": false,"values": ["auto_lucky_block:things"]}
+{
+    "replace": false,
+    "values": [
+        "auto_lucky_block:things"
+    ]
+}
