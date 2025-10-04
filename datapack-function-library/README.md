@@ -4,7 +4,7 @@
 
 _本数据包遵循开源协议 [GNU LESSER GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/lgpl-3.0.txt "跳转到此开源协议页面")。_
 
-**本数据包为开发者提供了一些实用的函数，兼容 Minecraft 所有版本（除了无法安装数据包的版本）。**
+**本数据包为开发者提供了一些实用的函数（还有一些对话框），兼容 Minecraft 所有版本（除了无法安装数据包的版本）。**
 
 **但由于数据包涉及命令较多，所以较低版本可能无法使用所有函数，下文将不会分别注明所有函数的适用版本。**
 
@@ -30,7 +30,7 @@ execute if score @n dfl_enable matches 1
 
 **注意：有些函数的用法下附有“前置函数”，这些函数执行前必须执行一次前置函数。**
 
-**有些函数用法后带有 {xx:"xx"} 这些函数为[宏函数](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F)，在使用时需通过 {<参数名>:"<内容>"} 传入参数（用法中的参数为默认参数，为作者开发时测试过的推荐参数，或作者测试使用的参数），参数名（如 num）在正文中表现为：{num}。参数格式可参考函数用法，特殊格式会说明。**
+**有些函数用法后带有 {xx:"xx"} 这些函数为[宏函数](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F)，在使用时需通过 {<参数名>:"<内容>"} 传入参数（用法中的参数为作者开发时测试过的推荐参数，或作者测试使用的参数），参数名（如 num）在正文中表现为：{num}。参数格式可参考函数用法，特殊格式会说明。**
 
 如果遇到任何问题，请点击 [这里](https://github.com/WhiteElephant-abc/datapack/issues/new/choose) 反馈。
 
@@ -431,3 +431,17 @@ execute if score @n dfl_enable matches 1
 函数用法：`/function dfl:lib/spawn`
 
 - 以玩家为坐标基准生成 100 个 Carpet 假人。
+
+# 对话框说明
+
+## GNU GPL 协议原文
+
+对话框用法：`/dialog show dfl:gpl`
+
+- 此对话框包含 GNU GPL v3.0 协议原文。
+
+## GNU LGPL 协议原文
+
+对话框用法：`/dialog show dfl:lgpl`
+
+- 此对话框包含 GNU LGPL v3.0 协议原文。

@@ -1,312 +1,320 @@
 # Preface
 
-*This datapack complies with the open-source license [GNU LESSER GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/lgpl-3.0.txt "Link to license page").*
+*This datapack is licensed under the [GNU LESSER GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/lgpl-3.0.txt "Go to this open source license page").*
 
-**This datapack provides developers with practical functions compatible with all Minecraft versions (except those unable to install datapacks).**
+**This datapack provides developers with some practical functions (and some dialogs), compatible with all versions of Minecraft (except for versions that cannot install datapacks).**
 
-**However, since the datapack involves numerous commands, older versions may not support all functions. This document will not individually specify version compatibility for each function.**
+**However, due to the large number of commands involved in the datapack, lower versions may not be able to use all functions. The applicable versions of all functions will not be specified below.**
 
-**Install the resource pack to use localized content (v3.2+). Otherwise, the datapack language defaults to zh_cn.**
+**Please install the resource pack at the same time to use localized content (v3.2+). Otherwise, the datapack language will default to zh_cn.**
 
-**The mod version of this datapack is distributed via Modrinth and is functionally identical to the datapack version but may not be the latest release. Use the datapack version whenever possible.**
+**The mod version of this datapack is packaged through Modrinth, and the content is exactly the same as the datapack version, but it is not necessarily the latest version. Please try to use the datapack version.**
 
-**This datapack includes a `dfl:dfl_enable` function that sets all entities' score in its objective to 1, facilitating detection by dependent datapacks or mods.**
+**This datapack provides a `dfl:dfl_enable` function, which can set the score of all entities in this scoreboard to 1, which is convenient for datapacks or mods that depend on this datapack to detect whether this datapack is loaded.**
 
 **Example:**
 
 ```mcfunction
-# Execute upon datapack load:
+#Execute when the datapack is loaded:
 scoreboard objectives add dfl_enable dummy
 scoreboard players set @e dfl_enable 0
-# If not loaded:
+#If not loaded:
 function dfl:dfl_enable
 execute unless score @n dfl_enable matches 1
-# If loaded:
+#If loaded:
 function dfl:dfl_enable
 execute if score @n dfl_enable matches 1
 ```
 
-**Note: Some functions specify "prerequisite functions" in their usage. These must be executed once before the main function.**
+**Note: Some functions have "prerequisite functions" attached to their usage. These functions must be executed once before executing them.**
 
-**Functions with `{xx:"xx"}` are [macro functions](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F). Pass parameters via `{<param_name>:"<content>"}` (default parameters in usage are tested/recommended values). Parameter names (e.g., `num`) appear as `{num}` in descriptions. Format follows examples unless specified otherwise.**
+**Some function usages are followed by `{xx:"xx"}`. These functions are [macro functions](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F). When using them, you need to pass parameters through `{<parameter name>:"<content>"}` (the parameters in the usage are the recommended parameters tested by the author during development, or the parameters used by the author for testing). The parameter name (such as num) is expressed as: {num} in the text. The parameter format can refer to the function usage, and special formats will be explained.**
 
-Report issues [here](https://github.com/WhiteElephant-abc/datapack/issues/new/choose).
+If you encounter any problems, please click [here](https://github.com/WhiteElephant-abc/datapack/issues/new/choose) to give feedback.
 
-# Function Documentation
+---
+
+# Function Description
 
 ## Start
 
-<span style="color:red;"><b>Execute functions in this category during datapack (re)load.</b></span>
+<span style="color:red;"><b>Functions in this category are recommended to be executed when the datapack is loaded (reloaded).</b></span>
 
 ### Disable Special Damage
 
-Function: `/function dfl:start/nodamage`
+Function usage: `/function dfl:start/nodamage`
 
-- Fall damage
-- Fire damage
-- Freezing damage
-- Drowning damage
+- Fall damage;
+- Fire damage;
+- Freeze damage;
+- Drowning damage.
 
-### Set World Spawn to 0 0
+### Fix the respawn point to 0 0
 
-Function: `/function dfl:start/setworldspawn`
+Function usage: `/function dfl:start/setworldspawn`
 
-- Sets world spawn to 0 0 0
-- Sets spawn radius to 0
-- Players respawn on the highest block at 0 0
+- Set the world respawn point to 0 0 0;
+- Set the respawn point radius to 0;
+- At this time, the player will be fixed to respawn on the highest block at coordinate 0 0.
 
-### Enable Death Leaderboard
+### Enable death leaderboard
 
-Function: `/function dfl:start/show/death`
+Function usage: `/function dfl:start/show/death`
 
-- Creates `death` scoreboard
-- Displays death counts on the right
-- Ranks players by deaths (high to low)
-- Note: Leaderboard appears only after a player dies
+- Create a scoreboard item named death;
+- The number of deaths will be displayed on the right side of the screen;
+- The number of player deaths is sorted from high to low;
+- Note: The death leaderboard will not be displayed when it is first enabled, and it will be displayed only after any player dies.
 
-### Display Player Health
+### Display player health
 
-Function: `/function dfl:start/show/health`
+Function usage: `/function dfl:start/show/health`
 
-- Creates `health` scoreboard
-- Shows health below player names
-- Hides at long distances (only IDs visible)
-- Note: Initial display shows 0 HP; updates after damage/healing
+- Create a scoreboard item named health;
+- The player's health will be displayed below the player's ID;
+- It will not be displayed if the distance is slightly far (only the player's ID is displayed);
+- Note: When it is first enabled, the health will be displayed as 0, and it will be displayed only after the value is updated (such as being injured).
 
-### Display Player Levels
+### Display player experience level
 
-Function: `/function dfl:start/show/level`
+Function usage: `/function dfl:start/show/level`
 
-- Creates `level` scoreboard
-- Shows XP levels in Tab list
-- Note: Initial display shows level 0; updates after XP gain
+- Create a scoreboard item named level;
+- The experience level of each player will be displayed in the Tab bar (player list bar);
+- Note: When it is first enabled, the experience level will be displayed as 0, and it will be displayed only after the value is updated (such as leveling up).
 
-### Display Health Bars in Tab List
+### Display player health bar
 
-Function: `/function dfl:start/show/health_list`
+Function usage: `/function dfl:start/show/health_list`
 
-- Creates `health` scoreboard
-- Shows health bars in Tab list
-- Effect:
+- Create a scoreboard item named health;
+- The health bar of each player will be displayed in the Tab bar (player list bar).
+- The effect is as follows:
 
-![[DFL] Datapack Function Library (datapack function library)-Image 1](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/Scoreboard_Display_List_Hearts.gif?raw=true)
+![[DFL] Datapack Function Support Library (datapack function library)-Image 1](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/Scoreboard_Display_List_Hearts.gif)
 
-### Quick Team Setup
+### Quickly create a new team
 
-Function: `/function dfl:start/addteam {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
+Function usage: `/function dfl:start/addteam {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
 
-- Creates teams `{team_blue}` (blue) and `{team_red}` (red)
-- Disables friendly fire
-- Players collide only with opposing teams
-- Name prefixes: `{prefix_blue}_` and `{prefix_red}_`
+- Create two teams named {team_blue} and {team_red};
+- The colors are blue and red respectively;
+- Disable friendly fire for players in the same team;
+- Players can only collide with entities not on the same team;
+- The player name prefixes are {prefix_blue}_ and {prefix_red}_ respectively.
 
 ## Tick
 
-<span style="color:red;"><b>Execute functions in this category every tick.</b></span>
+<span style="color:red;"><b>Functions in this category are recommended to be executed every Tick.</b></span>
 
-### Soft Ban Player
+### Soft ban player
 
-Function: `/function dfl:tick/ban`
+Function usage: `/function dfl:tick/ban`
 
-- Note: Executor must be the **banned** player (use `/execute`)
-- Teleports player to 0 0 0, sets adventure mode, applies debuffs
-- Must run every tick
-- Example: `/execute as @a[tag=ban] run function dfl:tick/ban`
+- Note: The executor of this function must be the player to be **banned**, you can use the `/execute` command;
+- Realize a soft ban by continuously tp the player to 0 0 0, setting the mode to adventure, and continuously giving the player negative buffs;
+- Must be executed every Tick;
+- Example: `/execute as @a[tag=ban] run function dfl:tick/ban`.
 
-Effect:
+The effect is as follows:
 
-![[DFL] Datapack Function Library (datapack function library)-Image 2](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.ban.png?raw=true)
+![[DFL] Datapack Function Support Library (datapack function library)-Image 2](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/tick.ban.png)
 
-### Beacon Elytra Launch
+### Beacon elytra take-off
 
-Function: `/function dfl:tick/beacon_fly`
+Function usage: `/function dfl:tick/beacon_fly`
 
-- Launches players upward when beacon has iron/gold/emerald/diamond/netherite blocks below
-- Heights: 20/40/60/80/100 blocks (blocks stack, max 400 blocks)
-- Non-spectators only
+- When there are iron blocks, gold blocks, emerald blocks, diamond blocks or netherite blocks under the beacon, the player will be teleported upwards (spectators will not be teleported);
+- The heights are 20, 40, 60, 80, and 100 blocks in order;
+- The same blocks can be stacked to increase the height (the highest is 400 blocks, using four netherite blocks). If the blocks are different, the block closest to the beacon will be used.
 
-### Apply Debuffs
+### One-click negative Buff
 
-Function: `/function dfl:tick/debuff`
+Function usage: `/function dfl:tick/debuff`
 
-Grants executor:
+Give the **function executor** the following Debuffs:
 
-1. Slowness
-2. Mining Fatigue
-3. Nausea
-4. Darkness
-5. Hunger
-6. Weakness
-7. Poison
-8. Bad Luck
-9. Trial Omen
+1. slowness
+2. mining_fatigue
+3. nausea
+4. darkness
+5. hunger
+6. weakness
+7. poison
+8. unluck
+9. trial_omen
 
-### Iron Block Elevator
+### Iron block elevator
 
-Function: `/function dfl:tick/iron_block_elevator`
+Function usage: `/function dfl:tick/iron_block_elevator`
 
-- Teleports players upward between vertical iron blocks
-- Max range: 6 blocks (5-block gap)
-- Affects mobs/non-player entities (not spectators)
+- Teleport the player upwards when standing between two iron blocks, one above the other;
+- The maximum teleportation distance is 6 blocks, that is, the maximum distance between two iron blocks is 5 blocks;
+- Will not teleport spectators;
+- Will teleport creatures and non-creature entities.
 
-### Clear Excess Entities
+### Clear entities if there are too many
 
-Function: `/function dfl:tick/kill {num:"1000"}`
+Function usage: `/function dfl:tick/kill {num:"1000"}`
 
-- Kills all non-player entities when count > `{num}`
-- Exempts entities with `need` tag
-- Creates `dfl_scoreboard` objective
-- Chat notification:
+- Clear all non-player entities when the number of non-player entities is greater than {num};
+- Will not clear entities with the need tag;
+- Entities with the need tag will not be counted in the number of entities here;
+- Create a scoreboard item named dfl_scoreboard.
+- After execution, a prompt will be displayed in the chat bar, the effect is as follows:
 
-![[DFL] Datapack Function Library (datapack function library)-Image 3](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.kill.png?raw=true)
+![[DFL] Datapack Function Support Library (datapack function library)-Image 3](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/tick.kill.png)
 
-### Clear High-Density Entities
+### Clear entities if the entity density is too high
 
-Function: `/function dfl:tick/kill_better {num:"50"}`
+Function usage: `/function dfl:tick/kill_better {num:"50"}`
 
-Prerequisite: `/function dfl:lib/entity_density`
+Prerequisite function: `/function dfl:lib/entity_density`
 
-- Kills entities with >`{num}` entities within 10 blocks
-- Exempts players, villagers, and `need`-tagged entities
-- No chat traces
+- Make all entities clear these entities when the number of entities within 10 blocks is greater than {num};
+- Will not kill players;
+- Will not kill villagers;
+- Will not kill entities with the need tag;
+- Will not leave traces in the chat bar.
 
-### Quality-of-Life
+### Experience optimization
 
-Function: `/function dfl:tick/relax`
+Function usage: `/function dfl:tick/relax`
 
-- Enables keepInventory
-- Grants Night Vision
-- Grants Glowing
-- Removes Darkness effect
+- Enable keep inventory on death;
+- Give players night vision;
+- Give players glowing;
+- Remove the player's darkness effect.
 
-### Display Entity Count
+### Display the number of entities
 
-Function: `/function dfl:tick/show_entity`
+Function usage: `/function dfl:tick/show_entity`
 
-Prerequisite: `/function dfl:lib/entity`
+Prerequisite function: `/function dfl:lib/entity`
 
-- Shows real-time entity count in action bar
+- Display the real-time number of entities in the player's action bar (above the shortcut bar).
+- The effect is as follows:
 
-Effect:
+![[DFL] Datapack Function Support Library (datapack function library)-Image 4](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/tick.show_entity.png)
 
-![[DFL] Datapack Function Library (datapack function library)-Image 4](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/tick.show_entity.png?raw=true)
+### Disable player friendly fire and collision
 
-### Disable Friendly Fire & Collisions
+Function usage: `/function dfl:tick/team`
 
-Function: `/function dfl:tick/team`
+- Add a team named dfl and add all players to this team;
+- Note: Since the same entity cannot join multiple teams, please do not enable this function if you want to use the player team function;
+- Disable team friendly fire;
+- Disable collision within the team;
+- If this function is not run every Tick, please make sure to run this function once after each new player joins.
 
-- Creates team `dfl`, adds all players
-- Disables friendly fire and collisions
-- Note: Conflicts with custom teams. Re-execute for new players if not run every tick.
+### Clear TNT if the TNT entity density is too high
 
-### Clear High-Density TNT
+Function usage: `/function dfl:tick/kill_tnt {num:"200"}`
 
-Function: `/function dfl:tick/kill_tnt {num:"200"}`
+- Clear these TNT entities when the number of TNT entities within five blocks of the TNT is greater than {num};
+- Create a scoreboard item named dfl_tntdensity.
 
-- Clears TNT with >`{num}` TNT entities within 5 blocks
-- Creates `dfl_tntdensity` objective
+### Suicide for players without permission
 
-### Permissionless Suicide
+Function usage: `/function dfl:tick/suicide`
 
-Function: `/function dfl:tick/suicide`
+- Create a scoreboard item named kill;
+- Enter `/trigger kill` to commit suicide (this command does not require any permission).
 
-- Creates `kill` objective
-- Execute `/trigger kill` to suicide (no permissions required)
+### Replace blocks in a large area
 
-### Large-Scale Block Replacement
+Function usage: `/function dfl:tick/change_block {new:"glass",old:"stone",num:"30"}`
 
-Function: `/function dfl:tick/change_block {new:"glass",old:"stone",num:"30"}`
+- Replace {old} with {new} in a {num}3 *8 range around the player;
+- Change the game rule commandModificationBlockLimit to 2147483647.
 
-- Replaces `{old}` with `{new}` in a {num}×{num}×8 area around player
-- Sets `commandModificationBlockLimit` to 2147483647
+### Always day + always sunny
 
-### Permanent Day/Sun
+Function usage: `/function dfl:tick/always_sunny`
 
-Function: `/function dfl:tick/always_sunny`
+- Turn off the day-night cycle;
+- Turn off weather changes;
+- Set the time to day;
+- Set the weather to clear.
 
-- Disables day/night cycle
-- Disables weather cycle
-- Sets time to day
-- Sets weather to clear
+### Clear a single item and execute a command
 
-### Clear Item & Run Command
+Function usage: `/function dfl:tick/clear_run_a {name:"stone",run:"tp ~ 100 ~"}`
 
-Function: `/function dfl:tick/clear_run_a {name:"stone",run:"tp ~ 100 ~"}`
+- Clear one {name} from all players and execute {run};
+- Note: There should be no extra spaces at the beginning and end of the command in the run parameter, and there should be no slash before the command.
 
-- Clears one `{name}` per player and executes `{run}`
-- Note: `{run}` must not have leading/trailing spaces or `/`
+### Clear specified items and execute commands multiple times
 
-### Clear Items & Run Commands
+Function usage: `/function dfl:tick/clear_run_b {name:"sand",run:"give @s anvil"}`
 
-Function: `/function dfl:tick/clear_run_b {name:"sand",run:"give @s anvil"}`
+- Clear all {name} of the function executor and execute the corresponding number of {run} **(within the same tick)**;
+- Note: There should be no extra spaces at the beginning and end of the command in the run parameter, and there should be no slash before the command.
 
-- Clears all `{name}` from executor and runs `{run}` once per item **in one tick**
-- Note: `{run}` must not have leading/trailing spaces or `/`
+### Keep having an item
 
-### Maintain Item Quantity
+Function usage: `/function dfl:tick/keep_have_things {name:"slime_block",num:"64"}`
 
-Function: `/function dfl:tick/keep_have_things {name:"slime_block",num:"64"}`
+- Let the command executor have exactly the specified number of items.
 
-- Ensures executor has exactly `{num}` of `{name}`
+### Self-rescue platform
 
-### Self-Rescue Platform
+Function usage: `/function dfl:tick/slime`
 
-Function: `/function dfl:tick/slime`
+Prerequisite function: `/function dfl:lib/gametime`
 
-Prerequisite: `/function dfl:lib/gametime`
+- Create a scoreboard item named dfl_slime_marker_temp to store the time when the slime platform is generated;
+- Generate a 3*3 slime platform under the player with the dfl_slime tag and remove the tag. The slime platform can only cover air blocks;
+- The slime blocks at the slime platform position will be cleared after `<slime_time's dfl_scoreboard scoreboard item>` ticks;
+- The dfl_scoreboard scoreboard item of slime_time will be set to 200 when it is not assigned, which is 10s;
+- The slime block drops within 2 blocks of the player's position when the platform is generated will be cleared.
 
-- Creates `dfl_slime_marker_temp` to store spawn time
-- Spawns 3×3 slime platform under players with `dfl_slime` tag (replaces air only)
-- Removes slime blocks after `<slime_time>` ticks (default 200 ticks/10s)
-- Clears slime block drops within 2 blocks of platform
+### Convert items to experience
 
-### Item-to-XP Conversion
+Function usage: `/function dfl:tick/things_to_xp {name:"tnt",xp:"1"}`
 
-Function: `/function dfl:tick/things_to_xp {name:"tnt",xp:"1"}`
+- Convert each {name} on the function executor into {xp} experience points.
 
-- Converts each `{name}` in executor's inventory to `{xp}` XP
+### tpa
 
-### TPA System
+Function usage: `/function dfl:tick/tpa`
 
-Function: `/function dfl:tick/tpa`
+Prerequisite function: `/function dfl:lib/player_id`
 
-Prerequisite: `/function dfl:lib/player_id`
+- Create scoreboard items named tpa and tpa_enable;
+- Enter `/trigger tpa set <player's id in the dfl_playerid scoreboard, which can be viewed through Tab>` to teleport to the corresponding player;
+- Enter `/trigger tpa_enable` to allow other players to teleport to themselves, which cannot be revoked (if this command is not executed, all other players cannot teleport to this player). If set is used in this command to set other values, there will be no effect (other players will not be allowed to teleport to themselves). You can still set it to 1 again through set to allow other players to teleport to themselves;
+- If the player to be teleported does not exist or has not allowed other players to teleport to themselves, they will be teleported to the corresponding player after the corresponding player id can be teleported. During this period, the tpa object can still be changed at will.
 
-- Creates `tpa` and `tpa_enable` objectives
-- `/trigger tpa set <player's dfl_playerid>`: Teleport to player
-- `/trigger tpa_enable`: Allow others to teleport to you (irreversible)
-- Queues teleport if target is unavailable
+### Auto-smelting
 
-### Auto-Smelting
+Function usage: `/function auto_smelt:smelt {input:"raw_iron",output:"iron_ingot"}`
 
-Function: `/function auto_smelt:smelt {input:"raw_iron",output:"iron_ingot"}`
-
-- Consumes `{input}`, grants `{output}`
-- Costs 1 XP per item smelted
-- Supports multiple fuels simultaneously
-- Coal blocks smelt 9 items (costs 9 XP)
+- Consume {input} and give the function executor the corresponding amount of {output};
+- Smelting an item consumes 1 experience point. If the player has no experience, the item will not be smelted;
+- If the backpack has three supported fuels at the same time, these fuels will be consumed at the same time;
+- After consuming a coal block, 9 items can be smelted at the same time, and 9 experience points will be deducted.
 
 ## Redstone
 
-<span style="color:red;"><b>Execute functions in this category periodically (use [/schedule](https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/schedule)).</b></span>
+<span style="color:red;"><b>Functions in this category are recommended to be executed after a period of time. (You can use the [/schedule](https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/schedule "Go to the wiki to see the usage of this command") command)</b></span>
 
-### Clear Dropped Items
+### Clean up dropped items
 
-Function: `/function dfl:redstone/kill_item`
+Function usage: `/function dfl:redstone/kill_item`
 
-- Creates `dfl_scoreboard`
-- Clears all items (exempts `need`-tagged)
-- Outputs cleared count via `/tellraw`
+- Create a scoreboard item named dfl_scoreboard;
+- Clear all dropped items and output the number of cleared dropped items through `/tellraw`;
+- Will not clear dropped items with the need tag.
+- The effect is as follows:
 
-Effect:
+![[DFL] Datapack Function Support Library (datapack function library)-Image 5](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/redstone.kill_item.png)
 
-![[DFL] Datapack Function Library (datapack function library)-Image 5](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.kill_item.png?raw=true)
+### Display entity quantity information
 
-### Display Entity Stats
+Function usage: `/function dfl:redstone/show_entity`
 
-Function: `/function dfl:redstone/show_entity`
-
-Prerequisites:
+Prerequisite functions:
 
 `/function dfl:lib/entity`
 
@@ -314,111 +322,126 @@ Prerequisites:
 
 `/function dfl:lib/other_entity`
 
-Effect:
+The effect of this function is as follows:
 
-![[DFL] Datapack Function Library (datapack function library)-Image 6](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/refs/heads/main/datapack-function-library/README/redstone.show_entity.png?raw=true)
+![[DFL] Datapack Function Support Library (datapack function library)-Image 6](https://raw.githubusercontent.com/WhiteElephant-abc/datapack/main/datapack-function-library/README/redstone.show_entity.png)
 
 ## Lib
 
-<span style="color:red;"><b>Functions here have no standalone effects or don't fit other categories.</b></span>
+<span style="color:red;"><b>Functions in this category have no effect when executed alone or do not fit into the above categories.</b></span>
 
-### Force Death Drop
+### Force death drop
 
-Function: `/function dfl:lib/clear`
+Function usage: `/function dfl:lib/clear`
 
-1. Disables keepInventory
-2. Kills executor
-3. Enables keepInventory
+1. Turn off keep inventory on death.
+2. Kill the function executor.
+3. Turn on keep inventory on death.
 
-### Get Entity Count
+### Get the number of entities
 
-Function: `/function dfl:lib/entity`
+Function usage: `/function dfl:lib/entity`
 
-- Creates `dfl_scoreboard`
-- Writes entity count to `entity` score
+- Create a scoreboard item named dfl_scoreboard;
+- Write the number of entities to the dfl_scoreboard scoreboard item of entity.
 
-### Get Entity Density
+### Get entity density
 
-Function: `/function dfl:lib/entity_density`
+Function usage: `/function dfl:lib/entity_density`
 
-- Creates `dfl_density`
-- Writes nearby (10-block) entity count to entity's score
+- Create a scoreboard item named dfl_density;
+- Write the number of entities within 10 blocks of all entities to the scoreboard item of this entity.
 
-### Get Item Count
+### Get the number of dropped items
 
-Function: `/function dfl:lib/item`
+Function usage: `/function dfl:lib/item`
 
-- Creates `dfl_scoreboard`
-- Writes item count to `item` score
+- Create a scoreboard item named dfl_scoreboard;
+- Write the number of dropped items to the dfl_scoreboard scoreboard item of item.
 
-### Get Non-Player Entity Count
+### Get the number of non-player entities
 
-Function: `/function dfl:lib/other_entity`
+Function usage: `/function dfl:lib/other_entity`
 
-- Creates `dfl_scoreboard`
-- Writes non-player entity count to `other_entity` score
+- Create a scoreboard item named dfl_scoreboard;
+- Write the number of non-player entities to the dfl_scoreboard scoreboard item of other_entity.
 
-### Get Game Day
+### Get the number of game days
 
-Function: `/function dfl:lib/day`
+Function usage: `/function dfl:lib/day`
 
-- Creates `dfl_scoreboard`
-- Writes game day to `day` score
-- Formula: `time / 24000` (integer division)
+- Create a scoreboard item named dfl_scoreboard;
+- Write the number of game days to the dfl_scoreboard scoreboard item of day;
+- Game days - the number of game days that have passed during the day-night cycle, which is the result of dividing the day-night cycle time by 24000 and taking the integer quotient.
 
-### Get Day Time
+### Get the time of day
 
-Function: `/function dfl:lib/daytime`
+Function usage: `/function dfl:lib/daytime`
 
-- Creates `dfl_scoreboard`
-- Writes daytime to `daytime` score
-- Formula: `time % 24000`
+- Create a scoreboard item named dfl_scoreboard;
+- Write the time of day to the dfl_scoreboard scoreboard item of daytime;
+- Time of day - the number of game ticks that have passed since sunrise on that day, which is the result of dividing the day-night cycle time by 24000 and taking the remainder.
 
-### Glass Cage Around Player
+### Surround the player with glass
 
-Function: `/function dfl:lib/fill_outline`
+Function usage: `/function dfl:lib/fill_outline`
 
-- Spawns 5×5 hollow glass cube at executor
+- Generate a 5*5 hollow glass cube at the command executor.
 
-### Get Game Time
+### Get game time
 
-Function: `/function dfl:lib/gametime`
+Function usage: `/function dfl:lib/gametime`
 
-- Creates `dfl_scoreboard`
-- Writes game ticks to `gametime` score
-- Also writes to players' `dfl_gametime`
+- Create a scoreboard item named dfl_scoreboard;
+- Write the game time to the dfl_scoreboard scoreboard item of gametime;
+- Game time - the total number of game ticks that have passed in the world.
 
-### Get Player Count
+### Get the number of players
 
-Function: `/function dfl:lib/players`
+Function usage: `/function dfl:lib/players`
 
-- Creates `dfl_scoreboard`
-- Writes player count to `players` score
+- Create a scoreboard item named dfl_scoreboard;
+- Write the number of players to the dfl_scoreboard scoreboard item of players.
 
-### Modify Max Health
+### Modify maximum health
 
-Function: `/function dfl:lib/change_max_health {num:"100"}`
+Function usage: `/function dfl:lib/change_max_health {num:"100"}`
 
-- Sets all players' max health to `{num}`
+- Set the maximum health of all players to {num}.
 
 ### Generate UID
 
-Function: `/function dfl:lib/player_id`
+Function usage: `/function dfl:lib/player_id`
 
-- Creates `dfl_playerid` and `dfl_scoreboard`
-- Stores UID usage in `playerid_temp`
-- Assigns unique immutable UIDs (dfl_playerid)
-- UIDs: 1+ (earlier joiners = smaller numbers)
+- Create scoreboard items named dfl_playerid and dfl_scoreboard;
+- Store the UID usage progress in the dfl_scoreboard scoreboard item of playerid_temp;
+- Set a unique and immutable UID for all players in the dfl_playerid scoreboard;
+- The UID is a number of 1 and above. The player who enters the server earliest has the smallest number, and so on;
+- If there is more than one player in the server when the function is executed, the UID generation order of these players is random.
 
-### Count Items
+### Detect the number of items
 
-Function: `/function dfl:lib/things_count {name:"stone"}`
+Function usage: `/function dfl:lib/things_count {name:"stone"}`
 
-- Creates `dfl_{name}_num`
-- Writes each player's `{name}` count to their score
+- Create a scoreboard item named dfl\_{name}\_num;
+- Write the number of {name} of all players to their respective scoreboard items.
 
-### Mass-Spawn Dummies
+### Batch generate dummies
 
-Function: `/function dfl:lib/spawn`
+Function usage: `/function dfl:lib/spawn`
 
-- Spawns 100 Carpet mod dummies at player coordinates
+- Generate 100 Carpet dummies based on the player's coordinates.
+
+# Dialog Description
+
+## GNU GPL License Text
+
+Dialog usage: `/dialog show dfl:gpl`
+
+- This dialog contains the original text of the GNU GPL v3.0 license.
+
+## GNU LGPL License Text
+
+Dialog usage: `/dialog show dfl:lgpl`
+
+- This dialog contains the original text of the GNU LGPL v3.0 license.
