@@ -1,7 +1,3 @@
-- 更新 README
-- 更正支持的版本列表
-
+- 使用完 gametime dfl_scoreboard 记分项后进行恢复，避免其他使用此记分项的项目出现问题
 ---
-
-- Update README
-- Correct supported version list
+- Restore the gametime dfl_scoreboard objective after use to avoid problems with other projects that use this objective
