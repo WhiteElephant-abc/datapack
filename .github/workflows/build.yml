@@ -97,7 +97,7 @@ jobs:
           [查看失败的构建]($RUN_URL)
 
           <details>
-          <summary>构建日志 (末尾 40kb)</summary>
+          <summary>构建日志片段</summary>
 
           \`\`\`
           $LOG_BODY

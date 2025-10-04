@@ -22,15 +22,15 @@ jobs:
         run: |
           TAG_NAME="${{ github.ref_name }}"
           echo "Tag name: $TAG_NAME"
-          
+
           # Extract project name (everything before _v)
           PROJECT_NAME=$(echo "$TAG_NAME" | sed 's/_v.*//')
           echo "Project name: $PROJECT_NAME"
-          
+
           # Extract version (everything after _v)
           VERSION=$(echo "$TAG_NAME" | sed 's/.*_v//')
           echo "Version: $VERSION"
-          
+
           echo "project_name=$PROJECT_NAME" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -74,11 +74,11 @@ jobs:
             exit 1
           fi
           echo "Found artifact: $OLD_ARTIFACT_PATH"
-          
+
           NEW_ARTIFACT_NAME="${{ github.ref_name }}.zip"
           mv "$OLD_ARTIFACT_PATH" "$NEW_ARTIFACT_NAME"
           echo "Renamed artifact to $NEW_ARTIFACT_NAME"
-          
+
           echo "artifact_path=$NEW_ARTIFACT_NAME" >> $GITHUB_OUTPUT
 
       - name: Create Release
