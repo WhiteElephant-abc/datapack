@@ -46,7 +46,7 @@ jobs:
   handle-failure:
     runs-on: ubuntu-latest
     needs: build-with-bazel
-    if: needs.build-with-bazel.result == 'failure'
+    if: failure()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
