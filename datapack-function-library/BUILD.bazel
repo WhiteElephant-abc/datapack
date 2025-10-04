@@ -5,7 +5,6 @@ pack_version = "4.4"
 
 # 主要的数据包配置，目标名称为包名称
 complete_datapack_config(
-    changelog = "NEWS.md",
     game_versions = minecraft_versions_range("1.13", "1.21.9"),  # 从 1.13 到 1.21.9
     modrinth_project_id = "xfcXTP3W",
     pack_id = "dfl",
