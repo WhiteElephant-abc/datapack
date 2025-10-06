@@ -101,7 +101,7 @@ jobs:
       - name: Check for existing issue
         id: check_issue
         run: |
-          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "in:title \"${{ steps.commit_info.outputs.short_sha }} 存在重复id\"")
+          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "\"\${{ steps.commit_info.outputs.short_sha }} 存在重复id\" in:title" | wc -l)
           if [ $issue_count -gt 0 ]; then
             echo "issue_exists=true" >> $GITHUB_OUTPUT
           else
