@@ -5,7 +5,7 @@ pack_version = "3.0"
 complete_datapack_config(
     game_versions = minecraft_versions_range("1.13.2", "1.20.2"),
     modrinth_project_id = "WF6VN2Zb",
-    pack_id = "auto_lucky_block",
+    pack_id = "highly_toxic_water",
     pack_version = pack_version,
     deps = [
         "README.md",
