@@ -19,10 +19,10 @@ function dfl:lib/gametime
 
 # tick_fill
 execute store result score tick_fill sd.temp run data get storage stone_disappearance:data settings.tick_fill
-execute if score tick_fill sd.temp matches 4 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace stone
-execute if score tick_fill sd.temp matches 4 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace deepslate
-execute if score tick_fill sd.temp matches 4 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace netherrack
-execute if score tick_fill sd.temp matches 4 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace end_stone
+execute if score tick_fill sd.temp matches 1 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace stone
+execute if score tick_fill sd.temp matches 1 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace deepslate
+execute if score tick_fill sd.temp matches 1 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace netherrack
+execute if score tick_fill sd.temp matches 1 as @a at @s run fill ~1 ~-1 ~1 ~-1 ~1 ~-1 air replace end_stone
 
 # 移除临时记分板
 scoreboard objectives remove sd.temp
