@@ -83,6 +83,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download duplication report
         uses: actions/download-artifact@v4
         with:
@@ -92,10 +94,14 @@ jobs:
         id: commit_info
         run: |
           echo "short_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$commit_message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Check for existing issue
         id: check_issue
         run: |
-          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "in:title \"${{ steps.commit_info.outputs.short_sha }} 存在重复id\"" | wc -l)
+          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "in:title \"${{ steps.commit_info.outputs.short_sha }} 存在重复id\"")
           if [ $issue_count -gt 0 ]; then
             echo "issue_exists=true" >> $GITHUB_OUTPUT
           else
@@ -107,7 +113,20 @@ jobs:
         if: steps.check_issue.outputs.issue_exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_MESSAGE: ${{ steps.commit_info.outputs.commit_message }}
           SHORT_SHA: ${{ steps.commit_info.outputs.short_sha }}
+          HEAD_SHA: ${{ github.sha }}
           REPO: ${{ github.repository }}
+          SERVER_URL: ${{ github.server_url }}
         run: |
-          gh issue create --repo $REPO --title "$SHORT_SHA 存在重复id" --body-file duplicate_report.md --label "bug"
+          cat <<EOF > issue-body.md
+          commit [$SHORT_SHA]($SERVER_URL/$REPO/commit/$HEAD_SHA) 存在重复id。
+
+          **Commit Message:**
+          $COMMIT_MESSAGE
+
+          ---
+
+          EOF
+          cat duplicate_report.md >> issue-body.md
+          gh issue create --repo $REPO --title "$SHORT_SHA 存在重复id" --body-file issue-body.md --label "bug"
