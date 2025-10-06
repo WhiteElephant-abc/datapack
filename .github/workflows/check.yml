@@ -1,4 +1,4 @@
-name: Check for duplicate IDs
+name: Check
 
 on: [pull_request, push]
 
@@ -41,7 +41,7 @@ jobs:
                       id = parts[2]
                       printf "发现重复的 `%s`: **%s**\n\n", type, id
                       printf "涉及的文件:\n"
-                      
+
                       split(locations[key], files, "\n")
                       for (i in files) {
                           if (files[i] != "") {
@@ -68,7 +68,7 @@ jobs:
           echo "发现重复的ID，请查看报告。"
           cat duplicate_report.md
           exit 1
-      
+
       - name: Upload duplication report
         if: failure()
         uses: actions/upload-artifact@v4
