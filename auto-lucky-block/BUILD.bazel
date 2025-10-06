@@ -3,7 +3,7 @@ load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_ran
 pack_version = "3.0"
 
 complete_datapack_config(
-    game_versions = minecraft_versions_range("1.13.2","1.20.2"),
+    game_versions = minecraft_versions_range("1.13.2", "1.20.2"),
     modrinth_project_id = "iLfrlAo2",
     pack_id = "auto_lucky_block",
     pack_version = pack_version,
@@ -11,5 +11,6 @@ complete_datapack_config(
         "README.md",
         "pack.png",
         "//:license_gpl",
+        "//datapack-function-library:dfl",
     ],
 )
