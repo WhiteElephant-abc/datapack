@@ -28,18 +28,6 @@ dialog show @s {\
             template: "data modify storage stone_disappearance:data settings merge value {end_block:'$(end_block)',end_min:$(end_min),end_max:$(end_max)}"\
         }\
     },\
-    body: [\
-        {\
-            type: "plain_message",\
-            width: 1000,\
-            contents: {\
-                translate: "dialog.white.elephant.common.technical_limitation",\
-                fallback: "由于技术限制，此处显示的设置均为默认值",\
-                color: "red",\
-                bold: true\
-            }\
-        }\
-    ],\
     inputs: [\
         {\
             type: "minecraft:text",\
