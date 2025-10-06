@@ -25,7 +25,7 @@
     },
     "action": {
       "type": "dynamic/run_command",
-      "template": "data modify storage stone_disappearance:data settings merge value {success_num:$(success_num),fill_falling_block_with:'$(fill_falling_block_with)',tick_fill:'$(tick_fill)'}"
+      "template": "data modify storage stone_disappearance:data settings merge value {success_num:$(success_num),fill_falling_block_with:'$(fill_falling_block_with)',tick_fill:$(tick_fill)}"
     }
   },
   "body": [

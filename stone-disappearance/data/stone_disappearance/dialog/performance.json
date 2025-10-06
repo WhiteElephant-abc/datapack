@@ -25,7 +25,7 @@
         },
         "action": {
             "type": "dynamic/run_command",
-            "template": "data modify storage stone_disappearance:data settings merge value {overworld_block:'$(overworld_block)',n:$(n),tick:$(tick),fill_falling_block:'$(fill_falling_block)',fill_falling_block_with:'glass'}"
+            "template": "data modify storage stone_disappearance:data settings merge value {overworld_block:'$(overworld_block)',n:$(n),tick:$(tick),fill_falling_block:$(fill_falling_block),fill_falling_block_with:'glass'}"
         }
     },
     "body": [
