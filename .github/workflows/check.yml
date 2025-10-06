@@ -1,0 +1,113 @@
+name: Check for duplicate IDs
+
+on: [pull_request, push]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check-ids:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run check script
+        id: check
+        run: |
+          find . -name "BUILD.bazel" -exec awk '
+            /modrinth_project_id\s*=/ {gsub(/"|,| /, "", $3); if ($3) print "modrinth_project_id:" $3 ":" FILENAME}
+            /pack_id\s*=/ {gsub(/"|,| /, "", $3); if ($3) print "pack_id:" $3 ":" FILENAME}
+          ' {} + > ids.txt
+
+          awk -F: -v repo="${{ github.repository }}" -v sha="${{ github.sha }}" '
+          BEGIN { found_duplicates = 0 }
+          {
+              key = $1 ":" $2
+              locations[key] = locations[key] $3 "\n"
+              count[key]++
+          }
+          END {
+              for (key in count) {
+                  if (count[key] > 1) {
+                      if (found_duplicates == 0) {
+                          print "## 发现重复ID"
+                          print ""
+                      }
+                      found_duplicates = 1
+                      split(key, parts, ":")
+                      type = parts[1]
+                      id = parts[2]
+                      printf "发现重复的 `%s`: **%s**\n\n", type, id
+                      printf "涉及的文件:\n"
+                      
+                      split(locations[key], files, "\n")
+                      for (i in files) {
+                          if (files[i] != "") {
+                              sub(/^\.\//, "", files[i])
+                              printf "- [%s](https://github.com/%s/blob/%s/%s)\n", files[i], repo, sha, files[i]
+                          }
+                      }
+                      print ""
+                  }
+              }
+          }
+          ' ids.txt > duplicate_report.md
+
+          if [ -s duplicate_report.md ]; then
+            echo "duplicates_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "duplicates_found=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Fail if duplicates found
+        if: steps.check.outputs.duplicates_found == 'true'
+        run: |
+          echo "发现重复的ID，请查看报告。"
+          cat duplicate_report.md
+          exit 1
+      
+      - name: Upload duplication report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duplicate-report
+          path: duplicate_report.md
+
+  handle-failure:
+    runs-on: ubuntu-latest
+    needs: check-ids
+    if: failure()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download duplication report
+        uses: actions/download-artifact@v4
+        with:
+          name: duplicate-report
+          path: .
+      - name: Get commit information
+        id: commit_info
+        run: |
+          echo "short_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+      - name: Check for existing issue
+        id: check_issue
+        run: |
+          issue_count=$(gh issue list --repo ${{ github.repository }} --label "bug" --search "in:title \"${{ steps.commit_info.outputs.short_sha }} 存在重复id\"" | wc -l)
+          if [ $issue_count -gt 0 ]; then
+            echo "issue_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "issue_exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create issue with report
+        if: steps.check_issue.outputs.issue_exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHORT_SHA: ${{ steps.commit_info.outputs.short_sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh issue create --repo $REPO --title "$SHORT_SHA 存在重复id" --body-file duplicate_report.md --label "bug"
