@@ -22,7 +22,7 @@ jobs:
           ' {} + > ids.txt
 
           awk -F: -v repo="${{ github.repository }}" -v sha="${{ github.sha }}" '
-          BEGIN { found_duplicates = 0 }
+          BEGIN { }
           {
               key = $1 ":" $2
               locations[key] = locations[key] $3 "\n"
@@ -31,11 +31,6 @@ jobs:
           END {
               for (key in count) {
                   if (count[key] > 1) {
-                      if (found_duplicates > 0) {
-                          print "---"
-                          print ""
-                      }
-                      found_duplicates++
                       split(key, parts, ":")
                       type = parts[1]
                       id = parts[2]
