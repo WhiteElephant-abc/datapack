@@ -1,3 +1,5 @@
-- 修改完 gametime dfl_scoreboard 记分项后进行恢复，避免其他使用此记分项的项目出现问题
+- 规范设置中布尔值的存储，不再使用字符串
+
 ---
-- Restore the gametime dfl_scoreboard objective after modification to avoid problems with other projects that use this objective
+
+- Standardize the storage of boolean values in settings, no longer use strings

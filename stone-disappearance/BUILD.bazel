@@ -1,9 +1,9 @@
 load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 
-pack_version = "4.2"
+pack_version = "4.3"
 
 complete_datapack_config(
-    game_versions = minecraft_versions_range("1.20.3"),  # 从 1.20.3 到最新版本
+    game_versions = minecraft_versions_range("1.20.3"),
     modrinth_project_id = "WD7HqNGg",
     pack_id = "stone_disappearance",
     pack_version = pack_version,
