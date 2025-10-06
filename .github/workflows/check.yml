@@ -120,7 +120,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
         run: |
           cat <<EOF > issue-body.md
-          commit [$SHORT_SHA]($SERVER_URL/$REPO/commit/$HEAD_SHA) 存在重复id。
+          在 commit [$SHORT_SHA]($SERVER_URL/$REPO/commit/$HEAD_SHA) 中存在重复id。
 
           **Commit Message:**
           $COMMIT_MESSAGE
