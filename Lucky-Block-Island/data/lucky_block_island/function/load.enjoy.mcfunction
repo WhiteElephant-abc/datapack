@@ -6,7 +6,6 @@ execute unless biome 0 10 0 minecraft:the_void run \
     title @a title \
         {\
             "translate":"title.lucky_block_island.lbi",\
-            "bold":true,\
             "color":"yellow",\
             "fallback":"[LBI]幸运方块空岛"\
         }

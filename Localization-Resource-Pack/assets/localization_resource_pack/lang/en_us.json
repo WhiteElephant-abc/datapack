@@ -56,5 +56,5 @@
   "dialog.stone_disappearance.advanced_end.max": "End Max",
   "title.lucky_block_island.lbi": "[LBI]Lucky Block Island",
   "title.lucky_block_island.error.subtitle": "Dimension settings validation failed!",
-    "title.lucky_block_island.error.actionbar": "Dimension settings validation failed, please load the datapack when creating the world!"
+    "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!"
 }
