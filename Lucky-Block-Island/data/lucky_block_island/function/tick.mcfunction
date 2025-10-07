@@ -1,6 +1,7 @@
 # 启用trigger
 scoreboard players enable @a minecraft.is.too.hard
 scoreboard players enable @a no.friendly.fire.and.collision
+scoreboard players enable @a clear.offhand
 
 # 处理trigger值
 execute as @a unless score @s minecraft.is.too.hard matches 1 run \
