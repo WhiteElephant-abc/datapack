@@ -119,21 +119,6 @@ def datapack_functions(pack_id):
         "functions_expand_pattern": ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
     }
 
-def datapack_standard_files(pack_id):
-    """生成数据包的标准文件 glob 模式。
-
-    Args:
-        pack_id: 数据包 ID
-
-    Returns:
-        包含各种标准文件的配置字典
-    """
-    return {
-        "dialogs_pattern": ["data/%s/dialog/*.json" % pack_id],
-        "function_tags_pattern": ["data/minecraft/tags/function/*.json"],
-        "minecraft_dialog_tags_pattern": ["data/minecraft/tags/dialog/*.json"],
-    }
-
 def standard_localization_dependency():
     """获取标准的本地化资源包依赖配置。
 
@@ -153,10 +138,9 @@ def _datapack_impl(
         functions_expand,
         functions,
         function_tags,
-        dialogs,
-        minecraft_dialog_tags,
         deps,
-        minecraft_version):
+        minecraft_version,
+        all_json):
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -172,15 +156,16 @@ def _datapack_impl(
     )
 
     process_json(
-        name = name + "_function_tag_compress",
-        srcs = function_tags,
+        name = name + "_all_json_compress",
+        srcs = all_json,
     )
 
     pkg_files(
-        name = name + "_function_tag",
+        name = name + "_pack_all_json",
         visibility = visibility,
-        srcs = [":%s_function_tag_compress" % name],
-        prefix = "data/minecraft/tags/function",
+        srcs = [":%s_all_json_compress" % name],
+        prefix = "data",
+        strip_prefix = "data",
     )
 
     process_json(
@@ -193,31 +178,7 @@ def _datapack_impl(
         visibility = visibility,
         srcs = [":%s_function_tag_legacy_compress" % name],
         prefix = "data/minecraft/tags/functions",
-    )
-
-    process_json(
-        name = name + "_dialog_compress",
-        srcs = dialogs,
-    )
-
-    pkg_files(
-        name = name + "_pack_dialog",
-        visibility = visibility,
-        srcs = [":%s_dialog_compress" % name],
-        prefix = "data/%s/dialog" % pack_id,
-        strip_prefix = "data/%s/dialog" % pack_id,
-    )
-
-    process_json(
-        name = name + "_minecraft_dialog_tag_compress",
-        srcs = minecraft_dialog_tags,
-    )
-
-    pkg_files(
-        name = name + "_minecraft_dialog_tag",
-        visibility = visibility,
-        srcs = [":%s_minecraft_dialog_tag_compress" % name],
-        prefix = "data/minecraft/tags/dialog",
+        strip_prefix = "data/minecraft/tags/function",
     )
 
     pkg_filegroup(
@@ -225,10 +186,8 @@ def _datapack_impl(
         visibility = visibility,
         srcs = [
             ":%s_pack_function" % name,
-            ":%s_function_tag" % name,
+            ":%s_pack_all_json" % name,
             ":%s_function_tag_legacy" % name,
-            ":%s_pack_dialog" % name,
-            ":%s_minecraft_dialog_tag" % name,
         ],
     )
 
@@ -272,8 +231,7 @@ datapack = macro(
         "functions_expand": attr.label_list(default = []),
         "functions": attr.label_list(default = []),
         "function_tags": attr.label_list(default = []),
-        "dialogs": attr.label_list(default = []),
-        "minecraft_dialog_tags": attr.label_list(default = []),
+        "all_json": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
     },
@@ -396,9 +354,6 @@ def complete_datapack_config(
     # 获取函数文件配置
     func_config = datapack_functions(pack_id)
 
-    # 获取标准文件配置
-    std_files = datapack_standard_files(pack_id)
-
     # 准备 Modrinth 依赖列表
     effective_modrinth_deps = list(modrinth_deps)
     if include_localization_dependency:
@@ -419,9 +374,8 @@ def complete_datapack_config(
             exclude = func_config["functions_exclude"],
         ),
         functions_expand = native.glob(func_config["functions_expand_pattern"]),
-        function_tags = native.glob(std_files["function_tags_pattern"]),
-        dialogs = native.glob(std_files["dialogs_pattern"], allow_empty = True),
-        minecraft_dialog_tags = native.glob(std_files["minecraft_dialog_tags_pattern"], allow_empty = True),
+        all_json = native.glob(["data/**/*.json"], allow_empty = True),
+        function_tags = native.glob(["data/minecraft/tags/function/*.json"], allow_empty = True),
         **kwargs
     )
 
