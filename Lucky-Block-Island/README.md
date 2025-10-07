@@ -4,6 +4,8 @@
 
 本数据包会在 0 0 0 不断生成幸运方块，如果在世界生成前加载数据包，还会修改主世界的生成设置。
 
+此数据包依赖于 Lucky Block（[CurseForge](https://www.curseforge.com/minecraft/mc-mods/lucky-block) | [MCMOD](https://www.mcmod.cn/class/294.html) | [GitHub](https://github.com/alexsocha/luckyblock)）。
+
 ## 基础功能
 
 - 本数据包会将 0 0 0 处的空气替换为幸运方块。
@@ -50,6 +52,8 @@
 ## Introduction
 
 This data pack will continuously generate lucky blocks at 0 0 0. If the data pack is loaded before world generation, it will also modify the Overworld's generation settings.
+
+This data pack depends on Lucky Block ([CurseForge](https://www.curseforge.com/minecraft/mc-mods/lucky-block) | [MCMOD](https://www.mcmod.cn/class/294.html) | [GitHub](https://github.com/alexsocha/luckyblock)).
 
 ## Basic Features
 
