@@ -20,7 +20,7 @@ execute if entity @a[scores={no.friendly.fire.and.collision=1}] run \
     function dfl:tick/team
 # 垃圾桶
 execute as @a[scores={clear.offhand=1}] run \
-    item replace entity @a weapon.offhand with air
+    item replace entity @s weapon.offhand with air
 
 # 放置lucky_block
 fill 0 0 0 0 0 0 lucky:lucky_block replace minecraft:air
