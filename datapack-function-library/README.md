@@ -182,9 +182,9 @@ execute if score @n dfl_enable matches 1
 函数用法：`/function dfl:tick/relax`
 
 - 开启死亡不掉落；
-- 给予玩家夜视；
-- 给予玩家发光；
-- 移除玩家的黑暗效果。
+- 给予执行者夜视；
+- 给予执行者发光；
+- 移除执行者的黑暗效果。
 
 ### 显示实体数
 

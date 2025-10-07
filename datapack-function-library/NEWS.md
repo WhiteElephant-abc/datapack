@@ -1,9 +1,5 @@
-- 加入 gpl 和 lgpl 协议原文对话框
-- 项目更名
-- 杂项
+- 现在 dfl:tick/relax 函数除死亡不掉落外，均仅对执行者生效
 
 ---
 
-- Added original GPL and LGPL license text dialogs
-- Project renamed
-- Miscellaneous
+- The dfl:tick/relax function now only affects the executor, except for keep inventory on death

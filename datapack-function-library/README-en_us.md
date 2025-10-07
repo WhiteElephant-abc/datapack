@@ -182,9 +182,9 @@ Prerequisite function: `/function dfl:lib/entity_density`
 Function usage: `/function dfl:tick/relax`
 
 - Enable keep inventory on death;
-- Give players night vision;
-- Give players glowing;
-- Remove the player's darkness effect.
+- Give the executor night vision;
+- Give the executor glowing;
+- Remove the executor's darkness effect.
 
 ### Display the number of entities
 
