@@ -3,7 +3,7 @@ load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_ran
 pack_version = "2.0"
 
 complete_datapack_config(
-    game_versions = minecraft_versions_range("1.14","1.20.2"),
+    game_versions = minecraft_versions_range("1.16","1.20.2"),
     modrinth_project_id = "sAahwfYo",
     pack_id = "lucky_block_island",
     pack_version = pack_version,

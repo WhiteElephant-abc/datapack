@@ -35,7 +35,7 @@ execute as @a[scores={clear.offhand=1}] run \
     item replace entity @s weapon.offhand with air
 
 # 放置lucky_block
-fill 0 0 0 0 0 0 lucky:lucky_block replace minecraft:air
+setblock 0 0 0 lucky:lucky_block keep
 
 # 掉落物传送
 execute positioned 0 0 0 as @e[distance=..3,type=item] \
