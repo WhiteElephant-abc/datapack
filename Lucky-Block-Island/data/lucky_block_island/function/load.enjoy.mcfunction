@@ -10,5 +10,6 @@ gamerule spawnRadius 0
 # 添加记分板
 scoreboard objectives add minecraft.is.too.hard trigger
 scoreboard objectives add no.friendly.fire.and.collision trigger
+scoreboard objectives add clear.offhand trigger
 
 scoreboard objectives add pos dummy

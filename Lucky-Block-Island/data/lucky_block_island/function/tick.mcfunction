@@ -1,11 +1,15 @@
 # 启用trigger
 scoreboard players enable @a minecraft.is.too.hard
 scoreboard players enable @a no.friendly.fire.and.collision
+
 # 处理trigger值
 execute as @a unless score @s minecraft.is.too.hard matches 1 run \
     scoreboard players set @s minecraft.is.too.hard 0
 execute as @a unless score @s no.friendly.fire.and.collision matches 1 run \
     scoreboard players set @s no.friendly.fire.and.collision 0
+execute as @a unless score @s clear.offhand matches 1 run \
+    scoreboard players set @s clear.offhand 0
+
 # minecraft is too hard
 execute as @a[scores={minecraft.is.too.hard=1}] run \
     function dfl:tick/mith
@@ -14,6 +18,9 @@ execute if entity @a[scores={minecraft.is.too.hard=1}] run \
 # no friendly fire and collision
 execute if entity @a[scores={no.friendly.fire.and.collision=1}] run \
     function dfl:tick/team
+# 垃圾桶
+execute as @a[scores={clear.offhand=1}] run \
+    item replace entity @a weapon.offhand with air
 
 # 放置lucky_block
 fill 0 0 0 0 0 0 lucky:lucky_block replace minecraft:air
