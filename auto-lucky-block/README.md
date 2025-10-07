@@ -1,5 +1,7 @@
 # [ALB]自动幸运方块 (auto lucky block)
 
+**The English description is below.**
+
 - 这个数据包可以（默认）每 30 秒为所有玩家激活一个幸运方块。
 - 使用 `/scoreboard players set countdown alb.settings <每次激活前等待的 tick 数>` 可以修改激活时间，默认 tick 数为 600（即 30 秒）。
 - 新的世界初次加载数据包后不会立即激活，而是等待设定的激活时间到来。

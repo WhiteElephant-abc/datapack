@@ -1,5 +1,7 @@
 # [SD]石头消失 (Stone Disappearance)
 
+**The English description is below.**
+
 ## 简介
 
 此数据包将世界中的石头替换为其他方块，最低兼容 Minecraft 1.20.3，但只有 Minecraft 1.21.6 及以上版本才能体验完整功能。
