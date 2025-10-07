@@ -23,7 +23,7 @@ complete_datapack_config(
 pkg_filegroup(
     name = "dfl",
     srcs = [
-        ":datapack-function-library_pack_dialog",
+        ":datapack-function-library_pack_namespace_json",
         ":datapack-function-library_pack_function",
     ],
     visibility = ["//visibility:public"],

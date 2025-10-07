@@ -140,7 +140,8 @@ def _datapack_impl(
         function_tags,
         deps,
         minecraft_version,
-        all_json):
+        namespace_json,
+        minecraft_json):
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -156,14 +157,27 @@ def _datapack_impl(
     )
 
     process_json(
-        name = name + "_all_json_compress",
-        srcs = all_json,
+        name = name + "_namespace_json_compress",
+        srcs = namespace_json,
     )
 
     pkg_files(
-        name = name + "_pack_all_json",
+        name = name + "_pack_namespace_json",
         visibility = visibility,
-        srcs = [":%s_all_json_compress" % name],
+        srcs = [":%s_namespace_json_compress" % name],
+        prefix = "data",
+        strip_prefix = "data",
+    )
+
+    process_json(
+        name = name + "_minecraft_json_compress",
+        srcs = minecraft_json,
+    )
+
+    pkg_files(
+        name = name + "_pack_minecraft_json",
+        visibility = visibility,
+        srcs = [":%s_minecraft_json_compress" % name],
         prefix = "data",
         strip_prefix = "data",
     )
@@ -186,7 +200,8 @@ def _datapack_impl(
         visibility = visibility,
         srcs = [
             ":%s_pack_function" % name,
-            ":%s_pack_all_json" % name,
+            ":%s_pack_namespace_json" % name,
+            ":%s_pack_minecraft_json" % name,
             ":%s_function_tag_legacy" % name,
         ],
     )
@@ -231,7 +246,8 @@ datapack = macro(
         "functions_expand": attr.label_list(default = []),
         "functions": attr.label_list(default = []),
         "function_tags": attr.label_list(default = []),
-        "all_json": attr.label_list(default = []),
+        "namespace_json": attr.label_list(default = []),
+        "minecraft_json": attr.label_list(default = []),
         "deps": attr.label_list(default = []),
         "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
     },
@@ -374,7 +390,8 @@ def complete_datapack_config(
             exclude = func_config["functions_exclude"],
         ),
         functions_expand = native.glob(func_config["functions_expand_pattern"]),
-        all_json = native.glob(["data/**/*.json"], allow_empty = True),
+        namespace_json = native.glob(["data/%s/**/*.json" % pack_id], allow_empty = True),
+        minecraft_json = native.glob(["data/minecraft/**/*.json"], allow_empty = True),
         function_tags = native.glob(["data/minecraft/tags/function/*.json"], allow_empty = True),
         **kwargs
     )
