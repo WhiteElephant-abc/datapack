@@ -177,9 +177,9 @@ execute if score @n dfl_enable matches 1
 - 不会杀死带有 need 标签的实体；
 - 不会在聊天栏留下痕迹。
 
-### 体验优化
+### Minecraft is too hard
 
-函数用法：`/function dfl:tick/relax`
+函数用法：`/function dfl:tick/mith`
 
 - 开启死亡不掉落；
 - 给予执行者夜视；

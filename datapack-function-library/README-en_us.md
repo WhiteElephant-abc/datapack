@@ -177,9 +177,9 @@ Prerequisite function: `/function dfl:lib/entity_density`
 - Will not kill entities with the need tag;
 - Will not leave traces in the chat bar.
 
-### Experience optimization
+### Minecraft is too hard
 
-Function usage: `/function dfl:tick/relax`
+Function usage: `/function dfl:tick/mith`
 
 - Enable keep inventory on death;
 - Give the executor night vision;
