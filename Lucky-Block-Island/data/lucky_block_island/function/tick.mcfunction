@@ -22,6 +22,12 @@ execute as @a unless score @s no.friendly.fire.and.collision matches 1 run \
 execute as @a unless score @s clear.offhand matches 1 run \
     scoreboard players set @s clear.offhand 0
 
+# 禁用功能
+execute unless entity @a[scores={minecraft.is.too.hard=1}] run \
+    function lucky_block_island:disable/minecraft.is.too.hard
+execute unless entity @a[scores={no.friendly.fire.and.collision=1}] run \
+    function lucky_block_island:disable/no.friendly.fire.and.collision
+
 # minecraft is too hard
 execute as @a[scores={minecraft.is.too.hard=1}] run \
     function dfl:tick/mith

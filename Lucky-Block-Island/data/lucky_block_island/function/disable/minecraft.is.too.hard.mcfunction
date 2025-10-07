@@ -1,0 +1,2 @@
+gamerule doDaylightCycle true
+gamerule keepInventory false
