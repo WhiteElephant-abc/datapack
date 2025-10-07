@@ -1,3 +1,14 @@
+execute unless biome 0 10 0 minecraft:the_void run \
+    title @a actionbar \
+        {\
+            "translate":"title.lucky_block_island.error.actionbar",\
+            "bold":true,\
+            "color":"red",\
+            "fallback":"维度设置验证失败，请在创建世界时加载数据包！"\
+        }
+execute unless biome 0 10 0 minecraft:the_void run \
+    return 0
+
 # 启用trigger
 scoreboard players enable @a minecraft.is.too.hard
 scoreboard players enable @a no.friendly.fire.and.collision
@@ -33,3 +44,7 @@ execute positioned 0 0 0 as @e[distance=..3,type=item] \
 # 防掉虚空
 execute as @e store result score @s pos run data get entity @s Pos[1]
 execute as @e[scores={pos=..-64},type=!item] run tp @s 0 20 0
+
+# 禁止下界
+execute as @a at @s if dimension minecraft:the_nether \
+    in minecraft:overworld run tp @s 0 1 0
