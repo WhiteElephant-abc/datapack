@@ -4,9 +4,3 @@
 
 function dfl:start/show/health_list
 function dfl:start/show/death
-#检测datapackets-functions-LIB数据包是否加载
-scoreboard objectives add dfl_enable dummy
-scoreboard players set @e dfl_enable 0
-#删除dfl_need记分板，确保每次加载数据包时都会重置状态
-scoreboard objectives remove dfl_need
-scoreboard objectives add dfl_need dummy
