@@ -20,6 +20,16 @@ This data pack can activate a lucky block for all players every 30 seconds (by d
 
 ---
 
+**[LBI]幸运方块空岛 (Lucky Block Island)**
+
+本数据包会在 0 0 0 不断生成幸运方块，如果在世界生成前加载数据包，还会修改主世界的生成设置。
+
+This data pack will continuously generate lucky blocks at 0 0 0. If the data pack is loaded before world generation, it will also modify the Overworld's generation settings.
+
+[Modrinth](https://modrinth.com/project/sAahwfYo) | [MCMOD](https://www.mcmod.cn/class/17215.html) | [GitHub](https://github.com/WhiteElephant-abc/datapack/tree/main/Lucky-Block-Island)
+
+---
+
 **[DFL]数据包函数支持库 (datapack function library)**
 
 本数据包为开发者提供了一些实用的函数（还有一些对话框），兼容 Minecraft 所有版本（除了无法安装数据包的版本）。
@@ -34,6 +44,6 @@ This datapack provides developers with some practical functions (and some dialog
 
 本数据包会在玩家脚底下不断生成 TNT。
 
-This datapack continuously spawns TNT under the player's feet.
+This datapack continuously generates TNT beneath players' feet.
 
 [Modrinth](https://modrinth.com/project/x9cTWnQD) | [MCMOD](https://www.mcmod.cn/class/17429.html) | [GitHub](https://github.com/WhiteElephant-abc/datapack/tree/main/SetBlock-TNT)
