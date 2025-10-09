@@ -23,10 +23,7 @@
                     ]
                 }
             },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -49,7 +46,10 @@
                     ]
                 }
             },
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "presentation": {
                 "echo": true,
                 "reveal": "always",
