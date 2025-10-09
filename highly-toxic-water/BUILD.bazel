@@ -3,7 +3,7 @@ load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_ran
 pack_version = "1.0"
 
 complete_datapack_config(
-    game_versions = minecraft_versions_range("1.20"),  # 从 1.20 到最新版本
+    game_versions = minecraft_versions_range("1.20"),
     modrinth_project_id = "WF6VN2Zb",
     pack_id = "highly_toxic_water",
     pack_version = pack_version,

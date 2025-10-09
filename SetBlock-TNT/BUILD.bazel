@@ -1,10 +1,10 @@
 load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 
-pack_version = "1.0"
+pack_version = "2.0"
 
 complete_datapack_config(
-    game_versions = minecraft_versions_range("1.20"),  # 从 1.20 到最新版本
-    modrinth_project_id = "WF6VN2Zb",
+    game_versions = minecraft_versions_range("1.20.3"),
+    modrinth_project_id = "x9cTWnQD",
     pack_id = "setblock_tnt",
     pack_version = pack_version,
     deps = [
