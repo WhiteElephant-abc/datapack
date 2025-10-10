@@ -23,6 +23,17 @@
 - **颜色代码**：保持 `§` 开头的颜色代码不变
 - **命令格式**：保持游戏命令格式不变
 
+### 4. 特殊要求
+
+**如果遇到**以下两个键值对，将`subtitle`作为上半句，`actionbar`作为下半句，以保证渲染的正确性。但是，如果目标语言文本较短，可以直接根据源文本翻译。
+
+```json
+{
+  "title.lucky_block_island.error.subtitle": "Dimension settings validation failed!",
+  "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!"
+}
+```
+
 ## 待翻译内容
 
 ```json
