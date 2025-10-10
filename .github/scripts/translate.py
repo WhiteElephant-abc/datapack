@@ -444,8 +444,8 @@ def main():
 
             print(f"    需要翻译 {len(keys_to_translate)} 个键")
 
-            # 分批翻译（每次最多20个键，避免请求过大）
-            batch_size = 20
+            # 分批翻译（每次最多40个键，避免请求过大）
+            batch_size = 40
             all_translated = existing_translate.copy()
 
             keys_list = list(keys_to_translate.items())

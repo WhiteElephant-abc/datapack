@@ -3,3 +3,4 @@ bazel-*
 .bazelbsp
 .vscode/settings.json
 .bazel
+/.github/scripts/__pycache__

@@ -7,8 +7,6 @@
 ### 1. 核心脚本
 
 - **`translate.py`** - 主翻译脚本，调用DeepSeek API进行翻译
-- **`merge_translations.py`** - 合并翻译文件到资源包assets目录
-- **`test_translation.py`** - 系统测试脚本
 
 ### 2. 提示词模板
 
@@ -51,7 +49,7 @@
 ### 🔍 质量保证
 
 - **占位符验证** - 自动检查翻译前后的格式化占位符（%s、%n$s等）一致性
-- **JSON完整性检查** - 验证翻译结果的键完整性、值类型和非空性
+- **JSON完整性检查** - 验证翻译结果的键完整性和值类型
 - **重试机制** - API调用失败时自动重试，最多3次，支持指数退避
 - **详细日志** - 记录翻译失败的详细信息，包括提示词、API响应和错误原因
 
@@ -80,16 +78,13 @@
 ### 手动触发
 
 1. 访问GitHub仓库的Actions页面
-2. 选择"Auto Translation with DeepSeek"工作流
+2. 选择"Auto Translate"工作流
 3. 点击"Run workflow"
 4. 可选择强制重新翻译所有文件
 
 ### 本地测试
 
 ```bash
-# 运行系统测试
-python .github/scripts/test_translation.py
-
 # 手动运行翻译（需要设置DEEPSEEK_API_KEY环境变量）
 python .github/scripts/translate.py
 ```
@@ -139,7 +134,6 @@ translate/                          # 翻译输出目录
 
 - **GitHub Actions日志** - 查看工作流运行的详细过程和错误信息
 - **本地日志文件** - 翻译失败时会在 `logs/` 目录生成详细的失败日志
-- **测试脚本** - 运行 `test_enhanced_translation.py` 验证系统功能
 
 ## 系统架构
 
@@ -243,7 +237,6 @@ translate目录输出
 │   └── translate.yml          # GitHub Actions工作流
 └── scripts/
     ├── translate.py           # 主翻译脚本
-    ├── merge_translations.py  # 翻译合并脚本
     └── README.md             # 本文档
 
 translate/                     # 翻译输出目录
@@ -275,7 +268,7 @@ Localization-Resource-Pack/
 ### 手动触发
 
 1. 在GitHub仓库页面，进入 "Actions" 标签
-2. 选择 "Auto Translation with DeepSeek" 工作流
+2. 选择 "Auto Translate" 工作流
 3. 点击 "Run workflow"
 4. 可选择是否强制重新翻译所有语言
 
@@ -288,8 +281,7 @@ export DEEPSEEK_API_KEY="your_api_key_here"
 # 运行翻译脚本
 python .github/scripts/translate.py
 
-# 合并翻译文件
-python .github/scripts/merge_translations.py
+# 注意：翻译文件会在Bazel构建时自动合并到资源包中
 ```
 
 ## 翻译质量保证
