@@ -66,14 +66,14 @@ def log_progress(message: str, level: str = "info"):
             print(f"::warning::{message}")
         else:
             print(f"::notice::[{timestamp}] {message}")
-    
-    # 标准日志输出
-    if level == "error":
-        logger.error(message)
-    elif level == "warning":
-        logger.warning(message)
     else:
-        logger.info(message)
+        # 标准日志输出（仅在非GitHub Actions环境中）
+        if level == "error":
+            logger.error(message)
+        elif level == "warning":
+            logger.warning(message)
+        else:
+            logger.info(message)
     
     # 强制刷新输出缓冲区
     sys.stdout.flush()
@@ -176,10 +176,10 @@ class DeepSeekTranslator:
             
             return ''.join(content_lines).strip()
         except FileNotFoundError:
-            print(f"警告：提示词模板文件 {file_path} 不存在，使用默认提示词")
+            log_progress(f"警告：提示词模板文件 {file_path} 不存在，使用默认提示词", "warning")
             return ""
         except Exception as e:
-            print(f"警告：加载提示词模板 {file_path} 时出错: {e}")
+            log_progress(f"警告：加载提示词模板 {file_path} 时出错: {e}", "warning")
             return ""
 
     def _format_prompt(self, template: str, **kwargs) -> str:
@@ -191,7 +191,7 @@ class DeepSeekTranslator:
                 formatted = formatted.replace(f"{{{{{key}}}}}", str(value))
             return formatted
         except Exception as e:
-            print(f"警告：格式化提示词时出错: {e}")
+            log_progress(f"警告：格式化提示词时出错: {e}", "warning")
             return template
 
     def validate_placeholder_consistency(self, original_text: str, translated_text: str) -> bool:
@@ -277,7 +277,7 @@ class DeepSeekTranslator:
             f.write(api_response)
             f.write("\n\n" + "=" * 80 + "\n")
 
-        print(f"翻译失败日志已保存: {log_file}")
+        log_progress(f"翻译失败日志已保存: {log_file}", "warning")
 
     def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
@@ -538,10 +538,10 @@ def load_json_file(file_path: str) -> Optional[Dict[str, str]]:
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"文件不存在: {file_path}")
+        log_progress(f"文件不存在: {file_path}", "warning")
         return None
     except json.JSONDecodeError as e:
-        print(f"JSON解析错误 {file_path}: {e}")
+        log_progress(f"JSON解析错误 {file_path}: {e}", "error")
         return None
 
 def save_json_file(file_path: str, data: Dict[str, str]) -> bool:
@@ -552,7 +552,7 @@ def save_json_file(file_path: str, data: Dict[str, str]) -> bool:
             json.dump(data, f, ensure_ascii=False, indent=2)
         return True
     except Exception as e:
-        print(f"保存文件失败 {file_path}: {e}")
+        log_progress(f"保存文件失败 {file_path}: {e}", "error")
         return False
 
 def merge_translations(base_dict: Dict[str, str], override_dict: Dict[str, str]) -> Dict[str, str]:
@@ -743,7 +743,7 @@ def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str
     # 检查是否有新的键需要翻译
     missing_keys = set(source_dict.keys()) - set(existing_translations.keys())
     if missing_keys:
-        print(f"{lang_code}: 发现 {len(missing_keys)} 个新键需要翻译")
+        log_progress(f"{lang_code}: 发现 {len(missing_keys)} 个新键需要翻译")
         return True
 
     return False

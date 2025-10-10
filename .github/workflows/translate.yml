@@ -47,10 +47,6 @@ jobs:
       run: |
         python .github/scripts/translate.py
 
-    - name: Merge translations to assets
-      run: |
-        python .github/scripts/merge_translations.py
-
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
