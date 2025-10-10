@@ -151,8 +151,9 @@ TARGET_LANGUAGES = {
 }
 
 class DeepSeekTranslator:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, non_thinking_mode: bool = False):
         self.api_key = api_key
+        self.non_thinking_mode = non_thinking_mode
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
@@ -331,8 +332,12 @@ class DeepSeekTranslator:
 请直接返回翻译后的JSON，不要添加任何解释文字。"""
                     log_progress(f"      使用默认用户提示词")
 
+                # 根据模式选择模型
+                model = "deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"
+                log_progress(f"      使用模型: {model} ({'非思考模式' if self.non_thinking_mode else '思考模式'})")
+                
                 payload = {
-                    "model": "deepseek-reasoner",  # 使用思考模式
+                    "model": model,
                     "messages": [
                         {
                             "role": "system",
@@ -760,8 +765,15 @@ def main():
     
     log_progress("✓ API密钥已配置")
 
+    # 检查是否使用非思考模式
+    non_thinking_mode = os.getenv('NON_THINKING_MODE', 'false').lower() == 'true'
+    if non_thinking_mode:
+        log_progress("⚡ 非思考模式：使用deepseek-chat模型以提升速度")
+    else:
+        log_progress("🧠 思考模式：使用deepseek-reasoner模型以提升质量")
+
     # 创建翻译器
-    translator = DeepSeekTranslator(api_key)
+    translator = DeepSeekTranslator(api_key, non_thinking_mode)
     log_progress("✓ 翻译器初始化完成")
 
     # 检查是否强制翻译
