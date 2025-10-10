@@ -19,11 +19,20 @@ pkg_files(
     visibility = ["//visibility:public"],
 )
 
+pkg_files(
+    name = "translate_assets",
+    srcs = glob(["../translate/**"], allow_empty = True),
+    strip_prefix = "../translate",
+    prefix = "assets",
+    visibility = ["//visibility:public"],
+)
+
 pkg_zip(
     name = pack_name,
     srcs = [
         ":README.md",
         ":localization_resource_pack_assets",
+        ":translate_assets",
         ":pack.mcmeta",
         ":pack.png",
     ],
