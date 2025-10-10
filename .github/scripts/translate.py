@@ -3,15 +3,18 @@
 自动翻译脚本 - 使用DeepSeek API进行多语言翻译
 """
 
-import json
 import os
-import requests
 import sys
-import re
-import logging
+import json
+import requests
 import time
+import subprocess
+import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Set
+from dataclasses import dataclass
+from enum import Enum
+import logging
 from datetime import datetime
 
 # 配置详细日志
@@ -24,6 +27,29 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+@dataclass
+class KeyChange:
+    """键值对变更信息"""
+    key: str
+    old_value: Optional[str]
+    new_value: Optional[str]
+    operation: str  # 'added', 'deleted', 'modified'
+
+@dataclass
+class FileChanges:
+    """文件变更信息"""
+    namespace: str
+    file_path: str
+    added_keys: List[KeyChange]
+    deleted_keys: List[KeyChange]
+    modified_keys: List[KeyChange]
+
+class ChangeType(Enum):
+    """变更类型枚举"""
+    ADDED = "added"
+    DELETED = "deleted"
+    MODIFIED = "modified"
 
 # 检测是否在GitHub Actions环境中运行
 IS_GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS') == 'true'
@@ -390,6 +416,122 @@ class DeepSeekTranslator:
                     log_progress(f"翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
 
+def get_git_changes() -> List[FileChanges]:
+    """获取Git变更，检测源翻译文件的变化"""
+    try:
+        # 获取最新提交的变更文件列表
+        result = subprocess.run([
+            'git', 'diff', '--name-only', 'HEAD~1', 'HEAD'
+        ], capture_output=True, text=True, cwd='.')
+        
+        if result.returncode != 0:
+            log_progress("无法获取Git差异，使用全量翻译模式", "warning")
+            return []
+        
+        changed_files = result.stdout.strip().split('\n') if result.stdout.strip() else []
+        log_progress(f"检测到 {len(changed_files)} 个变更文件")
+        
+        file_changes = []
+        
+        for file_path in changed_files:
+            # 只处理源翻译文件 (en_us.json)
+            if not file_path.endswith('/lang/en_us.json'):
+                continue
+                
+            # 提取命名空间
+            parts = file_path.split('/')
+            if len(parts) < 4 or 'assets' not in parts:
+                continue
+                
+            assets_index = parts.index('assets')
+            if assets_index + 1 >= len(parts):
+                continue
+                
+            namespace = parts[assets_index + 1]
+            
+            # 获取文件的具体变更
+            changes = get_file_key_changes(file_path)
+            if changes:
+                file_changes.append(FileChanges(
+                    namespace=namespace,
+                    file_path=file_path,
+                    added_keys=changes['added'],
+                    deleted_keys=changes['deleted'],
+                    modified_keys=changes['modified']
+                ))
+        
+        return file_changes
+        
+    except Exception as e:
+        log_progress(f"Git差异检测失败: {e}", "error")
+        return []
+
+def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]:
+    """获取单个文件的键值对变更"""
+    try:
+        # 获取旧版本文件内容
+        old_content_result = subprocess.run([
+            'git', 'show', f'HEAD~1:{file_path}'
+        ], capture_output=True, text=True, cwd='.')
+        
+        old_data = {}
+        if old_content_result.returncode == 0:
+            try:
+                old_data = json.loads(old_content_result.stdout)
+            except json.JSONDecodeError:
+                pass
+        
+        # 获取新版本文件内容
+        new_data = {}
+        if os.path.exists(file_path):
+            new_data = load_json_file(file_path) or {}
+        
+        # 比较变更
+        old_keys = set(old_data.keys())
+        new_keys = set(new_data.keys())
+        
+        added_keys = []
+        deleted_keys = []
+        modified_keys = []
+        
+        # 添加的键
+        for key in new_keys - old_keys:
+            added_keys.append(KeyChange(
+                key=key,
+                old_value=None,
+                new_value=new_data[key],
+                operation=ChangeType.ADDED.value
+            ))
+        
+        # 删除的键
+        for key in old_keys - new_keys:
+            deleted_keys.append(KeyChange(
+                key=key,
+                old_value=old_data[key],
+                new_value=None,
+                operation=ChangeType.DELETED.value
+            ))
+        
+        # 修改的键
+        for key in old_keys & new_keys:
+            if old_data[key] != new_data[key]:
+                modified_keys.append(KeyChange(
+                    key=key,
+                    old_value=old_data[key],
+                    new_value=new_data[key],
+                    operation=ChangeType.MODIFIED.value
+                ))
+        
+        return {
+            'added': added_keys,
+            'deleted': deleted_keys,
+            'modified': modified_keys
+        }
+        
+    except Exception as e:
+        log_progress(f"获取文件变更失败 {file_path}: {e}", "error")
+        return None
+
 def load_json_file(file_path: str) -> Optional[Dict[str, str]]:
     """加载JSON文件"""
     try:
@@ -464,6 +606,126 @@ def find_existing_translations(lang_code: str) -> Dict[str, str]:
 
     return existing_translations
 
+def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], max_context: int = 10) -> Dict[str, str]:
+    """为目标键获取上下文键值对"""
+    if len(target_keys) >= max_context:
+        # 如果目标键数量已经超过最大上下文数，直接返回目标键
+        return {key: source_dict[key] for key in target_keys if key in source_dict}
+    
+    source_keys = list(source_dict.keys())
+    target_set = set(target_keys)
+    context_dict = {}
+    
+    # 添加目标键
+    for key in target_keys:
+        if key in source_dict:
+            context_dict[key] = source_dict[key]
+    
+    # 如果目标键数量已经达到上下文限制，直接返回
+    if len(context_dict) >= max_context:
+        return context_dict
+    
+    # 计算需要添加的上下文数量
+    needed_context = max_context - len(context_dict)
+    
+    # 为每个目标键段落添加上下文
+    segments = []
+    current_segment = []
+    
+    # 将连续的目标键分组为段落
+    for i, key in enumerate(source_keys):
+        if key in target_set:
+            current_segment.append(i)
+        else:
+            if current_segment:
+                segments.append(current_segment)
+                current_segment = []
+    
+    if current_segment:
+        segments.append(current_segment)
+    
+    # 为每个段落添加前后上下文
+    context_indices = set()
+    context_per_segment = max(1, needed_context // (len(segments) * 2)) if segments else 0
+    
+    for segment in segments:
+        start_idx = segment[0]
+        end_idx = segment[-1]
+        
+        # 添加段落前的上下文
+        for i in range(max(0, start_idx - context_per_segment), start_idx):
+            context_indices.add(i)
+        
+        # 添加段落后的上下文
+        for i in range(end_idx + 1, min(len(source_keys), end_idx + 1 + context_per_segment)):
+            context_indices.add(i)
+    
+    # 如果还需要更多上下文，继续扩展
+    remaining_needed = needed_context - len(context_indices)
+    if remaining_needed > 0:
+        for segment in segments:
+            if remaining_needed <= 0:
+                break
+            start_idx = segment[0]
+            end_idx = segment[-1]
+            
+            # 继续向前扩展
+            for i in range(max(0, start_idx - context_per_segment - 1), max(0, start_idx - context_per_segment)):
+                if remaining_needed <= 0:
+                    break
+                context_indices.add(i)
+                remaining_needed -= 1
+            
+            # 继续向后扩展
+            for i in range(min(len(source_keys), end_idx + 1 + context_per_segment), 
+                          min(len(source_keys), end_idx + 1 + context_per_segment + 1)):
+                if remaining_needed <= 0:
+                    break
+                context_indices.add(i)
+                remaining_needed -= 1
+    
+    # 添加上下文键到结果中
+    for idx in sorted(context_indices):
+        key = source_keys[idx]
+        if key not in context_dict and len(context_dict) < max_context:
+            context_dict[key] = source_dict[key]
+    
+    return context_dict
+
+def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> bool:
+    """从所有翻译文件中删除指定的键"""
+    success = True
+    
+    for lang_code, _ in TARGET_LANGUAGES.items():
+        if lang_code == 'en_us':  # 跳过源语言
+            continue
+            
+        translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+        if not translate_file.exists():
+            continue
+        
+        # 加载现有翻译
+        translations = load_json_file(str(translate_file))
+        if not translations:
+            continue
+        
+        # 删除指定的键
+        modified = False
+        for key in keys_to_delete:
+            if key in translations:
+                del translations[key]
+                modified = True
+        
+        # 如果有修改，保存文件
+        if modified:
+            if save_json_file(str(translate_file), translations):
+                log_progress(f"    ✓ 从 {lang_code} 翻译中删除了 {len([k for k in keys_to_delete if k in translations])} 个键")
+            else:
+                log_progress(f"    ✗ 删除键失败: {translate_file}", "error")
+                success = False
+    
+    return success
+
 def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str]) -> bool:
     """判断是否需要翻译"""
     force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
@@ -502,6 +764,20 @@ def main():
     translator = DeepSeekTranslator(api_key)
     log_progress("✓ 翻译器初始化完成")
 
+    # 检查是否强制翻译
+    force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
+    
+    if force_translate:
+        log_progress("🔄 强制翻译模式：将重新翻译所有内容")
+        # 使用原有的全量翻译逻辑
+        run_full_translation(translator)
+    else:
+        log_progress("🔍 智能翻译模式：检测Git变更")
+        # 使用新的智能差异翻译逻辑
+        run_smart_translation(translator)
+
+def run_full_translation(translator):
+    """运行全量翻译（原有逻辑）"""
     # 获取所有命名空间
     log_progress("扫描命名空间...")
     namespaces = get_namespace_list()
@@ -516,7 +792,91 @@ def main():
     progress_tracker = ProgressTracker(len(TARGET_LANGUAGES), len(namespaces))
     
     log_section_end()
+    
+    # 调用原有的翻译逻辑
+    continue_full_translation(translator, progress_tracker, namespaces)
 
+def run_smart_translation(translator):
+    """运行智能差异翻译"""
+    # 检测Git变更
+    file_changes = get_git_changes()
+    
+    if not file_changes:
+        log_progress("未检测到源翻译文件变更，跳过翻译")
+        return
+    
+    log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
+    
+    # 处理每个有变更的命名空间
+    for changes in file_changes:
+        log_section(f"处理命名空间: {changes.namespace}")
+        
+        # 首先处理删除的键
+        if changes.deleted_keys:
+            deleted_key_names = [change.key for change in changes.deleted_keys]
+            log_progress(f"删除 {len(deleted_key_names)} 个键: {', '.join(deleted_key_names[:5])}{'...' if len(deleted_key_names) > 5 else ''}")
+            delete_keys_from_translations(changes.namespace, deleted_key_names)
+        
+        # 处理添加和修改的键（视为添加）
+        added_and_modified = changes.added_keys + changes.modified_keys
+        if not added_and_modified:
+            log_progress("没有需要翻译的新增或修改内容")
+            continue
+        
+        # 加载源文件
+        source_file = Path(ASSETS_DIR) / changes.namespace / "lang" / "en_us.json"
+        source_dict = load_json_file(str(source_file))
+        if not source_dict:
+            log_progress(f"无法加载源文件: {source_file}", "error")
+            continue
+        
+        # 获取需要翻译的键
+        keys_to_translate = [change.key for change in added_and_modified]
+        log_progress(f"需要翻译 {len(keys_to_translate)} 个键")
+        
+        # 获取翻译上下文
+        context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10)
+        log_progress(f"翻译上下文包含 {len(context_dict)} 个键值对")
+        
+        # 翻译到各种目标语言
+        for lang_code, lang_name in TARGET_LANGUAGES.items():
+            if lang_code == 'en_us':
+                continue
+                
+            log_progress(f"  翻译到 {lang_name} ({lang_code})")
+            
+            # 翻译上下文
+            translated_context = translator.translate_batch(context_dict, lang_code, lang_name)
+            if not translated_context:
+                log_progress(f"    ✗ 翻译失败", "error")
+                continue
+            
+            # 加载现有翻译
+            existing_translations = load_namespace_translations(changes.namespace, lang_code)
+            
+            # 只保存目标键的翻译（不包括上下文）
+            target_translations = {key: translated_context[key] 
+                                 for key in keys_to_translate 
+                                 if key in translated_context}
+            
+            # 合并翻译结果
+            final_translations = existing_translations.copy()
+            final_translations.update(target_translations)
+            
+            # 保存翻译结果
+            if save_namespace_translations(changes.namespace, lang_code, final_translations):
+                log_progress(f"    ✓ 成功翻译 {len(target_translations)} 个键")
+            else:
+                log_progress(f"    ✗ 保存翻译失败", "error")
+        
+        log_section_end()
+    
+    log_section("智能翻译完成")
+    log_progress("🎉 所有变更已处理完成！")
+    log_section_end()
+
+def continue_full_translation(translator, progress_tracker, namespaces):
+    """继续执行全量翻译的剩余逻辑"""
     # 处理每种目标语言
     for lang_code, lang_name in TARGET_LANGUAGES.items():
         progress_tracker.start_language(lang_code, lang_name)
