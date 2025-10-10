@@ -14,6 +14,87 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 
+# 配置详细日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('translation.log', encoding='utf-8')
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# 检测是否在GitHub Actions环境中运行
+IS_GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS') == 'true'
+
+def log_progress(message: str, level: str = "info"):
+    """统一的进度日志函数，在GitHub Actions中使用特殊格式"""
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    
+    if IS_GITHUB_ACTIONS:
+        # GitHub Actions 特殊格式
+        if level == "error":
+            print(f"::error::{message}")
+        elif level == "warning":
+            print(f"::warning::{message}")
+        else:
+            print(f"::notice::[{timestamp}] {message}")
+    
+    # 标准日志输出
+    if level == "error":
+        logger.error(message)
+    elif level == "warning":
+        logger.warning(message)
+    else:
+        logger.info(message)
+    
+    # 强制刷新输出缓冲区
+    sys.stdout.flush()
+
+def log_section(title: str):
+    """记录主要章节，在GitHub Actions中使用分组"""
+    if IS_GITHUB_ACTIONS:
+        print(f"::group::{title}")
+    log_progress(f"=== {title} ===")
+
+def log_section_end():
+    """结束章节分组"""
+    if IS_GITHUB_ACTIONS:
+        print("::endgroup::")
+
+class ProgressTracker:
+    """进度跟踪器"""
+    def __init__(self, total_languages: int, total_namespaces: int):
+        self.total_languages = total_languages
+        self.total_namespaces = total_namespaces
+        self.current_language = 0
+        self.current_namespace = 0
+        self.start_time = time.time()
+        
+    def start_language(self, lang_code: str, lang_name: str):
+        self.current_language += 1
+        self.current_namespace = 0
+        elapsed = time.time() - self.start_time
+        log_section(f"语言 {self.current_language}/{self.total_languages}: {lang_code} ({lang_name}) - 已用时 {elapsed:.1f}s")
+        
+    def start_namespace(self, namespace: str):
+        self.current_namespace += 1
+        log_progress(f"  命名空间 {self.current_namespace}/{self.total_namespaces}: {namespace}")
+        
+    def log_batch_progress(self, batch_num: int, total_batches: int, batch_size: int):
+        log_progress(f"    批次 {batch_num}/{total_batches} (每批 {batch_size} 个键)")
+        
+    def finish_language(self):
+        log_section_end()
+        
+    def get_total_progress(self) -> str:
+        total_tasks = self.total_languages * self.total_namespaces
+        completed_tasks = (self.current_language - 1) * self.total_namespaces + self.current_namespace
+        percentage = (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+        elapsed = time.time() - self.start_time
+        return f"总进度: {completed_tasks}/{total_tasks} ({percentage:.1f}%) - 已用时 {elapsed:.1f}s"
+
 # 配置
 DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
 ASSETS_DIR = "Localization-Resource-Pack/assets"
@@ -177,12 +258,17 @@ class DeepSeekTranslator:
         翻译一批文本，包含重试机制和完整性验证
         """
         max_retries = 3
+        
+        if not texts:
+            return {}
+
+        source_text = json.dumps(texts, ensure_ascii=False, indent=2)
+        log_progress(f"      开始翻译 {len(texts)} 个键到 {target_lang_name}")
 
         for attempt in range(max_retries):
             try:
-                # 构建翻译提示
-                source_text = json.dumps(texts, ensure_ascii=False, indent=2)
-
+                log_progress(f"      尝试 {attempt + 1}/{max_retries}")
+                
                 # 使用提示词模板或回退到默认提示词
                 if self.system_prompt:
                     system_prompt = self._format_prompt(
@@ -190,8 +276,10 @@ class DeepSeekTranslator:
                         source_language="中文",
                         target_language=target_lang_name
                     )
+                    log_progress(f"      使用自定义系统提示词 (长度: {len(system_prompt)} 字符)")
                 else:
                     system_prompt = "你是一个专业的游戏本地化翻译专家，擅长Minecraft相关内容的翻译。"
+                    log_progress(f"      使用默认系统提示词")
 
                 if self.user_prompt:
                     user_prompt = self._format_prompt(
@@ -200,6 +288,7 @@ class DeepSeekTranslator:
                         target_language=target_lang_name,
                         content_to_translate=source_text
                     )
+                    log_progress(f"      使用自定义用户提示词 (长度: {len(user_prompt)} 字符)")
                 else:
                     user_prompt = f"""请将以下JSON格式的中文游戏本地化文本翻译为{target_lang_name}。
 
@@ -214,6 +303,7 @@ class DeepSeekTranslator:
 {source_text}
 
 请直接返回翻译后的JSON，不要添加任何解释文字。"""
+                    log_progress(f"      使用默认用户提示词")
 
                 payload = {
                     "model": "deepseek-reasoner",  # 使用思考模式
@@ -232,13 +322,20 @@ class DeepSeekTranslator:
                 }
 
                 # 调用API
+                log_progress(f"      发送API请求到DeepSeek...")
+                start_time = time.time()
                 response = requests.post(DEEPSEEK_API_URL, headers=self.headers, json=payload, timeout=60)
+                api_time = time.time() - start_time
+                log_progress(f"      API响应时间: {api_time:.2f}s, 状态码: {response.status_code}")
+                
                 response.raise_for_status()
 
                 result = response.json()
                 translated_content = result["choices"][0]["message"]["content"].strip()
+                log_progress(f"      收到翻译响应 (长度: {len(translated_content)} 字符)")
 
                 # 清理响应内容
+                original_content = translated_content
                 if translated_content.startswith("```json"):
                     translated_content = translated_content[7:]
                 if translated_content.startswith("```"):
@@ -246,25 +343,32 @@ class DeepSeekTranslator:
                 if translated_content.endswith("```"):
                     translated_content = translated_content[:-3]
                 translated_content = translated_content.strip()
+                
+                if original_content != translated_content:
+                    log_progress(f"      清理代码块标记后长度: {len(translated_content)} 字符")
 
                 # 解析JSON
                 try:
+                    log_progress(f"      解析JSON响应...")
                     translated_dict = json.loads(translated_content)
+                    log_progress(f"      JSON解析成功，包含 {len(translated_dict)} 个键")
                 except json.JSONDecodeError as e:
                     raise ValueError(f"JSON解析失败: {e}")
 
                 # 验证翻译结果
+                log_progress(f"      验证翻译结果...")
                 validation_errors = self.validate_translation_result(texts, translated_dict)
                 if validation_errors:
+                    log_progress(f"      验证失败: {'; '.join(validation_errors)}", "warning")
                     raise ValueError(f"翻译验证失败: {'; '.join(validation_errors)}")
 
                 # 验证成功，返回结果
-                print(f"翻译成功，尝试次数: {attempt + 1}")
+                log_progress(f"      翻译成功！尝试次数: {attempt + 1}, 总耗时: {time.time() - start_time:.2f}s")
                 return translated_dict
 
             except Exception as e:
                 error_msg = f"翻译尝试 {attempt + 1} 失败: {str(e)}"
-                print(error_msg)
+                log_progress(error_msg, "error")
 
                 # 记录失败详情
                 self.log_translation_failure(
@@ -279,11 +383,11 @@ class DeepSeekTranslator:
                 # 如果不是最后一次尝试，等待后重试
                 if attempt < max_retries - 1:
                     wait_time = (attempt + 1) * 2  # 递增等待时间
-                    print(f"等待 {wait_time} 秒后重试...")
+                    log_progress(f"等待 {wait_time} 秒后重试...")
                     time.sleep(wait_time)
                 else:
                     # 最后一次尝试失败，返回空字典
-                    print(f"翻译失败，已重试 {max_retries} 次: {str(e)}")
+                    log_progress(f"翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
 
 def load_json_file(file_path: str) -> Optional[Dict[str, str]]:
@@ -360,25 +464,22 @@ def find_existing_translations(lang_code: str) -> Dict[str, str]:
 
     return existing_translations
 
-def should_translate(lang_code: str, source_dict: Dict[str, str]) -> bool:
+def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str]) -> bool:
     """判断是否需要翻译"""
     force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
 
     if force_translate:
         return True
 
-    # 检查translate目录中是否已存在该语言文件
-    translate_file = f"{TRANSLATE_DIR}/{lang_code}.json"
-    if not os.path.exists(translate_file):
-        return True
-
-    # 检查现有翻译是否完整
-    existing = load_json_file(translate_file)
-    if not existing:
+    # 检查已有翻译是否完整
+    existing_translations = load_namespace_translations(namespace, lang_code)
+    
+    # 如果没有任何翻译，需要翻译
+    if not existing_translations:
         return True
 
     # 检查是否有新的键需要翻译
-    missing_keys = set(source_dict.keys()) - set(existing.keys())
+    missing_keys = set(source_dict.keys()) - set(existing_translations.keys())
     if missing_keys:
         print(f"{lang_code}: 发现 {len(missing_keys)} 个新键需要翻译")
         return True
@@ -387,50 +488,65 @@ def should_translate(lang_code: str, source_dict: Dict[str, str]) -> bool:
 
 def main():
     """主函数"""
+    log_section("翻译脚本启动")
+    
+    # 检查环境变量
     api_key = os.getenv('DEEPSEEK_API_KEY')
     if not api_key:
-        print("错误：未找到DEEPSEEK_API_KEY环境变量")
+        log_progress("错误：未找到DEEPSEEK_API_KEY环境变量", "error")
         sys.exit(1)
+    
+    log_progress("✓ API密钥已配置")
 
     # 创建翻译器
     translator = DeepSeekTranslator(api_key)
+    log_progress("✓ 翻译器初始化完成")
 
     # 获取所有命名空间
+    log_progress("扫描命名空间...")
     namespaces = get_namespace_list()
     if not namespaces:
-        print("错误：未找到任何命名空间")
+        log_progress("错误：未找到任何命名空间", "error")
         sys.exit(1)
 
-    print(f"找到命名空间: {', '.join(namespaces)}")
+    log_progress(f"✓ 找到 {len(namespaces)} 个命名空间: {', '.join(namespaces)}")
+    log_progress(f"✓ 目标语言: {len(TARGET_LANGUAGES)} 种")
+    
+    # 创建进度跟踪器
+    progress_tracker = ProgressTracker(len(TARGET_LANGUAGES), len(namespaces))
+    
+    log_section_end()
 
     # 处理每种目标语言
     for lang_code, lang_name in TARGET_LANGUAGES.items():
-        print(f"\n处理语言: {lang_code} ({lang_name})")
+        progress_tracker.start_language(lang_code, lang_name)
 
         # 处理每个命名空间
         for namespace in namespaces:
-            print(f"\n  处理命名空间: {namespace}")
+            progress_tracker.start_namespace(namespace)
 
             # 加载该命名空间的源语言文件
             source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
             if not source_file.exists():
-                print(f"    跳过：源文件不存在 {source_file}")
+                log_progress(f"    跳过：源文件不存在 {source_file}", "warning")
                 continue
 
             source_dict = load_json_file(str(source_file))
             if not source_dict:
-                print(f"    跳过：无法加载源文件 {source_file}")
+                log_progress(f"    跳过：无法加载源文件 {source_file}", "warning")
                 continue
 
-            print(f"    加载源文件成功，共 {len(source_dict)} 个键")
+            log_progress(f"    ✓ 加载源文件成功，共 {len(source_dict)} 个键")
 
             # 检查是否需要翻译
-            if not should_translate(lang_code, source_dict):
-                print(f"    跳过：无需翻译")
+            if not needs_translation(namespace, lang_code, source_dict):
+                log_progress(f"    跳过：无需翻译")
                 continue
 
             # 加载该命名空间已有的翻译
+            log_progress(f"    加载已有翻译...")
             existing_translate = load_namespace_translations(namespace, lang_code)
+            log_progress(f"    ✓ 已有翻译：{len(existing_translate)} 个键")
 
             # 确定需要翻译的内容
             keys_to_translate = {}
@@ -439,32 +555,48 @@ def main():
                     keys_to_translate[key] = value
 
             if not keys_to_translate:
-                print(f"    所有内容已翻译完成")
+                log_progress(f"    所有内容已翻译完成")
                 continue
 
-            print(f"    需要翻译 {len(keys_to_translate)} 个键")
+            log_progress(f"    需要翻译 {len(keys_to_translate)} 个新键")
 
             # 分批翻译（每次最多40个键，避免请求过大）
             batch_size = 40
             all_translated = existing_translate.copy()
 
             keys_list = list(keys_to_translate.items())
+            total_batches = (len(keys_list) + batch_size - 1) // batch_size
+            log_progress(f"    开始分批翻译，共 {total_batches} 批，每批最多 {batch_size} 个键")
+            
+            successful_translations = 0
             for i in range(0, len(keys_list), batch_size):
                 batch = dict(keys_list[i:i + batch_size])
-                print(f"    翻译批次 {i//batch_size + 1}/{(len(keys_list) + batch_size - 1)//batch_size}")
+                batch_num = i//batch_size + 1
+                progress_tracker.log_batch_progress(batch_num, total_batches, len(batch))
 
                 translated_batch = translator.translate_batch(batch, lang_code, lang_name)
                 if translated_batch:
                     all_translated.update(translated_batch)
-                    print(f"    成功翻译 {len(translated_batch)} 个键")
+                    successful_translations += len(translated_batch)
+                    log_progress(f"      ✓ 批次 {batch_num} 成功翻译 {len(translated_batch)} 个键")
                 else:
-                    print(f"    批次翻译失败")
+                    log_progress(f"      ✗ 批次 {batch_num} 翻译失败", "error")
 
             # 保存翻译结果到对应的命名空间目录
+            log_progress(f"    保存翻译结果...")
             if save_namespace_translations(namespace, lang_code, all_translated):
-                print(f"    保存成功: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json")
+                log_progress(f"    ✓ 保存成功: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json")
+                log_progress(f"    ✓ 总计翻译 {successful_translations} 个新键，文件包含 {len(all_translated)} 个键")
             else:
-                print(f"    保存失败: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json")
+                log_progress(f"    ✗ 保存失败: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json", "error")
+                
+            log_progress(progress_tracker.get_total_progress())
+
+        progress_tracker.finish_language()
+
+    log_section("翻译完成")
+    log_progress("🎉 所有翻译任务已完成！")
+    log_section_end()
 
 if __name__ == "__main__":
     main()

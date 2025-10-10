@@ -1,0 +1,13 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
+java_binary(
+    name = "json_merger",
+    srcs = ["JsonMerger.java"],
+    main_class = "JsonMerger",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "//rule/worker_api",
+    ],
+)

@@ -1,5 +1,6 @@
 load("@//rule:datapack.bzl", "minecraft_versions_range")
 load("@//rule:upload_modrinth.bzl", "upload_modrinth")
+load("@//rule:merge_json.bzl", "merge_json")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
@@ -12,18 +13,17 @@ file_name = "%s_v%s.zip" % (pack_name, pack_version)
 version_name = "%s_v%s" % (pack_name, pack_version)
 git_tag_name = "%s_v%s" % (pack_name, pack_version)
 
-pkg_files(
-    name = "localization_resource_pack_assets",
-    srcs = glob(["assets/**"]),
-    strip_prefix = "",
-    visibility = ["//visibility:public"],
+# 合并assets和translate目录中的JSON文件
+merge_json(
+    name = "merged_translations",
+    srcs = glob(["assets/**/*.json"], allow_empty = True) + 
+           glob(["../translate/**/*.json"], allow_empty = True),
 )
 
 pkg_files(
-    name = "translate_assets",
-    srcs = glob(["../translate/**"], allow_empty = True),
-    strip_prefix = "../translate",
-    prefix = "assets",
+    name = "localization_resource_pack_assets",
+    srcs = glob(["assets/**"], exclude = ["assets/**/*.json"]) + [":merged_translations"],
+    strip_prefix = "",
     visibility = ["//visibility:public"],
 )
 
@@ -32,7 +32,6 @@ pkg_zip(
     srcs = [
         ":README.md",
         ":localization_resource_pack_assets",
-        ":translate_assets",
         ":pack.mcmeta",
         ":pack.png",
     ],
