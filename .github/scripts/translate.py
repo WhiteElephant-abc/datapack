@@ -20,15 +20,12 @@ import logging
 from datetime import datetime
 
 # 配置详细日志
-log_file_handler = logging.FileHandler('translation.log', encoding='utf-8')
-log_file_handler.setLevel(logging.INFO)
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        log_file_handler
+        logging.FileHandler('translation.log', encoding='utf-8')
     ],
     force=True
 )
@@ -1622,9 +1619,10 @@ def run_smart_translation(translator):
         return
 
     if not file_changes and missing_translations:
-        log_progress("未检测到源文件变更，但发现缺失的翻译文件，将补充翻译")
-        # 为缺失的翻译文件创建虚拟变更
-        file_changes = create_virtual_changes_for_missing_files(missing_translations)
+        log_progress("未检测到源文件变更，但发现缺失的翻译文件")
+        log_progress("智能翻译模式下，缺失文件不会触发全量翻译")
+        log_progress("如需补充翻译，请使用强制翻译模式: FORCE_TRANSLATE=true")
+        return
 
     log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
 
