@@ -973,16 +973,35 @@ def merge_namespace_translations(namespace: str, lang_code: str) -> Dict[str, an
     
     return merged_translations
 
-def get_merged_source_translations(namespace: str) -> Dict[str, any]:
-    """获取合并后的源语言翻译（zh_cn）
+def get_merged_reference_translations(namespace: str) -> Dict[str, any]:
+    """获取合并后的参考翻译，包含所有语言文件中的键值对
     
     Args:
         namespace: 命名空间名称
         
     Returns:
-        Dict[str, any]: 合并后的源翻译字典
+        Dict[str, any]: 合并后的参考翻译字典，包含所有已有的键值对
     """
-    return merge_namespace_translations(namespace, 'zh_cn')
+    merged_dict = {}
+    namespace_lang_dir = Path(ASSETS_DIR) / namespace / "lang"
+    
+    if not namespace_lang_dir.exists():
+        return merged_dict
+    
+    # 遍历所有语言文件，合并所有键值对
+    for lang_file in namespace_lang_dir.glob('*.json'):
+        try:
+            with open(lang_file, 'r', encoding='utf-8') as f:
+                lang_data = json.load(f)
+                # 合并键值对，如果键已存在则保持现有值
+                for key, value in lang_data.items():
+                    if key not in merged_dict:
+                        merged_dict[key] = value
+        except (json.JSONDecodeError, IOError) as e:
+            log_progress(f"警告：无法读取语言文件 {lang_file}: {e}", "warning")
+            continue
+    
+    return merged_dict
 
 def find_existing_translations(lang_code: str) -> Dict[str, str]:
     """查找现有的翻译文件"""
@@ -1097,10 +1116,14 @@ def check_missing_translation_files() -> Dict[str, List[str]]:
     log_progress("检查翻译文件完整性...")
 
     for namespace in namespaces:
-        # 检测源语言
-        source_language = detect_source_language(namespace)
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{source_language}.json"
-        if not source_file.exists():
+        # 检查是否存在任何语言文件
+        namespace_lang_dir = Path(ASSETS_DIR) / namespace / "lang"
+        if not namespace_lang_dir.exists():
+            continue
+        
+        # 检查是否有任何语言文件存在
+        has_lang_files = any(f.suffix == '.json' for f in namespace_lang_dir.glob('*.json'))
+        if not has_lang_files:
             continue
 
         missing_langs = []
@@ -1135,8 +1158,8 @@ def create_virtual_changes_for_missing_files(missing_translations: Dict[str, Lis
     virtual_changes = []
 
     for namespace, missing_langs in missing_translations.items():
-        # 使用合并后的源翻译
-        source_dict = get_merged_source_translations(namespace)
+        # 使用合并后的参考翻译
+        source_dict = get_merged_reference_translations(namespace)
         if not source_dict:
             continue
 
@@ -1175,10 +1198,14 @@ def check_missing_translation_files() -> List[Tuple[str, str]]:
     namespaces = get_namespace_list()
 
     for namespace in namespaces:
-        # 检测源语言
-        source_language = detect_source_language(namespace)
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{source_language}.json"
-        if not source_file.exists():
+        # 检查是否存在任何语言文件
+        namespace_lang_dir = Path(ASSETS_DIR) / namespace / "lang"
+        if not namespace_lang_dir.exists():
+            continue
+        
+        # 检查是否有任何语言文件存在
+        has_lang_files = any(f.suffix == '.json' for f in namespace_lang_dir.glob('*.json'))
+        if not has_lang_files:
             continue
 
         # 检查每种目标语言的翻译文件
@@ -1215,8 +1242,8 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
     virtual_changes = []
 
     for namespace, lang_codes in namespace_groups.items():
-        # 使用合并后的源翻译以获取所有键
-        source_dict = get_merged_source_translations(namespace)
+        # 使用合并后的参考翻译以获取所有键
+        source_dict = get_merged_reference_translations(namespace)
         if not source_dict:
             continue
 
@@ -1397,10 +1424,10 @@ def run_smart_translation(translator):
             log_progress("没有需要翻译的新增或修改内容")
             continue
 
-        # 使用合并后的源翻译
-        source_dict = get_merged_source_translations(changes.namespace)
+        # 使用合并后的参考翻译
+        source_dict = get_merged_reference_translations(changes.namespace)
         if not source_dict:
-            log_progress(f"无法加载命名空间 {changes.namespace} 的合并源翻译", "error")
+            log_progress(f"无法加载命名空间 {changes.namespace} 的合并参考翻译", "error")
             continue
         
         log_progress(f"✓ 加载合并后的源翻译，包含 {len(source_dict)} 个键值对")
@@ -1459,7 +1486,6 @@ def run_smart_translation(translator):
 def continue_full_translation(translator, progress_tracker, namespaces):
     """继续执行全量翻译的剩余逻辑"""
     # 处理每种目标语言
-    # 检测源语言并获取有效的目标语言
     # 翻译到所有目标语言
     for lang_code, lang_name in get_all_target_languages().items():
         progress_tracker.start_language(lang_code, lang_name)
@@ -1468,13 +1494,13 @@ def continue_full_translation(translator, progress_tracker, namespaces):
         for namespace in namespaces:
             progress_tracker.start_namespace(namespace)
 
-            # 使用合并后的源翻译（zh_cn）
-            source_dict = get_merged_source_translations(namespace)
+            # 使用合并后的参考翻译
+            source_dict = get_merged_reference_translations(namespace)
             if not source_dict:
-                log_progress(f"    跳过：无法加载命名空间 {namespace} 的合并源翻译", "warning")
+                log_progress(f"    跳过：无法加载命名空间 {namespace} 的合并参考翻译", "warning")
                 continue
 
-            log_progress(f"    ✓ 加载合并后的源翻译成功，共 {len(source_dict)} 个键值对")
+            log_progress(f"    ✓ 加载合并后的参考翻译成功，共 {len(source_dict)} 个键值对")
 
             # 检查是否需要翻译
             if not needs_translation(namespace, lang_code, source_dict):

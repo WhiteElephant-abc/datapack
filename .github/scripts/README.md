@@ -94,10 +94,10 @@ Localization-Resource-Pack/
 └── assets/
     ├── localization_resource_pack/
     │   └── lang/
-    │       └── zh_cn.json     # 源语言文件
+    │       └── zh_cn.json     # 语言文件
     └── white_elephant/
         └── lang/
-            └── zh_cn.json     # 源语言文件
+            └── zh_cn.json     # 语言文件
 ```
 
 ## 🚀 使用方法
@@ -139,7 +139,6 @@ python .github/scripts/translate.py
 
 提示词模板支持以下变量替换：
 
-- `{{source_language}}` - 源语言名称
 - `{{target_language}}` - 目标语言名称
 - `{{content_to_translate}}` - 待翻译的JSON内容
 
