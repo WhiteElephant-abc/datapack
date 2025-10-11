@@ -531,6 +531,9 @@ class DeepSeekTranslator:
         texts: Dict[str, str]
         target_lang: str
         target_lang_name: str
+        namespace: str = "unknown"
+        batch_id: int = 1
+        total_batches: int = 1
         batch_size: int = 40
 
     def prepare_translation_requests(self, all_texts: Dict[str, str], target_languages: List[Tuple[str, str]],
@@ -558,13 +561,17 @@ class DeepSeekTranslator:
             if total_texts > batch_size:
                 # 分段翻译：强制添加上下文
                 batches = self.split_texts_with_context_guarantee(all_texts, batch_size, context_size=4)
+                total_batches = len(batches)
 
-                for batch_texts in batches:
+                for batch_index, batch_texts in enumerate(batches, 1):
                     request = self.TranslationRequest(
                         request_id=request_id,
                         texts=batch_texts,
                         target_lang=target_lang,
                         target_lang_name=target_lang_name,
+                        namespace=namespace or "unknown",
+                        batch_id=batch_index,
+                        total_batches=total_batches,
                         batch_size=len(batch_texts)
                     )
                     requests.append(request)
@@ -576,6 +583,9 @@ class DeepSeekTranslator:
                     texts=all_texts,
                     target_lang=target_lang,
                     target_lang_name=target_lang_name,
+                    namespace=namespace or "unknown",
+                    batch_id=1,
+                    total_batches=1,
                     batch_size=len(all_texts)
                 )
                 requests.append(request)
@@ -611,27 +621,32 @@ class DeepSeekTranslator:
                 # 检查翻译结果是否为空
                 if not result:
                     if attempt < max_retries - 1:
-                        log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 翻译结果为空，重试中...", "warning")
+                        batch_info = f"批次{request.batch_id}/{request.total_batches}" if request.total_batches > 1 else ""
+                        log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info} -> {request.target_lang_name} -> 翻译结果为空，重试中...", "warning")
                         time.sleep(1)  # 固定等待1秒
                         continue
                     else:
-                        log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空（已重试{max_retries}次）", "error")
+                        batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
+                        log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空（已重试{max_retries}次）", "error")
                         return (request.request_id, request.target_lang, request.target_lang_name, {})
 
-                log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{f'（第{attempt + 1}次尝试）' if attempt > 0 else ''}")
+                batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
+                log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{f'（第{attempt + 1}次尝试）' if attempt > 0 else ''}")
                 return (request.request_id, request.target_lang, request.target_lang_name, result)
 
             except Exception as e:
                 if attempt < max_retries - 1:
                     # 记录失败并提示重试
                     error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
-                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 失败: {error_summary}，重试中...", "warning")
+                    batch_info = f"批次{request.batch_id}/{request.total_batches}" if request.total_batches > 1 else ""
+                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info} -> {request.target_lang_name} -> 失败: {error_summary}，重试中...", "warning")
                     time.sleep(1)  # 固定等待1秒
                     continue
                 else:
                     # 最后一次失败，记录最终失败状态
                     error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
-                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {error_summary}（已重试{max_retries}次）", "error")
+                    batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
+                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {error_summary}（已重试{max_retries}次）", "error")
                     return (request.request_id, request.target_lang, request.target_lang_name, {})
 
     def execute_requests_concurrently(self, requests: List['DeepSeekTranslator.TranslationRequest'],
