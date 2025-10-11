@@ -46,7 +46,7 @@ def _merge_json_impl(ctx):
     for basename, files in file_groups.items():
         # 按路径排序，确保合并顺序一致
         files = sorted(files, key = lambda f: f.path)
-        
+
         output_file = ctx.actions.declare_file(basename)
         output_files.append(output_file)
 
