@@ -15,7 +15,7 @@
   "dialog.white.elephant.options.admin_only": "Alleen beheerders kunnen instellingen aanpassen!",
   "dialog.white.elephant.common.cancel": "Annuleren",
   "dialog.white.elephant.common.save_and_exit": "Opslaan en afsluiten",
-  "dialog.white.elephant.common.cancel_tooltip": "Huidige wijzigingen ongedaan maken",
+  "dialog.white.elephant.common.cancel_tooltip": "Huidige wijzigingen negeren",
   "dialog.white.elephant.common.save_tooltip": "Huidige instellingen opslaan",
   "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen worden hier standaardinstellingen weergegeven"
 }
