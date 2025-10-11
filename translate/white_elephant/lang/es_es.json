@@ -6,7 +6,7 @@
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Falta requisito previo",
-  "need.dfl.white.elephant.please.install": "Por favor instala el paquete de datos: ",
+  "need.dfl.white.elephant.please.install": "Por favor, instala el paquete de datos: ",
   "dialog.white.elephant.new_player.line1": "¡%s paquete de datos cargado en este mundo!",
   "dialog.white.elephant.new_player.author": "Autor:",
   "dialog.white.elephant.new_player.tech_support": "Soporte técnico:",

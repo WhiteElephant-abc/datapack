@@ -46,7 +46,7 @@
   "dialog.stone_disappearance.performance.title": "石头消失性能设置",
   "dialog.stone_disappearance.performance.replace_with_glass": "将石头替换为玻璃而不是直接清除",
   "dialog.stone_disappearance.performance.clear_distance": "单位为区块，清除区块的最远距离",
-  "dialog.stone_disappearance.performance.wait_ticks": "每次清除后等待的游戏刻数",
+  "dialog.stone_disappearance.performance.wait_ticks": "每次清除后等待的tick数",
   "dialog.stone_disappearance.performance.fill_falling_block": "将可下落的方块替换为玻璃",
   "dialog.stone_disappearance.advanced.title": "石头消失高级设置",
   "dialog.stone_disappearance.advanced.warning": "不正确的设置可能导致错误！",
