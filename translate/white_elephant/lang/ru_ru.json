@@ -1,5 +1,5 @@
 {
-  "banner.white.elephant.enabled": "%s пакет данных успешно загружен",
+  "banner.white.elephant.enabled": "Пакет данных %s успешно загружен",
   "banner.white.elephant.author": "Автор: %s",
   "banner.white.elephant.license": "Этот пакет данных распространяется под лицензией %s",
   "banner.white.elephant.official": "Официальный сайт пакета данных",
