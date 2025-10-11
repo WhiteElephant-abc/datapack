@@ -5,3 +5,4 @@ bazel-*
 .bazel
 .temp
 /.github/scripts/__pycache__
+translation.log

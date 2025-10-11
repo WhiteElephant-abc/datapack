@@ -168,51 +168,18 @@ TARGET_LANGUAGES = {
     "zh_cn": "Simplified Chinese (China)"
 }
 
-# 默认源语言
-DEFAULT_SOURCE_LANGUAGE = "zh_cn"
 
-def get_effective_target_languages(source_language: str = None) -> dict:
+
+def get_all_target_languages() -> dict:
     """
-    获取有效的目标语言（排除源语言）
-    
-    Args:
-        source_language: 源语言代码，如果为None则使用默认源语言
+    获取所有目标语言
     
     Returns:
-        dict: 有效的目标语言字典
+        dict: 所有目标语言字典
     """
-    if source_language is None:
-        source_language = DEFAULT_SOURCE_LANGUAGE
-    
-    return {lang_code: lang_name for lang_code, lang_name in TARGET_LANGUAGES.items() 
-            if lang_code != source_language}
+    return TARGET_LANGUAGES
 
-def detect_source_language(namespace: str) -> str:
-    """
-    检测命名空间的源语言
-    
-    Args:
-        namespace: 命名空间名称
-    
-    Returns:
-        str: 检测到的源语言代码
-    """
-    # 检查各种可能的源语言文件
-    for lang_code in TARGET_LANGUAGES.keys():
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
-        if source_file.exists():
-            # 优先返回默认源语言
-            if lang_code == DEFAULT_SOURCE_LANGUAGE:
-                return lang_code
-    
-    # 如果没有找到默认源语言，返回找到的第一个语言
-    for lang_code in TARGET_LANGUAGES.keys():
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
-        if source_file.exists():
-            return lang_code
-    
-    # 如果都没有找到，返回默认源语言
-    return DEFAULT_SOURCE_LANGUAGE
+
 
 class DeepSeekTranslator:
     def __init__(self, api_key: str, non_thinking_mode: bool = False, max_concurrent_requests: int = 5):
@@ -418,7 +385,6 @@ class DeepSeekTranslator:
                 if self.system_prompt:
                     system_prompt = self._format_prompt(
                         self.system_prompt,
-                        source_language="中文",
                         target_language=target_lang_name
                     )
                     log_progress(f"      使用自定义系统提示词 (长度: {len(system_prompt)} 字符)")
@@ -429,13 +395,12 @@ class DeepSeekTranslator:
                 if self.user_prompt:
                     user_prompt = self._format_prompt(
                         self.user_prompt,
-                        source_language="中文",
                         target_language=target_lang_name,
                         content_to_translate=source_text
                     )
                     log_progress(f"      使用自定义用户提示词 (长度: {len(user_prompt)} 字符)")
                 else:
-                    user_prompt = f"""请将以下JSON格式的中文游戏本地化文本翻译为{target_lang_name}。
+                    user_prompt = f"""请将以下JSON格式的游戏本地化文本翻译为{target_lang_name}。
 
 要求：
 1. 保持JSON格式不变，只翻译值部分
@@ -1140,11 +1105,8 @@ def check_missing_translation_files() -> Dict[str, List[str]]:
 
         missing_langs = []
 
-        # 获取有效的目标语言（排除源语言）
-        effective_target_languages = get_effective_target_languages(source_language)
-        
         # 检查每种目标语言的翻译文件
-        for lang_code, lang_name in effective_target_languages.items():
+        for lang_code, lang_name in get_all_target_languages().items():
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_langs.append(lang_code)
@@ -1219,11 +1181,8 @@ def check_missing_translation_files() -> List[Tuple[str, str]]:
         if not source_file.exists():
             continue
 
-        # 获取有效的目标语言（排除源语言）
-        effective_target_languages = get_effective_target_languages(source_language)
-        
         # 检查每种目标语言的翻译文件
-        for lang_code, _ in effective_target_languages.items():
+        for lang_code, _ in get_all_target_languages().items():
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_files.append((namespace, lang_code))
@@ -1287,11 +1246,8 @@ def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> 
     """从所有翻译文件中删除指定的键"""
     success = True
 
-    # 检测源语言并获取有效的目标语言
-    source_language = detect_source_language(namespace)
-    effective_target_languages = get_effective_target_languages(source_language)
-
-    for lang_code, _ in effective_target_languages.items():
+    # 处理所有目标语言的翻译文件
+    for lang_code, _ in get_all_target_languages().items():
         translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
         if not translate_file.exists():
             continue
@@ -1394,9 +1350,8 @@ def run_full_translation(translator):
         sys.exit(1)
 
     log_progress(f"✓ 找到 {len(namespaces)} 个命名空间: {', '.join(namespaces)}")
-    # 计算实际需要翻译的语言数（动态排除源语言）
-    effective_target_languages = get_effective_target_languages(DEFAULT_SOURCE_LANGUAGE)
-    target_lang_count = len(effective_target_languages)
+    # 计算需要翻译的语言数
+    target_lang_count = len(get_all_target_languages())
     log_progress(f"✓ 目标语言: {target_lang_count} 种")
 
     # 创建进度跟踪器
@@ -1458,12 +1413,8 @@ def run_smart_translation(translator):
         context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10)
         log_progress(f"翻译上下文包含 {len(context_dict)} 个键值对")
 
-        # 检测源语言并获取有效的目标语言
-        source_language = detect_source_language(namespace)
-        effective_target_languages = get_effective_target_languages(source_language)
-        
         # 翻译到各种目标语言
-        for lang_code, lang_name in effective_target_languages.items():
+        for lang_code, lang_name in get_all_target_languages().items():
             log_progress(f"  翻译到 {lang_name} ({lang_code})")
 
             # 准备合并后的文本进行翻译
@@ -1509,10 +1460,8 @@ def continue_full_translation(translator, progress_tracker, namespaces):
     """继续执行全量翻译的剩余逻辑"""
     # 处理每种目标语言
     # 检测源语言并获取有效的目标语言
-    # 注意：在完整翻译中，我们使用默认源语言，因为可能涉及多个命名空间
-    effective_target_languages = get_effective_target_languages(DEFAULT_SOURCE_LANGUAGE)
-    
-    for lang_code, lang_name in effective_target_languages.items():
+    # 翻译到所有目标语言
+    for lang_code, lang_name in get_all_target_languages().items():
         progress_tracker.start_language(lang_code, lang_name)
 
         # 处理每个命名空间

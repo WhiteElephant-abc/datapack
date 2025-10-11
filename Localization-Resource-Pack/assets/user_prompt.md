@@ -1,6 +1,6 @@
 # DeepSeek 用户提示词
 
-请将以下{{source_language}}游戏本地化文本翻译成{{target_language}}：
+请将以下游戏本地化文本翻译成{{target_language}}：
 
 ## 翻译要求
 
