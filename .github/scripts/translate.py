@@ -380,7 +380,7 @@ class DeepSeekTranslator:
         """
         翻译一批文本，包含重试机制和完整性验证
         """
-        max_retries = 3
+        max_retries = 5
 
         if not texts:
             return {}
@@ -511,10 +511,10 @@ class DeepSeekTranslator:
 
                 # 如果不是最后一次尝试，等待后重试
                 if attempt < max_retries - 1:
-                    wait_time = (attempt + 1) * 2  # 递增等待时间
-                    time.sleep(wait_time)
+                    time.sleep(1)  # 固定等待1秒
                 else:
-                    # 最后一次尝试失败，返回空字典
+                    # 最后一次尝试失败，记录错误日志并返回空字典
+                    log_progress(f"    批量翻译失败: {str(e)}（已重试{max_retries}次）", "error")
                     return {}
 
     # 新的多线程架构：请求预处理 + 统一并发执行
@@ -584,7 +584,7 @@ class DeepSeekTranslator:
         Returns:
             (request_id, target_lang, target_lang_name, translation_result)
         """
-        max_retries = 3
+        max_retries = 5
 
         for attempt in range(max_retries):
             try:
@@ -594,23 +594,23 @@ class DeepSeekTranslator:
                 # 检查翻译结果是否为空
                 if not result:
                     if attempt < max_retries - 1:
-                        log_progress(f"    [请求{request.request_id}] [{request.namespace}] 尝试{attempt + 1}/{max_retries} -> {request.target_lang_name} -> 翻译结果为空，重试中...", "warning")
-                        time.sleep((attempt + 1) * 2)  # 递增等待时间
+                        log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 翻译结果为空，重试中...", "warning")
+                        time.sleep(1)  # 固定等待1秒
                         continue
                     else:
-                        log_progress(f"    [请求{request.request_id}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空（已重试{max_retries}次）", "error")
+                        log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空（已重试{max_retries}次）", "error")
                         return (request.request_id, request.target_lang, request.target_lang_name, {})
 
-                log_progress(f"    [请求{request.request_id}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{f'（第{attempt + 1}次尝试）' if attempt > 0 else ''}")
+                log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{f'（第{attempt + 1}次尝试）' if attempt > 0 else ''}")
                 return (request.request_id, request.target_lang, request.target_lang_name, result)
 
             except Exception as e:
                 if attempt < max_retries - 1:
-                    log_progress(f"    [请求{request.request_id}] [{request.namespace}] 尝试{attempt + 1}/{max_retries} -> {request.target_lang_name} -> 失败: {str(e)}，重试中...", "warning")
-                    time.sleep((attempt + 1) * 2)  # 递增等待时间
+                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 失败: {str(e)}，重试中...", "warning")
+                    time.sleep(1)  # 固定等待1秒
                     continue
                 else:
-                    log_progress(f"    [请求{request.request_id}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {str(e)}（已重试{max_retries}次）", "error")
+                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {str(e)}（已重试{max_retries}次）", "error")
                     return (request.request_id, request.target_lang, request.target_lang_name, {})
 
     def execute_requests_concurrently(self, requests: List['DeepSeekTranslator.TranslationRequest'],
@@ -664,7 +664,7 @@ class DeepSeekTranslator:
 
                 except Exception as e:
                     namespace = getattr(request, 'namespace', 'default')
-                    log_progress(f"  请求 {request.request_id} [{namespace}] 执行异常: {str(e)}", "error")
+                    log_progress(f"  [{namespace}] 执行异常: {str(e)}", "error")
 
         # 统计最终结果
         total_translations = sum(
