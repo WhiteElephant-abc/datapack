@@ -567,8 +567,10 @@ class DeepSeekTranslator:
         if not silent:
             total_requests = len(requests)
             total_texts_to_translate = sum(len(req.texts) for req in requests)
-            namespace_display = f" <{namespace}>" if namespace else ""
-            log_progress(f"为{namespace_display} 创建了 {total_requests} 个翻译请求，共 {total_texts_to_translate} 个文本")
+            namespace_display = f" {namespace}" if namespace else ""
+            # 获取目标语言名称（使用第一个请求的语言名称作为代表）
+            target_lang_display = requests[0].target_lang_name if requests else "未知语言"
+            log_progress(f"为{namespace_display} 创建了 {total_requests} 个{target_lang_display}翻译请求，共 {total_texts_to_translate} 个文本")
 
         return requests
 
@@ -621,7 +623,7 @@ class DeepSeekTranslator:
             max_workers: 最大并发数，默认为请求数量
 
         Returns:
-            按语言分组的翻译结果 {lang_code: {key: translation, ...}, ...}
+            按命名空间和语言双重分组的翻译结果 {namespace: {lang_code: {key: translation, ...}, ...}, ...}
         """
         if not requests:
             return {}
@@ -631,8 +633,8 @@ class DeepSeekTranslator:
 
         log_progress(f"开始并发执行 {len(requests)} 个翻译请求")
 
-        # 按语言分组结果
-        results_by_language = {}
+        # 按命名空间和语言双重分组结果
+        results_by_namespace_and_language = {}
         completed_requests = 0
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -650,22 +652,30 @@ class DeepSeekTranslator:
                 try:
                     request_id, target_lang, target_lang_name, result = future.result()
 
-                    # 按语言分组结果
-                    if target_lang not in results_by_language:
-                        results_by_language[target_lang] = {}
+                    # 按命名空间和语言双重分组结果
+                    namespace = getattr(request, 'namespace', 'default')
+                    if namespace not in results_by_namespace_and_language:
+                        results_by_namespace_and_language[namespace] = {}
+                    
+                    if target_lang not in results_by_namespace_and_language[namespace]:
+                        results_by_namespace_and_language[namespace][target_lang] = {}
 
-                    results_by_language[target_lang].update(result)
+                    results_by_namespace_and_language[namespace][target_lang].update(result)
 
                 except Exception as e:
                     log_progress(f"  请求 {request.request_id} 执行异常: {str(e)}", "error")
 
         # 统计最终结果
-        total_translations = sum(len(translations) for translations in results_by_language.values())
+        total_translations = sum(
+            len(translations) 
+            for namespace_results in results_by_namespace_and_language.values()
+            for translations in namespace_results.values()
+        )
         log_progress(f"统一并发执行完成:")
-        log_progress(f"  完成语言数: {len(results_by_language)}")
+        log_progress(f"  完成命名空间数: {len(results_by_namespace_and_language)}")
         log_progress(f"  总翻译数: {total_translations}")
 
-        return results_by_language
+        return results_by_namespace_and_language
 
 
 
@@ -1683,7 +1693,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
 
     # 第三阶段：一次性并发执行所有请求
     log_progress("开始全并发翻译...")
-    results_by_language = translator.execute_requests_concurrently(all_requests)
+    results_by_namespace_and_language = translator.execute_requests_concurrently(all_requests)
 
     # 第四阶段：保存翻译结果
     log_progress("保存翻译结果...")
@@ -1695,22 +1705,30 @@ def continue_full_translation(translator, progress_tracker, namespaces):
         existing_translations = task['existing_translations']
 
         # 获取该任务的翻译结果
-        if lang_code in results_by_language:
-            translated_results = results_by_language[lang_code]
+        if (namespace in results_by_namespace_and_language and 
+            lang_code in results_by_namespace_and_language[namespace]):
+            translated_results = results_by_namespace_and_language[namespace][lang_code]
 
-            # 合并翻译结果
+            # 计算真正的新翻译数量
             if force_translate:
+                # 强制翻译模式：所有翻译结果都是新的（覆盖现有翻译）
                 final_translations = translated_results
+                new_translations_count = len(translated_results)
             else:
+                # 增量翻译模式：translated_results中的所有键都是新的
+                # （因为keys_to_translate已经过滤掉了existing_translations中存在的键）
+                new_translations_count = len(translated_results)
                 final_translations = existing_translations.copy()
                 final_translations.update(translated_results)
 
             # 保存翻译结果
             if save_namespace_translations(namespace, lang_code, final_translations):
                 saved_count += 1
-                log_progress(f"✓ {namespace} -> {lang_code}: {len(translated_results)} 个新翻译")
+                log_progress(f"✓ {namespace} -> {lang_code}: {new_translations_count} 个新翻译")
             else:
                 log_progress(f"✗ 保存失败: {namespace} -> {lang_code}", "error")
+        else:
+            log_progress(f"✗ 未找到翻译结果: {namespace} -> {lang_code}", "warning")
 
     log_progress(f"🎉 全并发翻译完成！成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
     flush_logs()
