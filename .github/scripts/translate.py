@@ -1625,22 +1625,19 @@ def run_smart_translation(translator):
         # 获取目标语言列表
         target_languages = get_all_target_languages().copy()
 
-        # 如果是虚拟变更（处理缺失文件），排除当前命名空间中缺失的语言作为翻译目标
-        if changes.file_path.startswith("merged:"):
-            # 检查当前命名空间中缺失的语言文件
-            namespace_lang_dir = Path(ASSETS_DIR) / changes.namespace / "lang"
-            if namespace_lang_dir.exists():
-                missing_langs = []
-                for lang_code in target_languages.keys():
-                    lang_file = namespace_lang_dir / f"{lang_code}.json"
-                    if not lang_file.exists():
-                        missing_langs.append(lang_code)
-
-                # 排除缺失的语言作为翻译目标
-                for missing_lang in missing_langs:
-                    if missing_lang in target_languages:
-                        del target_languages[missing_lang]
-                        log_progress(f"  跳过缺失的语言: {missing_lang}")
+        # 如果是虚拟变更（处理缺失文件），只翻译特定的语言
+        if "/" in changes.file_path and changes.file_path.endswith(".json"):
+            # 从文件路径中提取语言代码
+            file_name = Path(changes.file_path).name
+            if file_name.endswith(".json"):
+                target_lang_code = file_name[:-5]  # 移除 .json 后缀
+                if target_lang_code in target_languages:
+                    # 只翻译这个特定的语言
+                    target_languages = {target_lang_code: target_languages[target_lang_code]}
+                    log_progress(f"  虚拟变更：只翻译缺失的语言 {target_languages[target_lang_code]} ({target_lang_code})")
+                else:
+                    target_languages = {}
+                    log_progress(f"  未知的语言代码: {target_lang_code}，跳过翻译")
 
         # 翻译到各种目标语言
         for lang_code, lang_name in target_languages.items():
