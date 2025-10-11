@@ -311,7 +311,9 @@ class DeepSeekTranslator:
         return errors
 
     def log_translation_failure(self, attempt: int, system_prompt: str, user_prompt: str,
-                              api_response: str, error: str, texts: Dict[str, str]) -> None:
+                              api_response: str, error: str, texts: Dict[str, str],
+                              namespace: str = "unknown", target_lang_name: str = "unknown",
+                              log_to_main: bool = True) -> None:
         """记录翻译失败的详细信息到日志文件"""
         log_dir = os.path.join(os.path.dirname(__file__), "logs")
         os.makedirs(log_dir, exist_ok=True)
@@ -352,10 +354,11 @@ class DeepSeekTranslator:
             f.write(f"  文件: {os.path.basename(log_file)}\n")
             f.write(f"  文本数量: {len(texts)}\n\n")
 
-        # 提取错误的关键信息用于主日志显示
-        error_summary = error[:50] + ('...' if len(error) > 50 else '')
-        log_progress(f"    [尝试{attempt}/5] [{namespace}] {len(texts)}个文本 -> {target_lang_name} -> 失败: {error_summary}", "warning")
-        flush_logs()  # 确保错误日志被及时写入
+        # 只在需要时记录主日志
+        if log_to_main:
+            error_summary = error[:50] + ('...' if len(error) > 50 else '')
+            log_progress(f"    [尝试{attempt}/5] [{namespace}] {len(texts)}个文本 -> {target_lang_name} -> 失败: {error_summary}", "warning")
+            flush_logs()  # 确保错误日志被及时写入
 
     def prepare_texts_for_translation(self, texts: Dict[str, any]) -> Dict[str, str]:
         """准备合并后的文本进行翻译，处理列表值
@@ -378,12 +381,10 @@ class DeepSeekTranslator:
 
         return prepared_texts
 
-    def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str) -> Dict[str, str]:
+    def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, namespace: str = "unknown") -> Dict[str, str]:
         """
-        翻译一批文本，包含重试机制和完整性验证
+        翻译一批文本，单次执行（重试机制由上层函数处理）
         """
-        max_retries = 5
-
         if not texts:
             return {}
 
@@ -395,8 +396,7 @@ class DeepSeekTranslator:
 
         source_text = json.dumps(texts_to_translate, ensure_ascii=False, indent=2)
 
-        for attempt in range(max_retries):
-            try:
+        try:
                 # 使用提示词模板或回退到默认提示词
                 if self.system_prompt:
                     system_prompt = self._format_prompt(
@@ -506,24 +506,21 @@ class DeepSeekTranslator:
                 # 验证成功，返回结果
                 return translated_dict
 
-            except Exception as e:
-                # 记录失败详情
-                self.log_translation_failure(
-                    attempt=attempt + 1,
-                    system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
-                    user_prompt=user_prompt if 'user_prompt' in locals() else "未生成",
-                    api_response=translated_content if 'translated_content' in locals() else "无响应",
-                    error=str(e),
-                    texts=texts
-                )
-
-                # 如果不是最后一次尝试，等待后重试
-                if attempt < max_retries - 1:
-                    time.sleep(1)  # 固定等待1秒
-                else:
-                    # 最后一次尝试失败，记录错误日志并返回空字典
-                    log_progress(f"    批量翻译失败: {str(e)}（已重试{max_retries}次）", "error")
-                    return {}
+        except Exception as e:
+            # 记录失败详情（但不重试，由上层函数处理重试）
+            self.log_translation_failure(
+                attempt=1,  # 这里总是1，因为重试由上层处理
+                system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
+                user_prompt=user_prompt if 'user_prompt' in locals() else "未生成",
+                api_response=translated_content if 'translated_content' in locals() else "无响应",
+                error=str(e),
+                texts=texts,
+                namespace=namespace,
+                target_lang_name=target_lang_name,
+                log_to_main=False  # 不在主日志中记录，避免重复
+            )
+            # 抛出异常让上层处理重试
+            raise e
 
     # 新的多线程架构：请求预处理 + 统一并发执行
 
@@ -609,7 +606,7 @@ class DeepSeekTranslator:
         for attempt in range(max_retries):
             try:
                 # 执行翻译
-                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name)
+                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name, request.namespace)
 
                 # 检查翻译结果是否为空
                 if not result:
