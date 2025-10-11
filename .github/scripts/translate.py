@@ -1364,45 +1364,7 @@ def check_missing_translation_files() -> Dict[str, List[str]]:
 
     return missing_files
 
-def create_virtual_changes_for_missing_files(missing_translations: Dict[str, List[str]]) -> List[FileChanges]:
-    """为缺失的翻译文件创建虚拟变更
 
-    Args:
-        missing_translations: 缺失翻译文件的命名空间和语言代码
-
-    Returns:
-        List[FileChanges]: 虚拟的文件变更列表
-    """
-    virtual_changes = []
-
-    for namespace, missing_langs in missing_translations.items():
-        # 使用合并后的参考翻译
-        source_dict = get_merged_reference_translations(namespace)
-        if not source_dict:
-            continue
-
-        # 创建虚拟变更，将所有合并后的键标记为新增
-        added_keys = []
-        for key, value in source_dict.items():
-            # 处理列表值的情况
-            if isinstance(value, list):
-                # 对于列表值，使用第一个值作为翻译源
-                added_keys.append(KeyChange(key=key, old_value=None, new_value=value[0], operation='added'))
-            else:
-                added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation='added'))
-
-        virtual_change = FileChanges(
-            namespace=namespace,
-            file_path=f"merged:{namespace}",  # 标记为合并源
-            added_keys=added_keys,
-            deleted_keys=[],
-            modified_keys=[]
-        )
-
-        virtual_changes.append(virtual_change)
-        log_progress(f"  为 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个合并后的键")
-
-    return virtual_changes
 
 def check_missing_translation_files() -> List[Tuple[str, str]]:
     """检查缺失的翻译文件
