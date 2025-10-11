@@ -1089,10 +1089,18 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             log_progress(f"    ✓ 已有翻译：{len(existing_translate)} 个键")
 
             # 确定需要翻译的内容
+            force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
             keys_to_translate = {}
-            for key, value in source_dict.items():
-                if key not in existing_translate:
-                    keys_to_translate[key] = value
+            
+            if force_translate:
+                # 强制翻译模式：翻译所有键
+                keys_to_translate = source_dict.copy()
+                log_progress(f"    强制翻译模式：将重新翻译所有 {len(keys_to_translate)} 个键")
+            else:
+                # 正常模式：只翻译缺失的键
+                for key, value in source_dict.items():
+                    if key not in existing_translate:
+                        keys_to_translate[key] = value
 
             if not keys_to_translate:
                 log_progress(f"    所有内容已翻译完成")
@@ -1102,7 +1110,12 @@ def continue_full_translation(translator, progress_tracker, namespaces):
 
             # 分批翻译（每次最多40个键，避免请求过大）
             batch_size = 40
-            all_translated = existing_translate.copy()
+            if force_translate:
+                # 强制翻译模式：从空字典开始，完全替换
+                all_translated = {}
+            else:
+                # 正常模式：基于现有翻译进行增量更新
+                all_translated = existing_translate.copy()
 
             keys_list = list(keys_to_translate.items())
             total_batches = (len(keys_list) + batch_size - 1) // batch_size
@@ -1126,7 +1139,10 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             log_progress(f"    保存翻译结果...")
             if save_namespace_translations(namespace, lang_code, all_translated):
                 log_progress(f"    ✓ 保存成功: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json")
-                log_progress(f"    ✓ 总计翻译 {successful_translations} 个新键，文件包含 {len(all_translated)} 个键")
+                if force_translate:
+                    log_progress(f"    ✓ 强制翻译完成：重新翻译了 {successful_translations} 个键，文件包含 {len(all_translated)} 个键")
+                else:
+                    log_progress(f"    ✓ 总计翻译 {successful_translations} 个新键，文件包含 {len(all_translated)} 个键")
             else:
                 log_progress(f"    ✗ 保存失败: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json", "error")
 
