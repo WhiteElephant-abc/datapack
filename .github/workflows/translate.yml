@@ -57,6 +57,14 @@ jobs:
       run: |
         python .github/scripts/translate.py
 
+    - name: Upload translation logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: translation-logs
+        path: translation.log
+        retention-days: 30
+
     - name: Commit and push changes
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"

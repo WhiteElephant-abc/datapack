@@ -697,12 +697,167 @@ def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], ma
     
     return context_dict
 
+def check_missing_translation_files() -> Dict[str, List[str]]:
+    """检查缺失的翻译文件
+    
+    Returns:
+        Dict[namespace, List[missing_lang_codes]]: 缺失翻译文件的命名空间和语言代码
+    """
+    missing_files = {}
+    
+    # 获取所有命名空间
+    namespaces = get_namespace_list()
+    if not namespaces:
+        return missing_files
+    
+    log_progress("检查翻译文件完整性...")
+    
+    for namespace in namespaces:
+        # 检查源文件是否存在
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        if not source_file.exists():
+            continue
+        
+        missing_langs = []
+        
+        # 检查每种目标语言的翻译文件
+        for lang_code, lang_name in TARGET_LANGUAGES.items():
+            if lang_code == 'en_us':  # 跳过源语言
+                continue
+                
+            translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+            if not translate_file.exists():
+                missing_langs.append(lang_code)
+        
+        if missing_langs:
+            missing_files[namespace] = missing_langs
+            log_progress(f"  {namespace}: 缺失 {len(missing_langs)} 个语言的翻译文件")
+    
+    if missing_files:
+        total_missing = sum(len(langs) for langs in missing_files.values())
+        log_progress(f"发现 {len(missing_files)} 个命名空间缺失翻译文件，共 {total_missing} 个文件")
+    else:
+        log_progress("所有翻译文件完整")
+    
+    return missing_files
+
+def create_virtual_changes_for_missing_files(missing_translations: Dict[str, List[str]]) -> List[FileChanges]:
+    """为缺失的翻译文件创建虚拟变更
+    
+    Args:
+        missing_translations: 缺失翻译文件的命名空间和语言代码
+        
+    Returns:
+        List[FileChanges]: 虚拟的文件变更列表
+    """
+    virtual_changes = []
+    
+    for namespace, missing_langs in missing_translations.items():
+        # 加载源文件
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        source_dict = load_json_file(str(source_file))
+        if not source_dict:
+            continue
+        
+        # 创建虚拟变更，将所有源文件的键标记为新增
+        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added') 
+                     for key, value in source_dict.items()]
+        
+        virtual_change = FileChanges(
+            namespace=namespace,
+            file_path=str(source_file),
+            added_keys=added_keys,
+            deleted_keys=[],
+            modified_keys=[]
+        )
+        
+        virtual_changes.append(virtual_change)
+        log_progress(f"  为 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
+    
+    return virtual_changes
+
+def check_missing_translation_files() -> List[Tuple[str, str]]:
+    """检查缺失的翻译文件
+    
+    Returns:
+        List[Tuple[str, str]]: 缺失文件的 (namespace, lang_code) 列表
+    """
+    missing_files = []
+    
+    # 获取所有命名空间
+    namespaces = get_namespace_list()
+    
+    for namespace in namespaces:
+        # 检查源文件是否存在
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        if not source_file.exists():
+            continue
+            
+        # 检查每种目标语言的翻译文件
+        for lang_code, _ in TARGET_LANGUAGES.items():
+            if lang_code == 'zh_cn':  # 跳过源语言
+                continue
+                
+            translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+            if not translate_file.exists():
+                missing_files.append((namespace, lang_code))
+    
+    if missing_files:
+        log_progress(f"发现 {len(missing_files)} 个缺失的翻译文件")
+        for namespace, lang_code in missing_files[:5]:  # 只显示前5个
+            log_progress(f"  缺失: {namespace}/{lang_code}.json")
+        if len(missing_files) > 5:
+            log_progress(f"  ... 还有 {len(missing_files) - 5} 个文件")
+    
+    return missing_files
+
+def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]]) -> List[FileChanges]:
+    """为缺失的翻译文件创建虚拟变更
+    
+    Args:
+        missing_files: 缺失文件的 (namespace, lang_code) 列表
+        
+    Returns:
+        List[FileChanges]: 虚拟变更列表
+    """
+    # 按命名空间分组
+    namespace_groups = {}
+    for namespace, lang_code in missing_files:
+        if namespace not in namespace_groups:
+            namespace_groups[namespace] = []
+        namespace_groups[namespace].append(lang_code)
+    
+    virtual_changes = []
+    
+    for namespace, lang_codes in namespace_groups.items():
+        # 加载源文件以获取所有键
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        source_dict = load_json_file(str(source_file))
+        if not source_dict:
+            continue
+        
+        # 创建虚拟变更，将所有键标记为新增
+        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added') 
+                     for key, value in source_dict.items()]
+        
+        virtual_changes.append(FileChanges(
+            namespace=namespace,
+            file_path=str(source_file),
+            added_keys=added_keys,
+            deleted_keys=[],
+            modified_keys=[]
+        ))
+        
+        log_progress(f"为命名空间 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
+    
+    return virtual_changes
+
 def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> bool:
     """从所有翻译文件中删除指定的键"""
     success = True
     
     for lang_code, _ in TARGET_LANGUAGES.items():
-        if lang_code == 'en_us':  # 跳过源语言
+        if lang_code == 'zh_cn':  # 跳过源语言
             continue
             
         translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
@@ -798,10 +953,12 @@ def run_full_translation(translator):
         sys.exit(1)
 
     log_progress(f"✓ 找到 {len(namespaces)} 个命名空间: {', '.join(namespaces)}")
-    log_progress(f"✓ 目标语言: {len(TARGET_LANGUAGES)} 种")
+    # 计算实际需要翻译的语言数（排除源语言zh_cn）
+    target_lang_count = len(TARGET_LANGUAGES) - 1  # 排除zh_cn
+    log_progress(f"✓ 目标语言: {target_lang_count} 种")
     
     # 创建进度跟踪器
-    progress_tracker = ProgressTracker(len(TARGET_LANGUAGES), len(namespaces))
+    progress_tracker = ProgressTracker(target_lang_count, len(namespaces))
     
     log_section_end()
     
@@ -813,9 +970,17 @@ def run_smart_translation(translator):
     # 检测Git变更
     file_changes = get_git_changes()
     
-    if not file_changes:
-        log_progress("未检测到源翻译文件变更，跳过翻译")
+    # 检查输出文件缺失情况
+    missing_translations = check_missing_translation_files()
+    
+    if not file_changes and not missing_translations:
+        log_progress("未检测到源翻译文件变更，且所有翻译文件完整，跳过翻译")
         return
+    
+    if not file_changes and missing_translations:
+        log_progress("未检测到源文件变更，但发现缺失的翻译文件，将补充翻译")
+        # 为缺失的翻译文件创建虚拟变更
+        file_changes = create_virtual_changes_for_missing_files(missing_translations)
     
     log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
     
@@ -852,7 +1017,7 @@ def run_smart_translation(translator):
         
         # 翻译到各种目标语言
         for lang_code, lang_name in TARGET_LANGUAGES.items():
-            if lang_code == 'en_us':
+            if lang_code == 'zh_cn':  # 跳过源语言
                 continue
                 
             log_progress(f"  翻译到 {lang_name} ({lang_code})")
@@ -891,13 +1056,16 @@ def continue_full_translation(translator, progress_tracker, namespaces):
     """继续执行全量翻译的剩余逻辑"""
     # 处理每种目标语言
     for lang_code, lang_name in TARGET_LANGUAGES.items():
+        if lang_code == 'zh_cn':  # 跳过源语言
+            continue
+            
         progress_tracker.start_language(lang_code, lang_name)
 
         # 处理每个命名空间
         for namespace in namespaces:
             progress_tracker.start_namespace(namespace)
 
-            # 加载该命名空间的源语言文件
+            # 加载该命名空间的源语言文件（zh_cn）
             source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
             if not source_file.exists():
                 log_progress(f"    跳过：源文件不存在 {source_file}", "warning")
