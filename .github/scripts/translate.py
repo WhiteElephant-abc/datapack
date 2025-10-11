@@ -953,8 +953,8 @@ def run_full_translation(translator):
         sys.exit(1)
 
     log_progress(f"✓ 找到 {len(namespaces)} 个命名空间: {', '.join(namespaces)}")
-    # 计算实际需要翻译的语言数（排除源语言zh_cn）
-    target_lang_count = len(TARGET_LANGUAGES) - 1  # 排除zh_cn
+    # 计算实际需要翻译的语言数（TARGET_LANGUAGES已排除源语言zh_cn）
+    target_lang_count = len(TARGET_LANGUAGES)
     log_progress(f"✓ 目标语言: {target_lang_count} 种")
 
     # 创建进度跟踪器
@@ -1091,7 +1091,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             # 确定需要翻译的内容
             force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
             keys_to_translate = {}
-            
+
             if force_translate:
                 # 强制翻译模式：翻译所有键
                 keys_to_translate = source_dict.copy()
