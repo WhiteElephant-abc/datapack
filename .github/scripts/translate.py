@@ -10,7 +10,7 @@ import requests
 import time
 import subprocess
 import re
-import threading
+
 import concurrent.futures
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Set
@@ -192,9 +192,7 @@ class DeepSeekTranslator:
         self.system_prompt = self._load_prompt_template(SYSTEM_PROMPT_FILE)
         self.user_prompt = self._load_prompt_template(USER_PROMPT_FILE)
 
-        # 多线程相关（保留活跃请求计数用于日志）
-        self._active_requests = 0
-        self._request_lock = threading.Lock()  # 保护活跃请求计数
+
 
     def _init_error_logging(self):
         """初始化错误日志系统"""
@@ -458,7 +456,33 @@ class DeepSeekTranslator:
 
                 response.raise_for_status()
 
-                result = response.json()
+                # 处理响应文本，过滤空行
+                response_text = response.text.strip()
+                if not response_text:
+                    raise ValueError("API返回空响应")
+                
+                # 过滤空行和只包含空白字符的行
+                filtered_lines = []
+                for line in response_text.split('\n'):
+                    line = line.strip()
+                    if line:  # 只保留非空行
+                        filtered_lines.append(line)
+                
+                if not filtered_lines:
+                    raise ValueError("API响应过滤后为空")
+                
+                # 重新组合过滤后的响应
+                filtered_response = '\n'.join(filtered_lines)
+                log_progress(f"      过滤空行后响应长度: {len(filtered_response)} 字符")
+                
+                # 解析JSON
+                try:
+                    result = json.loads(filtered_response)
+                except json.JSONDecodeError as e:
+                    # 如果过滤后仍然解析失败，尝试原始响应
+                    log_progress(f"      过滤后JSON解析失败，尝试原始响应: {e}", "warning")
+                    result = response.json()
+                
                 translated_content = result["choices"][0]["message"]["content"].strip()
                 log_progress(f"      收到翻译响应 (长度: {len(translated_content)} 字符)")
 
@@ -591,7 +615,7 @@ class DeepSeekTranslator:
         log_progress(f"    [请求{request.request_id}] 开始翻译 {len(request.texts)} 个文本到 {request.target_lang_name}")
         
         try:
-            result = self.translate_batch_streaming(request.texts, request.target_lang, request.target_lang_name, request.request_id)
+            result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name)
             log_progress(f"    [请求{request.request_id}] 翻译成功，获得 {len(result)} 个翻译")
             return (request.request_id, request.target_lang, request.target_lang_name, result)
         except Exception as e:
@@ -614,10 +638,9 @@ class DeepSeekTranslator:
             return {}
         
         if max_workers is None:
-            max_workers = min(len(requests), 20)  # 限制最大并发数
+            max_workers = len(requests)  # 无并发限制，充分利用DeepSeek API
         
-        log_progress(f"开始统一并发执行 {len(requests)} 个翻译请求")
-        log_progress(f"  最大并发数: {max_workers}")
+        log_progress(f"开始并发执行 {len(requests)} 个翻译请求")
         
         # 按语言分组结果
         results_by_language = {}
@@ -657,174 +680,9 @@ class DeepSeekTranslator:
         
         return results_by_language
 
-    def translate_batch_streaming(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, request_id: int = 1) -> Dict[str, str]:
-        """
-        使用流式响应的翻译方法，支持早期检测响应开始
-        """
-        max_retries = 3
 
-        if not texts:
-            return {}
 
-        source_text = json.dumps(texts, ensure_ascii=False, indent=2)
-        log_progress(f"      [请求{request_id}] 开始流式翻译 {len(texts)} 个键到 {target_lang_name}")
 
-        for attempt in range(max_retries):
-            try:
-                log_progress(f"      [请求{request_id}] 尝试 {attempt + 1}/{max_retries}")
-
-                # 使用提示词模板或回退到默认提示词
-                if self.system_prompt:
-                    system_prompt = self._format_prompt(
-                        self.system_prompt,
-                        target_language=target_lang_name
-                    )
-                else:
-                    system_prompt = "你是一个专业的游戏本地化翻译专家，擅长Minecraft相关内容的翻译。"
-
-                if self.user_prompt:
-                    user_prompt = self._format_prompt(
-                        self.user_prompt,
-                        target_language=target_lang_name,
-                        content_to_translate=source_text
-                    )
-                else:
-                    user_prompt = f"""请将以下JSON格式的游戏本地化文本翻译为{target_lang_name}。
-
-要求：
-1. 保持JSON格式不变，只翻译值部分
-2. 保持游戏术语的一致性和准确性
-3. 考虑游戏上下文，使翻译自然流畅
-4. 保持原有的格式标记（如方括号、冒号等）
-5. 对于专有名词（如"数据包"、"实体"等），使用游戏中的标准翻译
-
-源文本：
-{source_text}
-
-请直接返回翻译后的JSON，不要添加任何解释文字。"""
-
-                # 根据模式选择模型
-                model = "deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"
-
-                payload = {
-                    "model": model,
-                    "messages": [
-                        {
-                            "role": "system",
-                            "content": system_prompt
-                        },
-                        {
-                            "role": "user",
-                            "content": user_prompt
-                        }
-                    ],
-                    "temperature": 1.3,
-                    "stream": True  # 启用流式响应
-                }
-
-                # 调用API
-                log_progress(f"      [请求{request_id}] 发送流式API请求到DeepSeek...")
-                start_time = time.time()
-
-                with requests.post(DEEPSEEK_API_URL, headers=self.headers, json=payload, timeout=60, stream=True) as response:
-                    response.raise_for_status()
-
-                    # 开始接收流式响应
-                    log_progress(f"      [请求{request_id}] 开始接收流式响应")
-
-                    # 收集流式响应
-                    translated_content = ""
-                    first_chunk_received = False
-
-                    for line in response.iter_lines():
-                        if line:
-                            line = line.decode('utf-8')
-                            if line.startswith('data: '):
-                                data = line[6:]
-                                if data == '[DONE]':
-                                    break
-                                try:
-                                    chunk = json.loads(data)
-                                    if 'choices' in chunk and len(chunk['choices']) > 0:
-                                        delta = chunk['choices'][0].get('delta', {})
-                                        if 'content' in delta and delta['content'] is not None:
-                                            if not first_chunk_received:
-                                                first_chunk_received = True
-                                                log_progress(f"      [请求{request_id}] 收到第一个内容块")
-                                            translated_content += delta['content']
-                                except json.JSONDecodeError:
-                                    continue
-
-                    api_time = time.time() - start_time
-                    log_progress(f"      [请求{request_id}] 流式响应完成，耗时: {api_time:.2f}s")
-
-                # 清理响应内容
-                if translated_content.startswith("```json"):
-                    translated_content = translated_content[7:]
-                if translated_content.startswith("```"):
-                    translated_content = translated_content[3:]
-                if translated_content.endswith("```"):
-                    translated_content = translated_content[:-3]
-                translated_content = translated_content.strip()
-
-                # 解析JSON
-                try:
-                    translated_dict = json.loads(translated_content)
-                    log_progress(f"      [请求{request_id}] JSON解析成功，包含 {len(translated_dict)} 个键")
-                except json.JSONDecodeError as e:
-                    raise ValueError(f"JSON解析失败: {e}")
-
-                # 验证翻译结果
-                validation_errors = self.validate_translation_result(texts, translated_dict)
-                if validation_errors:
-                    raise ValueError(f"翻译验证失败: {'; '.join(validation_errors)}")
-
-                # 验证成功，返回结果
-                log_progress(f"      [请求{request_id}] 翻译成功！尝试次数: {attempt + 1}, 总耗时: {time.time() - start_time:.2f}s")
-                return translated_dict
-
-            except Exception as e:
-                error_msg = f"[请求{request_id}] 翻译尝试 {attempt + 1} 失败: {str(e)}"
-                log_progress(error_msg, "error")
-
-                # 记录失败详情到错误日志
-                self.log_translation_failure(
-                    attempt=attempt + 1,
-                    system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
-                    user_prompt=user_prompt if 'user_prompt' in locals() else "未生成",
-                    api_response=translated_content if 'translated_content' in locals() else "无响应",
-                    error=str(e),
-                    texts=texts
-                )
-
-                # 如果不是最后一次尝试，等待后重试
-                if attempt < max_retries - 1:
-                    wait_time = (attempt + 1) * 2
-                    log_progress(f"[请求{request_id}] 等待 {wait_time} 秒后重试...")
-                    time.sleep(wait_time)
-                else:
-                    log_progress(f"[请求{request_id}] 翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
-                    return {}
-            finally:
-                # 请求完成（无需额外清理）
-                pass
-
-    def _translate_single_request(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, request_id: int) -> Tuple[int, Dict[str, str]]:
-        """
-        单个翻译请求的实现，用于多线程调用
-        返回 (request_id, 翻译结果)
-        """
-        with self._request_lock:
-            self._active_requests += 1
-            log_progress(f"      [请求{request_id}] 开始翻译 {len(texts)} 个键到 {target_lang_name} (活跃请求: {self._active_requests})")
-
-        try:
-            result = self.translate_batch(texts, target_lang, target_lang_name)
-            return (request_id, result)
-        finally:
-            with self._request_lock:
-                self._active_requests -= 1
-                log_progress(f"      [请求{request_id}] 翻译完成 (活跃请求: {self._active_requests})")
 
     def translate_batch_concurrent_new(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
@@ -836,9 +694,9 @@ class DeepSeekTranslator:
 
         # 如果只有一个批次，直接翻译
         if len(texts_batches) == 1:
-            return self.translate_batch_streaming(texts_batches[0], target_lang, target_lang_name, 1)
+            return self.translate_batch(texts_batches[0], target_lang, target_lang_name)
 
-        log_progress(f"    开始新架构并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        log_progress(f"    开始并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
         
         # 1. 预处理：准备所有翻译请求
         all_texts = {}
@@ -863,15 +721,15 @@ class DeepSeekTranslator:
         if not texts_batches:
             return {}
 
-        # 如果只有一个批次，直接使用流式翻译
+        # 如果只有一个批次，直接翻译
         if len(texts_batches) == 1:
             batch = texts_batches[0].copy()  # 复制以避免修改原始数据
             core_keys = batch.pop('__core_keys__', set())
-            translated = self.translate_batch_streaming(batch, target_lang, target_lang_name, 1)
+            translated = self.translate_batch(batch, target_lang, target_lang_name)
             # 只返回核心内容
             return {k: v for k, v in translated.items() if k in core_keys}
 
-        log_progress(f"    开始新架构上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        log_progress(f"    开始上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
         
         # 1. 为每个批次创建翻译请求，保持上下文结构
         all_requests = []
@@ -906,7 +764,7 @@ class DeepSeekTranslator:
                 if key in all_translated:
                     core_translated[key] = all_translated[key]
         
-        log_progress(f"    新架构上下文保证翻译完成，核心翻译: {len(core_translated)}/{sum(len(keys) for keys in batch_core_keys_map.values())}")
+        log_progress(f"    上下文保证翻译完成，核心翻译: {len(core_translated)}/{sum(len(keys) for keys in batch_core_keys_map.values())}")
         return core_translated
 
 
@@ -1695,42 +1553,75 @@ def run_smart_translation(translator):
                     target_languages = {}
                     log_progress(f"  未知的语言代码: {target_lang_code}，跳过翻译")
 
-        # 翻译到各种目标语言
+        # 收集所有翻译任务
+        all_translation_tasks = []
+        
         for lang_code, lang_name in target_languages.items():
-            log_progress(f"  翻译到 {lang_name} ({lang_code})")
-
-            # 准备合并后的文本进行翻译
-            prepared_context = translator.prepare_texts_for_translation(context_dict)
-            log_progress(f"  准备翻译文本完成，处理了 {len(prepared_context)} 个键值对")
-
-            # 翻译上下文 - 使用上下文保证机制提升翻译质量
-            if len(prepared_context) > 40:  # 如果上下文较大，使用优化的上下文保证并发翻译
-                context_batches = translator.split_texts_with_context_guarantee(prepared_context, batch_size=40, context_size=4)
-                translated_context = translator.translate_batch_concurrent_with_context_new(context_batches, lang_code, lang_name)
-            else:
-                translated_context = translator.translate_batch(prepared_context, lang_code, lang_name)
-
-            if not translated_context:
-                log_progress(f"    ✗ 翻译失败", "error")
-                continue
-
             # 加载现有翻译
             existing_translations = load_namespace_translations(changes.namespace, lang_code)
-
-            # 只保存目标键的翻译（不包括上下文）
-            target_translations = {key: translated_context[key]
-                                 for key in keys_to_translate
-                                 if key in translated_context}
-
-            # 合并翻译结果
-            final_translations = existing_translations.copy()
-            final_translations.update(target_translations)
-
-            # 保存翻译结果
-            if save_namespace_translations(changes.namespace, lang_code, final_translations):
-                log_progress(f"    ✓ 成功翻译 {len(target_translations)} 个键")
-            else:
-                log_progress(f"    ✗ 保存翻译失败", "error")
+            
+            all_translation_tasks.append({
+                'namespace': changes.namespace,
+                'lang_code': lang_code,
+                'lang_name': lang_name,
+                'context_dict': context_dict,
+                'keys_to_translate': keys_to_translate,
+                'existing_translations': existing_translations
+            })
+        
+        if not all_translation_tasks:
+            continue
+            
+        log_progress(f"准备 {len(all_translation_tasks)} 个翻译任务")
+        
+        # 准备所有翻译请求
+        all_requests = []
+        
+        for task in all_translation_tasks:
+            prepared_context = translator.prepare_texts_for_translation(task['context_dict'])
+            target_languages_list = [(task['lang_code'], task['lang_name'])]
+            
+            # 创建翻译请求
+            requests = translator.prepare_translation_requests(prepared_context, target_languages_list, batch_size=40)
+            
+            # 为每个请求添加任务信息
+            for request in requests:
+                request.namespace = task['namespace']
+                request.keys_to_translate = task['keys_to_translate']
+                request.existing_translations = task['existing_translations']
+                all_requests.append(request)
+        
+        # 一次性并发执行所有请求
+        log_progress(f"开始并发翻译 {len(all_requests)} 个请求...")
+        results_by_language = translator.execute_requests_concurrently(all_requests)
+        
+        # 保存翻译结果
+        saved_count = 0
+        for task in all_translation_tasks:
+            lang_code = task['lang_code']
+            keys_to_translate = task['keys_to_translate']
+            existing_translations = task['existing_translations']
+            
+            if lang_code in results_by_language:
+                translated_context = results_by_language[lang_code]
+                
+                # 只保存目标键的翻译（不包括上下文）
+                target_translations = {key: translated_context[key]
+                                     for key in keys_to_translate
+                                     if key in translated_context}
+                
+                # 合并翻译结果
+                final_translations = existing_translations.copy()
+                final_translations.update(target_translations)
+                
+                # 保存翻译结果
+                if save_namespace_translations(changes.namespace, lang_code, final_translations):
+                    saved_count += 1
+                    log_progress(f"✓ {lang_code}: {len(target_translations)} 个新翻译")
+                else:
+                    log_progress(f"✗ 保存失败: {lang_code}", "error")
+        
+        log_progress(f"✓ 成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
 
         log_section_end()
 
@@ -1739,104 +1630,102 @@ def run_smart_translation(translator):
     log_section_end()
 
 def continue_full_translation(translator, progress_tracker, namespaces):
-    """继续执行全量翻译的剩余逻辑"""
-    # 处理每种目标语言
-    # 翻译到所有目标语言
-    for lang_code, lang_name in get_all_target_languages().items():
-        progress_tracker.start_language(lang_code, lang_name)
-
-        # 处理每个命名空间
-        for namespace in namespaces:
-            progress_tracker.start_namespace(namespace)
-
-            # 使用合并后的参考翻译
-            source_dict = get_merged_reference_translations(namespace)
-            if not source_dict:
-                log_progress(f"    跳过：无法加载命名空间 {namespace} 的合并参考翻译", "warning")
-                continue
-
-            log_progress(f"    ✓ 加载合并后的参考翻译成功，共 {len(source_dict)} 个键值对")
-
+    """继续执行全量翻译的剩余逻辑 - 全并发版本"""
+    log_progress("开始准备所有翻译请求...")
+    
+    # 第一阶段：收集所有需要翻译的内容
+    all_translation_tasks = []
+    force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
+    
+    for namespace in namespaces:
+        # 使用合并后的参考翻译
+        source_dict = get_merged_reference_translations(namespace)
+        if not source_dict:
+            log_progress(f"跳过命名空间 {namespace}：无法加载合并参考翻译", "warning")
+            continue
+            
+        log_progress(f"✓ 命名空间 {namespace}：{len(source_dict)} 个键值对")
+        
+        for lang_code, lang_name in get_all_target_languages().items():
             # 检查是否需要翻译
             if not needs_translation(namespace, lang_code, source_dict):
-                log_progress(f"    跳过：无需翻译")
                 continue
-
-            # 加载该命名空间已有的翻译
-            log_progress(f"    加载已有翻译...")
+                
+            # 加载已有翻译
             existing_translate = load_namespace_translations(namespace, lang_code)
-            log_progress(f"    ✓ 已有翻译：{len(existing_translate)} 个键")
-
+            
             # 确定需要翻译的内容
-            force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
-            keys_to_translate = {}
-
             if force_translate:
-                # 强制翻译模式：翻译所有键
                 keys_to_translate = source_dict.copy()
-                log_progress(f"    强制翻译模式：将重新翻译所有 {len(keys_to_translate)} 个键")
             else:
-                # 正常模式：只翻译缺失的键
-                for key, value in source_dict.items():
-                    if key not in existing_translate:
-                        keys_to_translate[key] = value
-
-            if not keys_to_translate:
-                log_progress(f"    所有内容已翻译完成")
-                continue
-
-            log_progress(f"    需要翻译 {len(keys_to_translate)} 个新键")
-
-            # 准备合并后的文本进行翻译
-            prepared_texts = translator.prepare_texts_for_translation(keys_to_translate)
-            log_progress(f"    准备翻译文本完成，处理了 {len(prepared_texts)} 个键值对")
-
-            # 分批翻译（每次最多40个键，避免请求过大）
-            batch_size = 40
+                keys_to_translate = {k: v for k, v in source_dict.items() if k not in existing_translate}
+            
+            if keys_to_translate:
+                all_translation_tasks.append({
+                    'namespace': namespace,
+                    'lang_code': lang_code,
+                    'lang_name': lang_name,
+                    'texts': keys_to_translate,
+                    'existing_translations': existing_translate
+                })
+    
+    if not all_translation_tasks:
+        log_progress("所有内容已翻译完成")
+        return
+    
+    log_progress(f"✓ 准备完成：{len(all_translation_tasks)} 个翻译任务")
+    
+    # 第二阶段：准备所有翻译请求
+    log_progress("准备翻译请求...")
+    all_requests = []
+    
+    for task in all_translation_tasks:
+        prepared_texts = translator.prepare_texts_for_translation(task['texts'])
+        target_languages = [(task['lang_code'], task['lang_name'])]
+        
+        # 创建翻译请求
+        requests = translator.prepare_translation_requests(prepared_texts, target_languages, batch_size=40)
+        
+        # 为每个请求添加任务信息
+        for request in requests:
+            request.namespace = task['namespace']
+            request.existing_translations = task['existing_translations']
+            all_requests.append(request)
+    
+    log_progress(f"✓ 生成了 {len(all_requests)} 个翻译请求")
+    
+    # 第三阶段：一次性并发执行所有请求
+    log_progress("开始全并发翻译...")
+    results_by_language = translator.execute_requests_concurrently(all_requests)
+    
+    # 第四阶段：保存翻译结果
+    log_progress("保存翻译结果...")
+    saved_count = 0
+    
+    for task in all_translation_tasks:
+        namespace = task['namespace']
+        lang_code = task['lang_code']
+        existing_translations = task['existing_translations']
+        
+        # 获取该任务的翻译结果
+        if lang_code in results_by_language:
+            translated_results = results_by_language[lang_code]
+            
+            # 合并翻译结果
             if force_translate:
-                # 强制翻译模式：从空字典开始，完全替换
-                all_translated = {}
+                final_translations = translated_results
             else:
-                # 正常模式：基于现有翻译进行增量更新
-                all_translated = existing_translate.copy()
-
-            keys_list = list(prepared_texts.items())
-            # 使用上下文保证机制提升翻译质量
-            if len(keys_list) > batch_size:
-                log_progress(f"    开始新架构上下文保证并发翻译，文本数量: {len(keys_list)}")
-                text_batches = translator.split_texts_with_context_guarantee(dict(keys_list), batch_size=batch_size, context_size=4)
-                all_translated = translator.translate_batch_concurrent_with_context_new(text_batches, lang_code, lang_name)
-                successful_translations = len(all_translated)
-                log_progress(f"    优化的上下文保证并发翻译完成，成功翻译 {successful_translations} 个键")
+                final_translations = existing_translations.copy()
+                final_translations.update(translated_results)
+            
+            # 保存翻译结果
+            if save_namespace_translations(namespace, lang_code, final_translations):
+                saved_count += 1
+                log_progress(f"✓ {namespace} -> {lang_code}: {len(translated_results)} 个新翻译")
             else:
-                # 文本较少时使用单线程翻译
-                log_progress(f"    开始单线程翻译，文本数量: {len(keys_list)}")
-                all_translated = translator.translate_batch(dict(keys_list), lang_code, lang_name)
-                successful_translations = len(all_translated) if all_translated else 0
-                log_progress(f"    单线程翻译完成，成功翻译 {successful_translations} 个键")
-
-            flush_logs()  # 确保翻译进度被及时写入日志
-
-            # 保存翻译结果到对应的命名空间目录
-            log_progress(f"    保存翻译结果...")
-            if save_namespace_translations(namespace, lang_code, all_translated):
-                log_progress(f"    ✓ 保存成功: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json")
-                if force_translate:
-                    log_progress(f"    ✓ 强制翻译完成：重新翻译了 {successful_translations} 个键，文件包含 {len(all_translated)} 个键")
-                else:
-                    log_progress(f"    ✓ 总计翻译 {successful_translations} 个新键，文件包含 {len(all_translated)} 个键")
-            else:
-                log_progress(f"    ✗ 保存失败: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json", "error")
-
-            log_progress(progress_tracker.get_total_progress())
-
-        progress_tracker.finish_language()
-
-    log_section("翻译完成")
-    log_progress("🎉 所有翻译任务已完成！")
-    log_section_end()
-
-    # 确保所有日志都被写入文件
+                log_progress(f"✗ 保存失败: {namespace} -> {lang_code}", "error")
+    
+    log_progress(f"🎉 全并发翻译完成！成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
     flush_logs()
 
 if __name__ == "__main__":
