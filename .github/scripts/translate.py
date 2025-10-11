@@ -19,14 +19,19 @@ from enum import Enum
 import logging
 from datetime import datetime
 
+# 检测是否在GitHub Actions环境中运行
+IS_GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS') == 'true'
+
 # 配置详细日志
+handlers = [logging.FileHandler('translation.log', encoding='utf-8')]
+# 在非GitHub Actions环境中添加控制台输出
+if not IS_GITHUB_ACTIONS:
+    handlers.append(logging.StreamHandler(sys.stdout))
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('translation.log', encoding='utf-8')
-    ],
+    handlers=handlers,
     force=True
 )
 logger = logging.getLogger(__name__)
@@ -64,9 +69,6 @@ class ChangeType(Enum):
     ADDED = "added"
     DELETED = "deleted"
     MODIFIED = "modified"
-
-# 检测是否在GitHub Actions环境中运行
-IS_GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS') == 'true'
 
 def log_progress(message: str, level: str = "info"):
     """统一的进度日志函数，在GitHub Actions中使用特殊格式"""
@@ -1619,10 +1621,10 @@ def run_smart_translation(translator):
         return
 
     if not file_changes and missing_translations:
-        log_progress("未检测到源文件变更，但发现缺失的翻译文件")
-        log_progress("智能翻译模式下，缺失文件不会触发全量翻译")
-        log_progress("如需补充翻译，请使用强制翻译模式: FORCE_TRANSLATE=true")
-        return
+        log_progress("未检测到源文件变更，但发现缺失的翻译文件，将补充翻译")
+        # 为缺失的翻译文件创建虚拟变更，但只包含实际存在的键
+        virtual_changes = create_virtual_changes_for_missing_files(missing_translations)
+        file_changes.extend(virtual_changes)
 
     log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
 
