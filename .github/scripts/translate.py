@@ -192,10 +192,9 @@ class DeepSeekTranslator:
         self.system_prompt = self._load_prompt_template(SYSTEM_PROMPT_FILE)
         self.user_prompt = self._load_prompt_template(USER_PROMPT_FILE)
 
-        # 多线程相关
-        self._request_lock = threading.Lock()
+        # 多线程相关（保留活跃请求计数用于日志）
         self._active_requests = 0
-        self._streaming_requests = {}  # 跟踪流式请求状态
+        self._request_lock = threading.Lock()  # 保护活跃请求计数
 
     def _init_error_logging(self):
         """初始化错误日志系统"""
@@ -519,6 +518,145 @@ class DeepSeekTranslator:
                     log_progress(f"翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
 
+    # 新的多线程架构：请求预处理 + 统一并发执行
+    
+    @dataclass
+    class TranslationRequest:
+        """翻译请求数据结构"""
+        request_id: int
+        texts: Dict[str, str]
+        target_lang: str
+        target_lang_name: str
+        batch_size: int = 40
+        
+    def prepare_translation_requests(self, all_texts: Dict[str, str], target_languages: List[Tuple[str, str]], 
+                                   batch_size: int = 40) -> List['DeepSeekTranslator.TranslationRequest']:
+        """
+        预处理所有翻译请求，将文本按语言和批次分割
+        
+        Args:
+            all_texts: 所有需要翻译的文本
+            target_languages: 目标语言列表 [(lang_code, lang_name), ...]
+            batch_size: 每个请求的批次大小
+            
+        Returns:
+            预处理好的翻译请求列表
+        """
+        requests = []
+        request_id = 1
+        
+        log_progress(f"开始预处理翻译请求...")
+        log_progress(f"  文本总数: {len(all_texts)}")
+        log_progress(f"  目标语言: {len(target_languages)} 种")
+        log_progress(f"  批次大小: {batch_size}")
+        
+        for target_lang, target_lang_name in target_languages:
+            # 将文本分批
+            text_items = list(all_texts.items())
+            
+            for i in range(0, len(text_items), batch_size):
+                batch_texts = dict(text_items[i:i + batch_size])
+                
+                request = self.TranslationRequest(
+                    request_id=request_id,
+                    texts=batch_texts,
+                    target_lang=target_lang,
+                    target_lang_name=target_lang_name,
+                    batch_size=len(batch_texts)
+                )
+                
+                requests.append(request)
+                request_id += 1
+        
+        total_requests = len(requests)
+        total_texts_to_translate = sum(len(req.texts) for req in requests)
+        
+        log_progress(f"预处理完成:")
+        log_progress(f"  总请求数: {total_requests}")
+        log_progress(f"  总翻译文本数: {total_texts_to_translate}")
+        log_progress(f"  平均每请求: {total_texts_to_translate / total_requests:.1f} 个文本")
+        
+        return requests
+    
+    def execute_translation_request(self, request: 'DeepSeekTranslator.TranslationRequest') -> Tuple[int, str, str, Dict[str, str]]:
+        """
+        执行单个翻译请求
+        
+        Args:
+            request: 翻译请求对象
+            
+        Returns:
+            (request_id, target_lang, target_lang_name, translation_result)
+        """
+        log_progress(f"    [请求{request.request_id}] 开始翻译 {len(request.texts)} 个文本到 {request.target_lang_name}")
+        
+        try:
+            result = self.translate_batch_streaming(request.texts, request.target_lang, request.target_lang_name, request.request_id)
+            log_progress(f"    [请求{request.request_id}] 翻译成功，获得 {len(result)} 个翻译")
+            return (request.request_id, request.target_lang, request.target_lang_name, result)
+        except Exception as e:
+            log_progress(f"    [请求{request.request_id}] 翻译失败: {str(e)}", "error")
+            return (request.request_id, request.target_lang, request.target_lang_name, {})
+    
+    def execute_requests_concurrently(self, requests: List['DeepSeekTranslator.TranslationRequest'], 
+                                    max_workers: int = None) -> Dict[str, Dict[str, str]]:
+        """
+        统一并发执行所有翻译请求
+        
+        Args:
+            requests: 预处理好的翻译请求列表
+            max_workers: 最大并发数，默认为请求数量
+            
+        Returns:
+            按语言分组的翻译结果 {lang_code: {key: translation, ...}, ...}
+        """
+        if not requests:
+            return {}
+        
+        if max_workers is None:
+            max_workers = min(len(requests), 20)  # 限制最大并发数
+        
+        log_progress(f"开始统一并发执行 {len(requests)} 个翻译请求")
+        log_progress(f"  最大并发数: {max_workers}")
+        
+        # 按语言分组结果
+        results_by_language = {}
+        completed_requests = 0
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # 提交所有请求
+            future_to_request = {
+                executor.submit(self.execute_translation_request, request): request 
+                for request in requests
+            }
+            
+            # 收集结果
+            for future in concurrent.futures.as_completed(future_to_request):
+                request = future_to_request[future]
+                completed_requests += 1
+                
+                try:
+                    request_id, target_lang, target_lang_name, result = future.result()
+                    
+                    # 按语言分组结果
+                    if target_lang not in results_by_language:
+                        results_by_language[target_lang] = {}
+                    
+                    results_by_language[target_lang].update(result)
+                    
+                    log_progress(f"  请求 {request_id} 完成 ({completed_requests}/{len(requests)}) - {target_lang_name}: {len(result)} 个翻译")
+                    
+                except Exception as e:
+                    log_progress(f"  请求 {request.request_id} 执行异常: {str(e)}", "error")
+        
+        # 统计最终结果
+        total_translations = sum(len(translations) for translations in results_by_language.values())
+        log_progress(f"统一并发执行完成:")
+        log_progress(f"  完成语言数: {len(results_by_language)}")
+        log_progress(f"  总翻译数: {total_translations}")
+        
+        return results_by_language
+
     def translate_batch_streaming(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, request_id: int = 1) -> Dict[str, str]:
         """
         使用流式响应的翻译方法，支持早期检测响应开始
@@ -591,10 +729,8 @@ class DeepSeekTranslator:
                 with requests.post(DEEPSEEK_API_URL, headers=self.headers, json=payload, timeout=60, stream=True) as response:
                     response.raise_for_status()
 
-                    # 标记请求开始输出
-                    with self._request_lock:
-                        self._streaming_requests[request_id] = True
-                        log_progress(f"      [请求{request_id}] 开始接收流式响应")
+                    # 开始接收流式响应
+                    log_progress(f"      [请求{request_id}] 开始接收流式响应")
 
                     # 收集流式响应
                     translated_content = ""
@@ -670,10 +806,8 @@ class DeepSeekTranslator:
                     log_progress(f"[请求{request_id}] 翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
             finally:
-                # 清理流式请求状态
-                with self._request_lock:
-                    if request_id in self._streaming_requests:
-                        del self._streaming_requests[request_id]
+                # 请求完成（无需额外清理）
+                pass
 
     def _translate_single_request(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, request_id: int) -> Tuple[int, Dict[str, str]]:
         """
@@ -692,189 +826,90 @@ class DeepSeekTranslator:
                 self._active_requests -= 1
                 log_progress(f"      [请求{request_id}] 翻译完成 (活跃请求: {self._active_requests})")
 
-
-
-
-    def translate_batch_concurrent_optimized(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
+    def translate_batch_concurrent_new(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
-        优化的并发翻译方法：当上一个请求开始输出时才创建新请求
-        利用DeepSeek API无并发限制的特性，移除请求数量上限
+        新的简化并发翻译方法：预处理 + 统一并发执行
+        移除复杂的流式检测，使用标准ThreadPoolExecutor模式
         """
         if not texts_batches:
             return {}
 
-        # 如果只有一个批次，直接使用流式翻译
+        # 如果只有一个批次，直接翻译
         if len(texts_batches) == 1:
             return self.translate_batch_streaming(texts_batches[0], target_lang, target_lang_name, 1)
 
-        log_progress(f"    开始优化并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
-        log_progress(f"    使用流式响应优化策略，无并发限制")
+        log_progress(f"    开始新架构并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        
+        # 1. 预处理：准备所有翻译请求
+        all_texts = {}
+        for batch in texts_batches:
+            all_texts.update(batch)
+        
+        target_languages = [(target_lang, target_lang_name)]
+        requests = self.prepare_translation_requests(all_texts, target_languages, batch_size=40)
+        
+        # 2. 统一并发执行
+        results_by_language = self.execute_requests_concurrently(requests, max_workers=len(requests))
+        
+        # 3. 返回结果
+        return results_by_language.get(target_lang, {})
 
-        merged_results = {}
-        completed_batches = 0
-        active_futures = {}
-        batch_queue = list(enumerate(texts_batches, 1))
-        next_request_id = 1
 
-        # 启动第一个请求
-        if batch_queue:
-            batch_id, batch = batch_queue.pop(0)
-            executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(texts_batches))
-            future = executor.submit(self.translate_batch_streaming, batch, target_lang, target_lang_name, next_request_id)
-            active_futures[future] = (batch_id, next_request_id)
-            next_request_id += 1
-            log_progress(f"    启动第一个请求 (批次 {batch_id})")
 
-        try:
-            while active_futures or batch_queue:
-                # 检查是否有新的流式请求开始输出
-                if batch_queue:
-                    # 检查是否有请求开始输出（可以启动新请求）
-                    streaming_started = False
-                    with self._request_lock:
-                        if self._streaming_requests:
-                            streaming_started = True
-
-                    if streaming_started and len(active_futures) < len(texts_batches):
-                        # 启动下一个请求
-                        batch_id, batch = batch_queue.pop(0)
-                        future = executor.submit(self.translate_batch_streaming, batch, target_lang, target_lang_name, next_request_id)
-                        active_futures[future] = (batch_id, next_request_id)
-                        log_progress(f"    检测到流式响应开始，启动新请求 (批次 {batch_id})")
-                        next_request_id += 1
-
-                # 检查完成的请求
-                if active_futures:
-                    # 使用短超时检查完成的任务
-                    done_futures = []
-                    for future in list(active_futures.keys()):
-                        try:
-                            result = future.result(timeout=0.1)
-                            done_futures.append((future, result))
-                        except concurrent.futures.TimeoutError:
-                            continue
-                        except Exception as e:
-                            done_futures.append((future, {}))
-                            batch_id, request_id = active_futures[future]
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译异常: {str(e)}", "error")
-
-                    # 处理完成的请求
-                    for future, result in done_futures:
-                        batch_id, request_id = active_futures[future]
-                        del active_futures[future]
-                        completed_batches += 1
-
-                        if result:
-                            merged_results.update(result)
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译成功，获得 {len(result)} 个翻译 ({completed_batches}/{len(texts_batches)} 完成)")
-                        else:
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译失败 ({completed_batches}/{len(texts_batches)} 完成)", "warning")
-
-                # 短暂等待，避免过度占用CPU
-                time.sleep(0.1)
-
-        finally:
-            executor.shutdown(wait=True)
-
-        log_progress(f"    优化并发翻译完成，总共获得 {len(merged_results)} 个翻译")
-        return merged_results
-
-    def translate_batch_concurrent_with_context_optimized(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
+    def translate_batch_concurrent_with_context_new(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
-        优化的上下文保证并发翻译方法：当上一个请求开始输出时才创建新请求
+        新的上下文保证并发翻译方法：使用简化的并发架构，保持上下文保证机制
         """
         if not texts_batches:
             return {}
 
         # 如果只有一个批次，直接使用流式翻译
         if len(texts_batches) == 1:
-            batch = texts_batches[0]
+            batch = texts_batches[0].copy()  # 复制以避免修改原始数据
             core_keys = batch.pop('__core_keys__', set())
             translated = self.translate_batch_streaming(batch, target_lang, target_lang_name, 1)
             # 只返回核心内容
             return {k: v for k, v in translated.items() if k in core_keys}
 
-        log_progress(f"    开始优化上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
-        log_progress(f"    使用流式响应优化策略，无并发限制")
+        log_progress(f"    开始新架构上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        
+        # 1. 为每个批次创建翻译请求，保持上下文结构
+        all_requests = []
+        batch_core_keys_map = {}  # 记录每个请求对应的核心键
+        
+        for i, batch in enumerate(texts_batches):
+            batch_copy = batch.copy()  # 复制以避免修改原始数据
+            core_keys = batch_copy.pop('__core_keys__', set())
+            batch_core_keys_map[i] = core_keys
+            
+            # 为这个批次创建翻译请求
+            target_languages = [(target_lang, target_lang_name)]
+            batch_requests = self.prepare_translation_requests(batch_copy, target_languages, batch_size=len(batch_copy))
+            
+            # 标记这些请求属于哪个批次
+            for request in batch_requests:
+                request.batch_index = i
+                all_requests.append(request)
+        
+        log_progress(f"    创建了 {len(all_requests)} 个翻译请求，对应 {len(texts_batches)} 个上下文保证批次")
+        
+        # 2. 并发执行所有请求
+        results_by_language = self.execute_requests_concurrently(all_requests, max_workers=len(all_requests))
+        
+        # 3. 收集核心翻译结果
+        all_translated = results_by_language.get(target_lang, {})
+        core_translated = {}
+        
+        # 只保留核心键的翻译
+        for batch_index, core_keys in batch_core_keys_map.items():
+            for key in core_keys:
+                if key in all_translated:
+                    core_translated[key] = all_translated[key]
+        
+        log_progress(f"    新架构上下文保证翻译完成，核心翻译: {len(core_translated)}/{sum(len(keys) for keys in batch_core_keys_map.values())}")
+        return core_translated
 
-        merged_results = {}
-        completed_batches = 0
-        active_futures = {}
-        batch_core_keys = {}
-        batch_queue = []
 
-        # 准备批次队列和核心键映射
-        for i, batch in enumerate(texts_batches, 1):
-            if batch:
-                core_keys = batch.pop('__core_keys__', set())
-                batch_core_keys[i] = core_keys
-                batch_queue.append((i, batch))
-
-        next_request_id = 1
-
-        # 启动第一个请求
-        if batch_queue:
-            batch_id, batch = batch_queue.pop(0)
-            executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(texts_batches))
-            future = executor.submit(self.translate_batch_streaming, batch, target_lang, target_lang_name, next_request_id)
-            active_futures[future] = (batch_id, next_request_id)
-            next_request_id += 1
-            log_progress(f"    启动第一个请求 (批次 {batch_id})")
-
-        try:
-            while active_futures or batch_queue:
-                # 检查是否有新的流式请求开始输出
-                if batch_queue:
-                    streaming_started = False
-                    with self._request_lock:
-                        if self._streaming_requests:
-                            streaming_started = True
-
-                    if streaming_started and len(active_futures) < len(texts_batches):
-                        # 启动下一个请求
-                        batch_id, batch = batch_queue.pop(0)
-                        future = executor.submit(self.translate_batch_streaming, batch, target_lang, target_lang_name, next_request_id)
-                        active_futures[future] = (batch_id, next_request_id)
-                        log_progress(f"    检测到流式响应开始，启动新请求 (批次 {batch_id})")
-                        next_request_id += 1
-
-                # 检查完成的请求
-                if active_futures:
-                    done_futures = []
-                    for future in list(active_futures.keys()):
-                        try:
-                            result = future.result(timeout=0.1)
-                            done_futures.append((future, result))
-                        except concurrent.futures.TimeoutError:
-                            continue
-                        except Exception as e:
-                            done_futures.append((future, {}))
-                            batch_id, request_id = active_futures[future]
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译异常: {str(e)}", "error")
-
-                    # 处理完成的请求
-                    for future, result in done_futures:
-                        batch_id, request_id = active_futures[future]
-                        core_keys = batch_core_keys[batch_id]
-                        del active_futures[future]
-                        completed_batches += 1
-
-                        if result:
-                            # 只保存核心内容
-                            core_result = {k: v for k, v in result.items() if k in core_keys}
-                            merged_results.update(core_result)
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译成功，获得 {len(core_result)} 个核心翻译 (总共 {len(result)} 个) ({completed_batches}/{len(texts_batches)} 完成)")
-                        else:
-                            log_progress(f"    批次 {batch_id} (请求{request_id}) 翻译失败 ({completed_batches}/{len(texts_batches)} 完成)", "warning")
-
-                # 短暂等待，避免过度占用CPU
-                time.sleep(0.1)
-
-        finally:
-            executor.shutdown(wait=True)
-
-        log_progress(f"    优化上下文保证并发翻译完成，总共获得 {len(merged_results)} 个核心翻译")
-        return merged_results
 
     def split_texts_for_concurrent_translation(self, texts: Dict[str, str], batch_size: int = 40) -> List[Dict[str, str]]:
         """
@@ -1559,19 +1594,14 @@ def main():
 
     # 检查翻译模式
     force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
-    merge_translate = os.getenv('MERGE_TRANSLATE', 'false').lower() == 'true'
 
-    if merge_translate:
-        log_progress("🔗 合并后翻译模式：合并同命名空间键值对后翻译")
-        # 使用新的合并后翻译逻辑
-        run_merge_translation(translator)
-    elif force_translate:
-        log_progress("🔄 强制翻译模式：将重新翻译所有内容")
-        # 使用原有的全量翻译逻辑
+    if force_translate:
+        log_progress("🔄 强制翻译模式：将重新翻译所有内容（使用合并翻译逻辑）")
+        # 使用全量翻译逻辑（已集成合并翻译）
         run_full_translation(translator)
     else:
-        log_progress("🔍 智能翻译模式：检测Git变更")
-        # 使用新的智能差异翻译逻辑
+        log_progress("🔍 智能翻译模式：检测Git变更（使用合并翻译逻辑）")
+        # 使用智能差异翻译逻辑（已集成合并翻译）
         run_smart_translation(translator)
 
 def run_full_translation(translator):
@@ -1676,7 +1706,7 @@ def run_smart_translation(translator):
             # 翻译上下文 - 使用上下文保证机制提升翻译质量
             if len(prepared_context) > 40:  # 如果上下文较大，使用优化的上下文保证并发翻译
                 context_batches = translator.split_texts_with_context_guarantee(prepared_context, batch_size=40, context_size=4)
-                translated_context = translator.translate_batch_concurrent_with_context_optimized(context_batches, lang_code, lang_name)
+                translated_context = translator.translate_batch_concurrent_with_context_new(context_batches, lang_code, lang_name)
             else:
                 translated_context = translator.translate_batch(prepared_context, lang_code, lang_name)
 
@@ -1773,9 +1803,9 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             keys_list = list(prepared_texts.items())
             # 使用上下文保证机制提升翻译质量
             if len(keys_list) > batch_size:
-                log_progress(f"    开始优化的上下文保证并发翻译，文本数量: {len(keys_list)}")
+                log_progress(f"    开始新架构上下文保证并发翻译，文本数量: {len(keys_list)}")
                 text_batches = translator.split_texts_with_context_guarantee(dict(keys_list), batch_size=batch_size, context_size=4)
-                all_translated = translator.translate_batch_concurrent_with_context_optimized(text_batches, lang_code, lang_name)
+                all_translated = translator.translate_batch_concurrent_with_context_new(text_batches, lang_code, lang_name)
                 successful_translations = len(all_translated)
                 log_progress(f"    优化的上下文保证并发翻译完成，成功翻译 {successful_translations} 个键")
             else:
