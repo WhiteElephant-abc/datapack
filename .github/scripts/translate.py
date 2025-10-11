@@ -352,7 +352,9 @@ class DeepSeekTranslator:
             f.write(f"  文件: {os.path.basename(log_file)}\n")
             f.write(f"  文本数量: {len(texts)}\n\n")
 
-        log_progress(f"翻译失败日志已保存: {log_file}", "warning")
+        # 提取错误的关键信息用于主日志显示
+        error_summary = error[:50] + ('...' if len(error) > 50 else '')
+        log_progress(f"    [尝试{attempt}/5] [{namespace}] {len(texts)}个文本 -> {target_lang_name} -> 失败: {error_summary}", "warning")
         flush_logs()  # 确保错误日志被及时写入
 
     def prepare_texts_for_translation(self, texts: Dict[str, any]) -> Dict[str, str]:
