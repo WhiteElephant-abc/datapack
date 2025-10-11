@@ -10,6 +10,8 @@ import requests
 import time
 import subprocess
 import re
+import threading
+import concurrent.futures
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Set
 from dataclasses import dataclass
@@ -162,13 +164,61 @@ TARGET_LANGUAGES = {
     "id_id": "Indonesian",
     "vi_vn": "Vietnamese",
     "zh_tw": "Traditional Chinese (Taiwan)",
-    "zh_hk": "Traditional Chinese (Hong Kong)"
+    "zh_hk": "Traditional Chinese (Hong Kong)",
+    "zh_cn": "Simplified Chinese (China)"
 }
 
+# 默认源语言
+DEFAULT_SOURCE_LANGUAGE = "zh_cn"
+
+def get_effective_target_languages(source_language: str = None) -> dict:
+    """
+    获取有效的目标语言（排除源语言）
+    
+    Args:
+        source_language: 源语言代码，如果为None则使用默认源语言
+    
+    Returns:
+        dict: 有效的目标语言字典
+    """
+    if source_language is None:
+        source_language = DEFAULT_SOURCE_LANGUAGE
+    
+    return {lang_code: lang_name for lang_code, lang_name in TARGET_LANGUAGES.items() 
+            if lang_code != source_language}
+
+def detect_source_language(namespace: str) -> str:
+    """
+    检测命名空间的源语言
+    
+    Args:
+        namespace: 命名空间名称
+    
+    Returns:
+        str: 检测到的源语言代码
+    """
+    # 检查各种可能的源语言文件
+    for lang_code in TARGET_LANGUAGES.keys():
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
+        if source_file.exists():
+            # 优先返回默认源语言
+            if lang_code == DEFAULT_SOURCE_LANGUAGE:
+                return lang_code
+    
+    # 如果没有找到默认源语言，返回找到的第一个语言
+    for lang_code in TARGET_LANGUAGES.keys():
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
+        if source_file.exists():
+            return lang_code
+    
+    # 如果都没有找到，返回默认源语言
+    return DEFAULT_SOURCE_LANGUAGE
+
 class DeepSeekTranslator:
-    def __init__(self, api_key: str, non_thinking_mode: bool = False):
+    def __init__(self, api_key: str, non_thinking_mode: bool = False, max_concurrent_requests: int = 5):
         self.api_key = api_key
         self.non_thinking_mode = non_thinking_mode
+        self.max_concurrent_requests = max_concurrent_requests
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
@@ -176,6 +226,10 @@ class DeepSeekTranslator:
         self._init_error_logging()
         self.system_prompt = self._load_prompt_template(SYSTEM_PROMPT_FILE)
         self.user_prompt = self._load_prompt_template(USER_PROMPT_FILE)
+        
+        # 多线程相关
+        self._request_lock = threading.Lock()
+        self._active_requests = 0
 
     def _init_error_logging(self):
         """初始化错误日志系统"""
@@ -321,6 +375,29 @@ class DeepSeekTranslator:
         log_progress(f"翻译失败日志已保存: {log_file}", "warning")
         flush_logs()  # 确保错误日志被及时写入
 
+    def prepare_texts_for_translation(self, texts: Dict[str, any]) -> Dict[str, str]:
+        """准备合并后的文本进行翻译，处理列表值
+        
+        Args:
+            texts: 可能包含列表值的文本字典
+            
+        Returns:
+            Dict[str, str]: 准备好的翻译文本字典
+        """
+        prepared_texts = {}
+        
+        for key, value in texts.items():
+            if isinstance(value, list):
+                # 对于列表值，使用第一个值作为翻译源
+                if value:  # 确保列表不为空
+                    prepared_texts[key] = value[0]
+                else:
+                    prepared_texts[key] = ""
+            else:
+                prepared_texts[key] = str(value)
+        
+        return prepared_texts
+
     def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
         翻译一批文本，包含重试机制和完整性验证
@@ -461,6 +538,248 @@ class DeepSeekTranslator:
                     # 最后一次尝试失败，返回空字典
                     log_progress(f"翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
+
+    def _translate_single_request(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, request_id: int) -> Tuple[int, Dict[str, str]]:
+        """
+        单个翻译请求的实现，用于多线程调用
+        返回 (request_id, 翻译结果)
+        """
+        with self._request_lock:
+            self._active_requests += 1
+            log_progress(f"      [请求{request_id}] 开始翻译 {len(texts)} 个键到 {target_lang_name} (活跃请求: {self._active_requests})")
+        
+        try:
+            result = self.translate_batch(texts, target_lang, target_lang_name)
+            return (request_id, result)
+        finally:
+            with self._request_lock:
+                self._active_requests -= 1
+                log_progress(f"      [请求{request_id}] 翻译完成 (活跃请求: {self._active_requests})")
+
+    def translate_batch_concurrent(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
+        """
+        并发翻译多个批次的文本
+        
+        Args:
+            texts_batches: 文本批次列表，每个批次是一个字典
+            target_lang: 目标语言代码
+            target_lang_name: 目标语言名称
+            
+        Returns:
+            合并后的翻译结果字典
+        """
+        if not texts_batches:
+            return {}
+        
+        # 如果只有一个批次，直接使用单线程翻译
+        if len(texts_batches) == 1:
+            return self.translate_batch(texts_batches[0], target_lang, target_lang_name)
+        
+        log_progress(f"    开始并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        log_progress(f"    最大并发请求数: {self.max_concurrent_requests}")
+        
+        merged_results = {}
+        
+        # 使用线程池执行并发翻译
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_concurrent_requests) as executor:
+            # 提交所有翻译任务
+            future_to_batch = {}
+            for i, batch in enumerate(texts_batches):
+                if batch:  # 只处理非空批次
+                    future = executor.submit(self._translate_single_request, batch, target_lang, target_lang_name, i + 1)
+                    future_to_batch[future] = i + 1
+            
+            # 收集结果
+            completed_batches = 0
+            for future in concurrent.futures.as_completed(future_to_batch):
+                batch_id = future_to_batch[future]
+                try:
+                    request_id, batch_result = future.result()
+                    completed_batches += 1
+                    
+                    if batch_result:
+                        merged_results.update(batch_result)
+                        log_progress(f"    批次 {batch_id} 翻译成功，获得 {len(batch_result)} 个翻译 ({completed_batches}/{len(future_to_batch)} 完成)")
+                    else:
+                        log_progress(f"    批次 {batch_id} 翻译失败 ({completed_batches}/{len(future_to_batch)} 完成)", "warning")
+                        
+                except Exception as e:
+                    completed_batches += 1
+                    log_progress(f"    批次 {batch_id} 翻译异常: {str(e)} ({completed_batches}/{len(future_to_batch)} 完成)", "error")
+        
+        log_progress(f"    并发翻译完成，总共获得 {len(merged_results)} 个翻译")
+        return merged_results
+
+    def translate_batch_concurrent_with_context(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
+        """
+        并发翻译多个带有上下文保证的批次，只保存核心内容
+        
+        Args:
+            texts_batches: 带有上下文保证的批次列表
+            target_lang: 目标语言代码
+            target_lang_name: 目标语言名称
+            
+        Returns:
+            合并后的翻译结果字典（只包含核心内容）
+        """
+        if not texts_batches:
+            return {}
+        
+        # 如果只有一个批次，直接使用单线程翻译
+        if len(texts_batches) == 1:
+            batch = texts_batches[0]
+            core_keys = batch.pop('__core_keys__', set())
+            translated = self.translate_batch(batch, target_lang, target_lang_name)
+            # 只返回核心内容
+            return {k: v for k, v in translated.items() if k in core_keys}
+        
+        log_progress(f"    开始上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
+        log_progress(f"    最大并发请求数: {self.max_concurrent_requests}")
+        
+        merged_results = {}
+        
+        # 使用线程池执行并发翻译
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_concurrent_requests) as executor:
+            # 提交所有翻译任务
+            future_to_batch = {}
+            batch_core_keys = {}
+            
+            for i, batch in enumerate(texts_batches):
+                if batch:  # 只处理非空批次
+                    # 提取并保存核心键
+                    core_keys = batch.pop('__core_keys__', set())
+                    batch_core_keys[i + 1] = core_keys
+                    
+                    future = executor.submit(self._translate_single_request, batch, target_lang, target_lang_name, i + 1)
+                    future_to_batch[future] = i + 1
+            
+            # 收集结果
+            completed_batches = 0
+            for future in concurrent.futures.as_completed(future_to_batch):
+                batch_id = future_to_batch[future]
+                core_keys = batch_core_keys[batch_id]
+                
+                try:
+                    request_id, batch_result = future.result()
+                    completed_batches += 1
+                    
+                    if batch_result:
+                        # 只保存核心内容
+                        core_result = {k: v for k, v in batch_result.items() if k in core_keys}
+                        merged_results.update(core_result)
+                        log_progress(f"    批次 {batch_id} 翻译成功，获得 {len(core_result)} 个核心翻译 (总共 {len(batch_result)} 个) ({completed_batches}/{len(future_to_batch)} 完成)")
+                    else:
+                        log_progress(f"    批次 {batch_id} 翻译失败 ({completed_batches}/{len(future_to_batch)} 完成)", "warning")
+                        
+                except Exception as e:
+                    completed_batches += 1
+                    log_progress(f"    批次 {batch_id} 翻译异常: {str(e)} ({completed_batches}/{len(future_to_batch)} 完成)", "error")
+        
+        log_progress(f"    上下文保证并发翻译完成，总共获得 {len(merged_results)} 个核心翻译")
+        return merged_results
+
+    def split_texts_for_concurrent_translation(self, texts: Dict[str, str], batch_size: int = 20) -> List[Dict[str, str]]:
+        """
+        将文本字典分割为适合并发翻译的批次
+        
+        Args:
+            texts: 要翻译的文本字典
+            batch_size: 每个批次的大小
+            
+        Returns:
+            分割后的批次列表
+        """
+        if not texts:
+            return []
+        
+        items = list(texts.items())
+        batches = []
+        
+        for i in range(0, len(items), batch_size):
+            batch_items = items[i:i + batch_size]
+            batch_dict = dict(batch_items)
+            batches.append(batch_dict)
+        
+        log_progress(f"    将 {len(texts)} 个文本分割为 {len(batches)} 个批次 (每批次 {batch_size} 个)")
+        return batches
+
+    def split_texts_with_context_guarantee(self, texts: Dict[str, str], batch_size: int = 20, context_size: int = 4) -> List[Dict[str, str]]:
+        """
+        将文本字典分割为适合并发翻译的批次，并为每个批次添加上下文保证
+        
+        Args:
+            texts: 要翻译的文本字典
+            batch_size: 每个批次的大小
+            context_size: 上下文大小（前后各添加的条数）
+            
+        Returns:
+            分割后的批次列表，每个批次包含上下文
+        """
+        if not texts:
+            return []
+        
+        items = list(texts.items())
+        total_items = len(items)
+        
+        # 如果总数不超过批次大小，直接返回
+        if total_items <= batch_size:
+            return [dict(items)]
+        
+        batches = []
+        
+        for i in range(0, total_items, batch_size):
+            batch_start = i
+            batch_end = min(i + batch_size, total_items)
+            
+            # 获取当前批次的核心内容
+            core_items = items[batch_start:batch_end]
+            
+            # 计算上下文范围
+            context_items = []
+            
+            if i == 0:
+                # 第一段：仅添加后方上下文
+                context_start = batch_end
+                context_end = min(batch_end + context_size, total_items)
+                if context_start < total_items:
+                    context_items = items[context_start:context_end]
+                    log_progress(f"    批次 {len(batches)+1} (首段): 核心 {len(core_items)} 项 + 后方上下文 {len(context_items)} 项")
+                else:
+                    log_progress(f"    批次 {len(batches)+1} (首段): 核心 {len(core_items)} 项")
+            elif batch_end >= total_items:
+                # 最后一段：仅添加前方上下文
+                context_start = max(0, batch_start - context_size)
+                context_end = batch_start
+                context_items = items[context_start:context_end]
+                log_progress(f"    批次 {len(batches)+1} (末段): 前方上下文 {len(context_items)} 项 + 核心 {len(core_items)} 项")
+            else:
+                # 中间段落：前后各添加2条上下文
+                half_context = context_size // 2
+                # 前方上下文
+                pre_context_start = max(0, batch_start - half_context)
+                pre_context_end = batch_start
+                pre_context = items[pre_context_start:pre_context_end]
+                
+                # 后方上下文
+                post_context_start = batch_end
+                post_context_end = min(batch_end + half_context, total_items)
+                post_context = items[post_context_start:post_context_end]
+                
+                context_items = pre_context + post_context
+                log_progress(f"    批次 {len(batches)+1} (中段): 前方上下文 {len(pre_context)} 项 + 核心 {len(core_items)} 项 + 后方上下文 {len(post_context)} 项")
+            
+            # 合并核心内容和上下文
+            batch_items = core_items + context_items
+            batch_dict = dict(batch_items)
+            
+            # 标记哪些是核心内容（需要保存），哪些是上下文（不保存）
+            core_keys = set(key for key, _ in core_items)
+            batch_dict['__core_keys__'] = core_keys
+            
+            batches.append(batch_dict)
+        
+        log_progress(f"    将 {len(texts)} 个文本分割为 {len(batches)} 个批次 (每批次 {batch_size} 个 + 上下文)")
+        return batches
 
 def get_git_changes() -> List[FileChanges]:
     """获取Git变更，检测源翻译文件的变化"""
@@ -641,6 +960,65 @@ def save_namespace_translations(namespace: str, lang_code: str, translations: Di
     translate_file = translate_dir / f"{lang_code}.json"
     return save_json_file(str(translate_file), translations)
 
+def merge_namespace_translations(namespace: str, lang_code: str) -> Dict[str, any]:
+    """合并同命名空间的所有键值对，包括重复键处理
+    
+    Args:
+        namespace: 命名空间名称
+        lang_code: 语言代码
+        
+    Returns:
+        Dict[str, any]: 合并后的翻译字典，重复键的值为列表
+    """
+    merged_translations = {}
+    
+    # 收集所有可能的翻译文件路径
+    file_paths = []
+    
+    # assets目录中的文件
+    assets_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
+    if assets_file.exists():
+        file_paths.append(assets_file)
+    
+    # translate目录中的文件
+    translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+    if translate_file.exists():
+        file_paths.append(translate_file)
+    
+    # 合并所有文件的内容
+    for file_path in file_paths:
+        translations = load_json_file(str(file_path))
+        if not translations:
+            continue
+            
+        for key, value in translations.items():
+            if key in merged_translations:
+                # 处理重复键：转换为列表形式
+                existing_value = merged_translations[key]
+                if isinstance(existing_value, list):
+                    # 如果已经是列表，添加新值
+                    if value not in existing_value:
+                        existing_value.append(value)
+                else:
+                    # 如果不是列表，创建新列表
+                    if existing_value != value:
+                        merged_translations[key] = [existing_value, value]
+            else:
+                merged_translations[key] = value
+    
+    return merged_translations
+
+def get_merged_source_translations(namespace: str) -> Dict[str, any]:
+    """获取合并后的源语言翻译（zh_cn）
+    
+    Args:
+        namespace: 命名空间名称
+        
+    Returns:
+        Dict[str, any]: 合并后的源翻译字典
+    """
+    return merge_namespace_translations(namespace, 'zh_cn')
+
 def find_existing_translations(lang_code: str) -> Dict[str, str]:
     """查找现有的翻译文件"""
     existing_translations = {}
@@ -754,18 +1132,19 @@ def check_missing_translation_files() -> Dict[str, List[str]]:
     log_progress("检查翻译文件完整性...")
 
     for namespace in namespaces:
-        # 检查源文件是否存在
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        # 检测源语言
+        source_language = detect_source_language(namespace)
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{source_language}.json"
         if not source_file.exists():
             continue
 
         missing_langs = []
 
+        # 获取有效的目标语言（排除源语言）
+        effective_target_languages = get_effective_target_languages(source_language)
+        
         # 检查每种目标语言的翻译文件
-        for lang_code, lang_name in TARGET_LANGUAGES.items():
-            if lang_code == 'en_us':  # 跳过源语言
-                continue
-
+        for lang_code, lang_name in effective_target_languages.items():
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_langs.append(lang_code)
@@ -794,26 +1173,31 @@ def create_virtual_changes_for_missing_files(missing_translations: Dict[str, Lis
     virtual_changes = []
 
     for namespace, missing_langs in missing_translations.items():
-        # 加载源文件
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
-        source_dict = load_json_file(str(source_file))
+        # 使用合并后的源翻译
+        source_dict = get_merged_source_translations(namespace)
         if not source_dict:
             continue
 
-        # 创建虚拟变更，将所有源文件的键标记为新增
-        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added')
-                     for key, value in source_dict.items()]
+        # 创建虚拟变更，将所有合并后的键标记为新增
+        added_keys = []
+        for key, value in source_dict.items():
+            # 处理列表值的情况
+            if isinstance(value, list):
+                # 对于列表值，使用第一个值作为翻译源
+                added_keys.append(KeyChange(key=key, old_value=None, new_value=value[0], operation='added'))
+            else:
+                added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation='added'))
 
         virtual_change = FileChanges(
             namespace=namespace,
-            file_path=str(source_file),
+            file_path=f"merged:{namespace}",  # 标记为合并源
             added_keys=added_keys,
             deleted_keys=[],
             modified_keys=[]
         )
 
         virtual_changes.append(virtual_change)
-        log_progress(f"  为 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
+        log_progress(f"  为 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个合并后的键")
 
     return virtual_changes
 
@@ -829,16 +1213,17 @@ def check_missing_translation_files() -> List[Tuple[str, str]]:
     namespaces = get_namespace_list()
 
     for namespace in namespaces:
-        # 检查源文件是否存在
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
+        # 检测源语言
+        source_language = detect_source_language(namespace)
+        source_file = Path(ASSETS_DIR) / namespace / "lang" / f"{source_language}.json"
         if not source_file.exists():
             continue
 
+        # 获取有效的目标语言（排除源语言）
+        effective_target_languages = get_effective_target_languages(source_language)
+        
         # 检查每种目标语言的翻译文件
-        for lang_code, _ in TARGET_LANGUAGES.items():
-            if lang_code == 'zh_cn':  # 跳过源语言
-                continue
-
+        for lang_code, _ in effective_target_languages.items():
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_files.append((namespace, lang_code))
@@ -871,15 +1256,20 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
     virtual_changes = []
 
     for namespace, lang_codes in namespace_groups.items():
-        # 加载源文件以获取所有键
-        source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
-        source_dict = load_json_file(str(source_file))
+        # 使用合并后的源翻译以获取所有键
+        source_dict = get_merged_source_translations(namespace)
         if not source_dict:
             continue
 
-        # 创建虚拟变更，将所有键标记为新增
-        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added')
-                     for key, value in source_dict.items()]
+        # 创建虚拟变更，将所有合并后的键标记为新增
+        added_keys = []
+        for key, value in source_dict.items():
+            # 处理列表值的情况
+            if isinstance(value, list):
+                # 对于列表值，使用第一个值作为翻译源
+                added_keys.append(KeyChange(key=key, old_value=None, new_value=value[0], operation='added'))
+            else:
+                added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation='added'))
 
         virtual_changes.append(FileChanges(
             namespace=namespace,
@@ -897,10 +1287,11 @@ def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> 
     """从所有翻译文件中删除指定的键"""
     success = True
 
-    for lang_code, _ in TARGET_LANGUAGES.items():
-        if lang_code == 'zh_cn':  # 跳过源语言
-            continue
+    # 检测源语言并获取有效的目标语言
+    source_language = detect_source_language(namespace)
+    effective_target_languages = get_effective_target_languages(source_language)
 
+    for lang_code, _ in effective_target_languages.items():
         translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
         if not translate_file.exists():
             continue
@@ -968,14 +1359,23 @@ def main():
     else:
         log_progress("🧠 思考模式：使用deepseek-reasoner模型以提升质量")
 
+    # 配置多线程翻译
+    max_concurrent_requests = int(os.getenv('MAX_CONCURRENT_REQUESTS', '5'))
+    log_progress(f"🔀 多线程翻译：最大并发请求数 {max_concurrent_requests}")
+
     # 创建翻译器
-    translator = DeepSeekTranslator(api_key, non_thinking_mode)
+    translator = DeepSeekTranslator(api_key, non_thinking_mode, max_concurrent_requests)
     log_progress("✓ 翻译器初始化完成")
 
-    # 检查是否强制翻译
+    # 检查翻译模式
     force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
+    merge_translate = os.getenv('MERGE_TRANSLATE', 'false').lower() == 'true'
 
-    if force_translate:
+    if merge_translate:
+        log_progress("🔗 合并后翻译模式：合并同命名空间键值对后翻译")
+        # 使用新的合并后翻译逻辑
+        run_merge_translation(translator)
+    elif force_translate:
         log_progress("🔄 强制翻译模式：将重新翻译所有内容")
         # 使用原有的全量翻译逻辑
         run_full_translation(translator)
@@ -994,8 +1394,9 @@ def run_full_translation(translator):
         sys.exit(1)
 
     log_progress(f"✓ 找到 {len(namespaces)} 个命名空间: {', '.join(namespaces)}")
-    # 计算实际需要翻译的语言数（TARGET_LANGUAGES已排除源语言zh_cn）
-    target_lang_count = len(TARGET_LANGUAGES)
+    # 计算实际需要翻译的语言数（动态排除源语言）
+    effective_target_languages = get_effective_target_languages(DEFAULT_SOURCE_LANGUAGE)
+    target_lang_count = len(effective_target_languages)
     log_progress(f"✓ 目标语言: {target_lang_count} 种")
 
     # 创建进度跟踪器
@@ -1041,12 +1442,13 @@ def run_smart_translation(translator):
             log_progress("没有需要翻译的新增或修改内容")
             continue
 
-        # 加载源文件
-        source_file = Path(ASSETS_DIR) / changes.namespace / "lang" / "en_us.json"
-        source_dict = load_json_file(str(source_file))
+        # 使用合并后的源翻译
+        source_dict = get_merged_source_translations(changes.namespace)
         if not source_dict:
-            log_progress(f"无法加载源文件: {source_file}", "error")
+            log_progress(f"无法加载命名空间 {changes.namespace} 的合并源翻译", "error")
             continue
+        
+        log_progress(f"✓ 加载合并后的源翻译，包含 {len(source_dict)} 个键值对")
 
         # 获取需要翻译的键
         keys_to_translate = [change.key for change in added_and_modified]
@@ -1056,15 +1458,25 @@ def run_smart_translation(translator):
         context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10)
         log_progress(f"翻译上下文包含 {len(context_dict)} 个键值对")
 
+        # 检测源语言并获取有效的目标语言
+        source_language = detect_source_language(namespace)
+        effective_target_languages = get_effective_target_languages(source_language)
+        
         # 翻译到各种目标语言
-        for lang_code, lang_name in TARGET_LANGUAGES.items():
-            if lang_code == 'zh_cn':  # 跳过源语言
-                continue
-
+        for lang_code, lang_name in effective_target_languages.items():
             log_progress(f"  翻译到 {lang_name} ({lang_code})")
 
-            # 翻译上下文
-            translated_context = translator.translate_batch(context_dict, lang_code, lang_name)
+            # 准备合并后的文本进行翻译
+            prepared_context = translator.prepare_texts_for_translation(context_dict)
+            log_progress(f"  准备翻译文本完成，处理了 {len(prepared_context)} 个键值对")
+
+            # 翻译上下文 - 使用上下文保证机制提升翻译质量
+            if len(prepared_context) > 40:  # 如果上下文较大，使用上下文保证并发翻译
+                context_batches = translator.split_texts_with_context_guarantee(prepared_context, batch_size=20, context_size=4)
+                translated_context = translator.translate_batch_concurrent_with_context(context_batches, lang_code, lang_name)
+            else:
+                translated_context = translator.translate_batch(prepared_context, lang_code, lang_name)
+                
             if not translated_context:
                 log_progress(f"    ✗ 翻译失败", "error")
                 continue
@@ -1096,28 +1508,24 @@ def run_smart_translation(translator):
 def continue_full_translation(translator, progress_tracker, namespaces):
     """继续执行全量翻译的剩余逻辑"""
     # 处理每种目标语言
-    for lang_code, lang_name in TARGET_LANGUAGES.items():
-        if lang_code == 'zh_cn':  # 跳过源语言
-            continue
-
+    # 检测源语言并获取有效的目标语言
+    # 注意：在完整翻译中，我们使用默认源语言，因为可能涉及多个命名空间
+    effective_target_languages = get_effective_target_languages(DEFAULT_SOURCE_LANGUAGE)
+    
+    for lang_code, lang_name in effective_target_languages.items():
         progress_tracker.start_language(lang_code, lang_name)
 
         # 处理每个命名空间
         for namespace in namespaces:
             progress_tracker.start_namespace(namespace)
 
-            # 加载该命名空间的源语言文件（zh_cn）
-            source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
-            if not source_file.exists():
-                log_progress(f"    跳过：源文件不存在 {source_file}", "warning")
-                continue
-
-            source_dict = load_json_file(str(source_file))
+            # 使用合并后的源翻译（zh_cn）
+            source_dict = get_merged_source_translations(namespace)
             if not source_dict:
-                log_progress(f"    跳过：无法加载源文件 {source_file}", "warning")
+                log_progress(f"    跳过：无法加载命名空间 {namespace} 的合并源翻译", "warning")
                 continue
 
-            log_progress(f"    ✓ 加载源文件成功，共 {len(source_dict)} 个键")
+            log_progress(f"    ✓ 加载合并后的源翻译成功，共 {len(source_dict)} 个键值对")
 
             # 检查是否需要翻译
             if not needs_translation(namespace, lang_code, source_dict):
@@ -1149,6 +1557,10 @@ def continue_full_translation(translator, progress_tracker, namespaces):
 
             log_progress(f"    需要翻译 {len(keys_to_translate)} 个新键")
 
+            # 准备合并后的文本进行翻译
+            prepared_texts = translator.prepare_texts_for_translation(keys_to_translate)
+            log_progress(f"    准备翻译文本完成，处理了 {len(prepared_texts)} 个键值对")
+
             # 分批翻译（每次最多40个键，避免请求过大）
             batch_size = 40
             if force_translate:
@@ -1158,25 +1570,22 @@ def continue_full_translation(translator, progress_tracker, namespaces):
                 # 正常模式：基于现有翻译进行增量更新
                 all_translated = existing_translate.copy()
 
-            keys_list = list(keys_to_translate.items())
-            total_batches = (len(keys_list) + batch_size - 1) // batch_size
-            log_progress(f"    开始分批翻译，共 {total_batches} 批，每批最多 {batch_size} 个键")
-
-            successful_translations = 0
-            for i in range(0, len(keys_list), batch_size):
-                batch = dict(keys_list[i:i + batch_size])
-                batch_num = i//batch_size + 1
-                progress_tracker.log_batch_progress(batch_num, total_batches, len(batch))
-
-                translated_batch = translator.translate_batch(batch, lang_code, lang_name)
-                if translated_batch:
-                    all_translated.update(translated_batch)
-                    successful_translations += len(translated_batch)
-                    log_progress(f"      ✓ 批次 {batch_num} 成功翻译 {len(translated_batch)} 个键")
-                    flush_logs()  # 确保翻译进度被及时写入日志
-                else:
-                    log_progress(f"      ✗ 批次 {batch_num} 翻译失败", "error")
-                    flush_logs()  # 确保错误信息被及时写入日志
+            keys_list = list(prepared_texts.items())
+            # 使用上下文保证机制提升翻译质量
+            if len(keys_list) > batch_size:
+                log_progress(f"    开始上下文保证并发翻译，文本数量: {len(keys_list)}")
+                text_batches = translator.split_texts_with_context_guarantee(dict(keys_list), batch_size=batch_size, context_size=4)
+                all_translated = translator.translate_batch_concurrent_with_context(text_batches, lang_code, lang_name)
+                successful_translations = len(all_translated)
+                log_progress(f"    上下文保证并发翻译完成，成功翻译 {successful_translations} 个键")
+            else:
+                # 文本较少时使用单线程翻译
+                log_progress(f"    开始单线程翻译，文本数量: {len(keys_list)}")
+                all_translated = translator.translate_batch(dict(keys_list), lang_code, lang_name)
+                successful_translations = len(all_translated) if all_translated else 0
+                log_progress(f"    单线程翻译完成，成功翻译 {successful_translations} 个键")
+            
+            flush_logs()  # 确保翻译进度被及时写入日志
 
             # 保存翻译结果到对应的命名空间目录
             log_progress(f"    保存翻译结果...")
