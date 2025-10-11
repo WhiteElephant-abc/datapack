@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s datapakket succesvol geladen",
   "banner.white.elephant.author": "Auteur: %s",
-  "banner.white.elephant.license": "Dit datapakket is open source onder %s licentie",
+  "banner.white.elephant.license": "Dit datapakket is open source onder de %s licentie",
   "banner.white.elephant.official": "Officiële datapakket website",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Opslaan en afsluiten",
   "dialog.white.elephant.common.cancel_tooltip": "Huidige wijzigingen negeren",
   "dialog.white.elephant.common.save_tooltip": "Huidige instellingen opslaan",
-  "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen worden hier standaardinstellingen getoond"
+  "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen worden hier standaardinstellingen weergegeven"
 }
