@@ -547,20 +547,32 @@ class DeepSeekTranslator:
         request_id = 1
 
         for target_lang, target_lang_name in target_languages:
-            # 将文本分批
-            text_items = list(all_texts.items())
+            total_texts = len(all_texts)
 
-            for i in range(0, len(text_items), batch_size):
-                batch_texts = dict(text_items[i:i + batch_size])
+            # 如果需要分段（超过batch_size），使用强制上下文模式
+            if total_texts > batch_size:
+                # 分段翻译：强制添加上下文
+                batches = self.split_texts_with_context_guarantee(all_texts, batch_size, context_size=4)
 
+                for batch_texts in batches:
+                    request = self.TranslationRequest(
+                        request_id=request_id,
+                        texts=batch_texts,
+                        target_lang=target_lang,
+                        target_lang_name=target_lang_name,
+                        batch_size=len(batch_texts)
+                    )
+                    requests.append(request)
+                    request_id += 1
+            else:
+                # 不需要分段，直接创建单个请求
                 request = self.TranslationRequest(
                     request_id=request_id,
-                    texts=batch_texts,
+                    texts=all_texts,
                     target_lang=target_lang,
                     target_lang_name=target_lang_name,
-                    batch_size=len(batch_texts)
+                    batch_size=len(all_texts)
                 )
-
                 requests.append(request)
                 request_id += 1
 
@@ -656,7 +668,7 @@ class DeepSeekTranslator:
                     namespace = getattr(request, 'namespace', 'default')
                     if namespace not in results_by_namespace_and_language:
                         results_by_namespace_and_language[namespace] = {}
-                    
+
                     if target_lang not in results_by_namespace_and_language[namespace]:
                         results_by_namespace_and_language[namespace][target_lang] = {}
 
@@ -668,7 +680,7 @@ class DeepSeekTranslator:
 
         # 统计最终结果
         total_translations = sum(
-            len(translations) 
+            len(translations)
             for namespace_results in results_by_namespace_and_language.values()
             for translations in namespace_results.values()
         )
@@ -682,88 +694,11 @@ class DeepSeekTranslator:
 
 
 
-    def translate_batch_concurrent_new(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
-        """
-        新的简化并发翻译方法：预处理 + 统一并发执行
-        移除复杂的流式检测，使用标准ThreadPoolExecutor模式
-        """
-        if not texts_batches:
-            return {}
-
-        # 如果只有一个批次，直接翻译
-        if len(texts_batches) == 1:
-            return self.translate_batch(texts_batches[0], target_lang, target_lang_name)
-
-        log_progress(f"    开始并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
-
-        # 1. 预处理：准备所有翻译请求
-        all_texts = {}
-        for batch in texts_batches:
-            all_texts.update(batch)
-
-        target_languages = [(target_lang, target_lang_name)]
-        requests = self.prepare_translation_requests(all_texts, target_languages, batch_size=40)
-
-        # 2. 统一并发执行
-        results_by_language = self.execute_requests_concurrently(requests, max_workers=len(requests))
-
-        # 3. 返回结果
-        return results_by_language.get(target_lang, {})
 
 
 
-    def translate_batch_concurrent_with_context_new(self, texts_batches: List[Dict[str, str]], target_lang: str, target_lang_name: str) -> Dict[str, str]:
-        """
-        新的上下文保证并发翻译方法：使用简化的并发架构，保持上下文保证机制
-        """
-        if not texts_batches:
-            return {}
 
-        # 如果只有一个批次，直接翻译
-        if len(texts_batches) == 1:
-            batch = texts_batches[0].copy()  # 复制以避免修改原始数据
-            core_keys = batch.pop('__core_keys__', set())
-            translated = self.translate_batch(batch, target_lang, target_lang_name)
-            # 只返回核心内容
-            return {k: v for k, v in translated.items() if k in core_keys}
 
-        log_progress(f"    开始上下文保证并发翻译 {len(texts_batches)} 个批次到 {target_lang_name}")
-
-        # 1. 为每个批次创建翻译请求，保持上下文结构
-        all_requests = []
-        batch_core_keys_map = {}  # 记录每个请求对应的核心键
-
-        for i, batch in enumerate(texts_batches):
-            batch_copy = batch.copy()  # 复制以避免修改原始数据
-            core_keys = batch_copy.pop('__core_keys__', set())
-            batch_core_keys_map[i] = core_keys
-
-            # 为这个批次创建翻译请求
-            target_languages = [(target_lang, target_lang_name)]
-            batch_requests = self.prepare_translation_requests(batch_copy, target_languages, batch_size=len(batch_copy), silent=True)
-
-            # 标记这些请求属于哪个批次
-            for request in batch_requests:
-                request.batch_index = i
-                all_requests.append(request)
-
-        log_progress(f"    创建了 {len(all_requests)} 个翻译请求，对应 {len(texts_batches)} 个上下文保证批次")
-
-        # 2. 并发执行所有请求
-        results_by_language = self.execute_requests_concurrently(all_requests, max_workers=len(all_requests))
-
-        # 3. 收集核心翻译结果
-        all_translated = results_by_language.get(target_lang, {})
-        core_translated = {}
-
-        # 只保留核心键的翻译
-        for batch_index, core_keys in batch_core_keys_map.items():
-            for key in core_keys:
-                if key in all_translated:
-                    core_translated[key] = all_translated[key]
-
-        log_progress(f"    上下文保证翻译完成，核心翻译: {len(core_translated)}/{sum(len(keys) for keys in batch_core_keys_map.values())}")
-        return core_translated
 
 
 
@@ -1149,10 +1084,22 @@ def find_existing_translations(lang_code: str) -> Dict[str, str]:
 
     return existing_translations
 
-def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], max_context: int = 10) -> Dict[str, str]:
-    """为目标键获取上下文键值对"""
-    if len(target_keys) >= max_context:
-        # 如果目标键数量已经超过最大上下文数，直接返回目标键
+def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], max_context: int = 10, force_context: bool = False) -> Dict[str, str]:
+    """为目标键获取上下文键值对
+
+    Args:
+        source_dict: 源字典
+        target_keys: 目标键列表
+        max_context: 最大上下文数量
+        force_context: 是否强制添加上下文（分段翻译模式）
+    """
+    # 差异翻译逻辑：
+    # - 如果目标键数量 >= max_context 且不是强制上下文模式，直接返回目标键
+    # - 如果目标键数量 < max_context，添加上下文补充到 max_context
+    # 分段翻译逻辑：
+    # - 强制添加上下文，不受目标键数量限制
+    if not force_context and len(target_keys) >= max_context:
+        # 差异翻译：目标键数量已经足够，直接返回目标键
         return {key: source_dict[key] for key in target_keys if key in source_dict}
 
     source_keys = list(source_dict.keys())
@@ -1530,9 +1477,14 @@ def run_smart_translation(translator):
         keys_to_translate = [change.key for change in added_and_modified]
         log_progress(f"需要翻译 {len(keys_to_translate)} 个键")
 
-        # 获取翻译上下文
-        context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10)
-        log_progress(f"翻译上下文包含 {len(context_dict)} 个键值对")
+        # 获取翻译上下文（差异翻译步骤：如果少于10条则添加上下文补充到10条）
+        if len(keys_to_translate) < 10:
+            context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10, force_context=False)
+            log_progress(f"差异翻译上下文补充：{len(keys_to_translate)} 个目标键 + {len(context_dict) - len(keys_to_translate)} 个上下文键 = {len(context_dict)} 个键值对")
+        else:
+            # 目标键数量已经足够，直接使用目标键
+            context_dict = {key: source_dict[key] for key in keys_to_translate if key in source_dict}
+            log_progress(f"差异翻译：{len(context_dict)} 个键值对（无需添加上下文）")
 
         # 获取目标语言列表
         target_languages = get_all_target_languages().copy()
@@ -1706,7 +1658,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
         existing_translations = task['existing_translations']
 
         # 获取该任务的翻译结果
-        if (namespace in results_by_namespace_and_language and 
+        if (namespace in results_by_namespace_and_language and
             lang_code in results_by_namespace_and_language[namespace]):
             translated_results = results_by_namespace_and_language[namespace][lang_code]
 
