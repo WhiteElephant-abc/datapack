@@ -62,7 +62,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: translation-logs
-        path: translation.log
+        path: |
+          translation.log
+          .github/scripts/logs/
         retention-days: 30
 
     - name: Commit and push changes

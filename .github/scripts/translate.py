@@ -18,15 +18,30 @@ import logging
 from datetime import datetime
 
 # 配置详细日志
+log_file_handler = logging.FileHandler('translation.log', encoding='utf-8')
+log_file_handler.setLevel(logging.INFO)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler('translation.log', encoding='utf-8')
-    ]
+        log_file_handler
+    ],
+    force=True
 )
 logger = logging.getLogger(__name__)
+
+def flush_logs():
+    """强制刷新所有日志处理器"""
+    for handler in logging.getLogger().handlers:
+        handler.flush()
+
+def close_logs():
+    """关闭所有日志处理器"""
+    for handler in logging.getLogger().handlers:
+        if hasattr(handler, 'close'):
+            handler.close()
 
 @dataclass
 class KeyChange:
@@ -158,8 +173,24 @@ class DeepSeekTranslator:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
         }
+        self._init_error_logging()
         self.system_prompt = self._load_prompt_template(SYSTEM_PROMPT_FILE)
         self.user_prompt = self._load_prompt_template(USER_PROMPT_FILE)
+
+    def _init_error_logging(self):
+        """初始化错误日志系统"""
+        log_dir = os.path.join(os.path.dirname(__file__), "logs")
+        os.makedirs(log_dir, exist_ok=True)
+        
+        # 创建新的错误汇总日志文件
+        summary_file = os.path.join(log_dir, "error_summary.log")
+        session_start = datetime.now().isoformat()
+        
+        with open(summary_file, 'w', encoding='utf-8') as f:
+            f.write(f"翻译错误汇总日志\n")
+            f.write(f"会话开始时间: {session_start}\n")
+            f.write(f"模式: {'非思考模式' if self.non_thinking_mode else '思考模式'}\n")
+            f.write("=" * 80 + "\n\n")
 
     def _load_prompt_template(self, file_path: str) -> str:
         """加载提示词模板文件，跳过标题行"""
@@ -251,12 +282,14 @@ class DeepSeekTranslator:
         log_dir = os.path.join(os.path.dirname(__file__), "logs")
         os.makedirs(log_dir, exist_ok=True)
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]  # 包含毫秒
         log_file = os.path.join(log_dir, f"translation_failure_{timestamp}_attempt_{attempt}.log")
 
+        # 详细错误日志
         with open(log_file, 'w', encoding='utf-8') as f:
             f.write(f"翻译失败日志 - 尝试次数: {attempt}\n")
             f.write(f"时间: {datetime.now().isoformat()}\n")
+            f.write(f"文本数量: {len(texts)}\n")
             f.write("=" * 80 + "\n\n")
 
             f.write(f"错误信息:\n{error}\n")
@@ -278,7 +311,15 @@ class DeepSeekTranslator:
             f.write(api_response)
             f.write("\n\n" + "=" * 80 + "\n")
 
+        # 错误汇总日志
+        summary_file = os.path.join(log_dir, "error_summary.log")
+        with open(summary_file, 'a', encoding='utf-8') as f:
+            f.write(f"[{datetime.now().isoformat()}] 尝试 {attempt} 失败: {error[:100]}{'...' if len(error) > 100 else ''}\n")
+            f.write(f"  文件: {os.path.basename(log_file)}\n")
+            f.write(f"  文本数量: {len(texts)}\n\n")
+
         log_progress(f"翻译失败日志已保存: {log_file}", "warning")
+        flush_logs()  # 确保错误日志被及时写入
 
     def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str) -> Dict[str, str]:
         """
@@ -1132,8 +1173,10 @@ def continue_full_translation(translator, progress_tracker, namespaces):
                     all_translated.update(translated_batch)
                     successful_translations += len(translated_batch)
                     log_progress(f"      ✓ 批次 {batch_num} 成功翻译 {len(translated_batch)} 个键")
+                    flush_logs()  # 确保翻译进度被及时写入日志
                 else:
                     log_progress(f"      ✗ 批次 {batch_num} 翻译失败", "error")
+                    flush_logs()  # 确保错误信息被及时写入日志
 
             # 保存翻译结果到对应的命名空间目录
             log_progress(f"    保存翻译结果...")
@@ -1153,6 +1196,14 @@ def continue_full_translation(translator, progress_tracker, namespaces):
     log_section("翻译完成")
     log_progress("🎉 所有翻译任务已完成！")
     log_section_end()
+    
+    # 确保所有日志都被写入文件
+    flush_logs()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    finally:
+        # 确保日志文件被正确关闭
+        flush_logs()
+        close_logs()
