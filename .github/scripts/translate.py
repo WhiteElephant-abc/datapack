@@ -597,7 +597,7 @@ class DeepSeekTranslator:
                                     chunk = json.loads(data)
                                     if 'choices' in chunk and len(chunk['choices']) > 0:
                                         delta = chunk['choices'][0].get('delta', {})
-                                        if 'content' in delta:
+                                        if 'content' in delta and delta['content'] is not None:
                                             if not first_chunk_received:
                                                 first_chunk_received = True
                                                 log_progress(f"      [请求{request_id}] 收到第一个内容块")
@@ -636,6 +636,16 @@ class DeepSeekTranslator:
             except Exception as e:
                 error_msg = f"[请求{request_id}] 翻译尝试 {attempt + 1} 失败: {str(e)}"
                 log_progress(error_msg, "error")
+
+                # 记录失败详情到错误日志
+                self.log_translation_failure(
+                    attempt=attempt + 1,
+                    system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
+                    user_prompt=user_prompt if 'user_prompt' in locals() else "未生成",
+                    api_response=translated_content if 'translated_content' in locals() else "无响应",
+                    error=str(e),
+                    texts=texts
+                )
 
                 # 如果不是最后一次尝试，等待后重试
                 if attempt < max_retries - 1:
