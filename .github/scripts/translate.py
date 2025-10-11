@@ -507,7 +507,7 @@ class DeepSeekTranslator:
                 return translated_dict
 
         except Exception as e:
-            # 记录失败详情（但不重试，由上层函数处理重试）
+            # 记录失败详情到文件（不记录主日志，由上层函数统一管理主日志）
             self.log_translation_failure(
                 attempt=1,  # 这里总是1，因为重试由上层处理
                 system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
@@ -517,7 +517,7 @@ class DeepSeekTranslator:
                 texts=texts,
                 namespace=namespace,
                 target_lang_name=target_lang_name,
-                log_to_main=False  # 不在主日志中记录，避免重复
+                log_to_main=False  # 不记录主日志，由execute_translation_request统一管理
             )
             # 抛出异常让上层处理重试
             raise e
@@ -623,11 +623,15 @@ class DeepSeekTranslator:
 
             except Exception as e:
                 if attempt < max_retries - 1:
-                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 失败: {str(e)}，重试中...", "warning")
+                    # 记录失败并提示重试
+                    error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
+                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] -> {request.target_lang_name} -> 失败: {error_summary}，重试中...", "warning")
                     time.sleep(1)  # 固定等待1秒
                     continue
                 else:
-                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {str(e)}（已重试{max_retries}次）", "error")
+                    # 最后一次失败，记录最终失败状态
+                    error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
+                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {error_summary}（已重试{max_retries}次）", "error")
                     return (request.request_id, request.target_lang, request.target_lang_name, {})
 
     def execute_requests_concurrently(self, requests: List['DeepSeekTranslator.TranslationRequest'],
