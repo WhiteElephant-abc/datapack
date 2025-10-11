@@ -76,5 +76,6 @@ jobs:
           echo "No changes to commit"
         else
           git commit -m "Auto-translate: Update translation files"
+          git pull origin ${{ github.ref_name }}
           git push origin ${{ github.ref_name }}
         fi
