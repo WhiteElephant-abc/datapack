@@ -5,9 +5,9 @@
   "banner.white.elephant.official": "Offizielle Datenpaket-Website",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
-  "need.dfl.white.elephant.no": "Fehlende Abhängigkeit",
-  "need.dfl.white.elephant.please.install": "Bitte installiere Datenpaket: ",
-  "dialog.white.elephant.new_player.line1": "%s Datenpaket wurde in dieser Welt geladen!",
+  "need.dfl.white.elephant.no": "Fehlende Voraussetzung",
+  "need.dfl.white.elephant.please.install": "Bitte installieren Sie das Datenpaket: ",
+  "dialog.white.elephant.new_player.line1": "%s Datenpaket wurde in diese Welt geladen!",
   "dialog.white.elephant.new_player.author": "Autor:",
   "dialog.white.elephant.new_player.tech_support": "Technischer Support:",
   "dialog.white.elephant.new_player.license": "Dieses Datenpaket verwendet die %s Open-Source-Lizenz",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Speichern und beenden",
   "dialog.white.elephant.common.cancel_tooltip": "Aktuelle Änderungen verwerfen",
   "dialog.white.elephant.common.save_tooltip": "Aktuelle Einstellungen speichern",
-  "dialog.white.elephant.common.technical_limitation": "Aufgrund technischer Einschränkungen werden hier Standardeinstellungen angezeigt"
+  "dialog.white.elephant.common.technical_limitation": "Aufgrund technischer Einschränkungen werden hier nur Standardeinstellungen angezeigt"
 }

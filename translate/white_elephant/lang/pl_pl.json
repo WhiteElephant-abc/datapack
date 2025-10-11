@@ -5,9 +5,9 @@
   "banner.white.elephant.official": "Oficjalna strona paczki danych",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
-  "need.dfl.white.elephant.no": "Brak wymagań wstępnych",
+  "need.dfl.white.elephant.no": "Brak wymaganych zależności",
   "need.dfl.white.elephant.please.install": "Proszę zainstalować paczkę danych: ",
-  "dialog.white.elephant.new_player.line1": "%s paczka danych została załadowana do tego świata!",
+  "dialog.white.elephant.new_player.line1": "Paczka danych %s została załadowana do tego świata!",
   "dialog.white.elephant.new_player.author": "Autor:",
   "dialog.white.elephant.new_player.tech_support": "Wsparcie techniczne:",
   "dialog.white.elephant.new_player.license": "Ta paczka danych używa licencji open source %s",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Zapisz i wyjdź",
   "dialog.white.elephant.common.cancel_tooltip": "Porzuć bieżące zmiany",
   "dialog.white.elephant.common.save_tooltip": "Zapisz bieżące ustawienia",
-  "dialog.white.elephant.common.technical_limitation": "Ze względu na ograniczenia techniczne, wyświetlane tutaj ustawienia są wartościami domyślnymi"
+  "dialog.white.elephant.common.technical_limitation": "Z powodu ograniczeń technicznych wyświetlane są tutaj domyślne ustawienia"
 }

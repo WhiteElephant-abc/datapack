@@ -10,12 +10,12 @@
   "dialog.white.elephant.new_player.line1": "%s pacchetto dati caricato in questo mondo!",
   "dialog.white.elephant.new_player.author": "Autore:",
   "dialog.white.elephant.new_player.tech_support": "Supporto tecnico:",
-  "dialog.white.elephant.new_player.license": "Questo pacchetto dati utilizza la licenza open source %s",
+  "dialog.white.elephant.new_player.license": "Questo pacchetto dati usa la licenza open source %s",
   "dialog.white.elephant.new_player.view_license": "Visualizza licenza open source",
   "dialog.white.elephant.options.admin_only": "Solo gli amministratori possono modificare le impostazioni!",
   "dialog.white.elephant.common.cancel": "Annulla",
   "dialog.white.elephant.common.save_and_exit": "Salva ed esci",
   "dialog.white.elephant.common.cancel_tooltip": "Annulla le modifiche correnti",
   "dialog.white.elephant.common.save_tooltip": "Salva le impostazioni correnti",
-  "dialog.white.elephant.common.technical_limitation": "A causa di limitazioni tecniche, qui vengono visualizzate le impostazioni predefinite"
+  "dialog.white.elephant.common.technical_limitation": "A causa di limitazioni tecniche, qui vengono mostrate solo le impostazioni predefinite"
 }

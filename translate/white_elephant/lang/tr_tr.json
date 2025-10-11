@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s veri paketi başarıyla yüklendi",
   "banner.white.elephant.author": "Yazar: %s",
-  "banner.white.elephant.license": "Bu veri paketi %s lisansıyla açık kaynaktır",
+  "banner.white.elephant.license": "Bu veri paketi %s lisansı altında açık kaynaktır",
   "banner.white.elephant.official": "Veri Paketi Resmi Sitesi",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
