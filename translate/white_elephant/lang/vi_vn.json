@@ -1,5 +1,5 @@
 {
-  "banner.white.elephant.enabled": "Gói dữ liệu %s đã tải thành công",
+  "banner.white.elephant.enabled": "%s gói dữ liệu đã tải thành công",
   "banner.white.elephant.author": "Tác giả: %s",
   "banner.white.elephant.license": "Gói dữ liệu này sử dụng giấy phép mã nguồn mở %s",
   "banner.white.elephant.official": "Trang web chính thức của gói dữ liệu",
@@ -7,7 +7,7 @@
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Thiếu tiên quyết",
   "need.dfl.white.elephant.please.install": "Vui lòng cài đặt gói dữ liệu: ",
-  "dialog.white.elephant.new_player.line1": "Gói dữ liệu %s đã được tải vào thế giới này!",
+  "dialog.white.elephant.new_player.line1": "%s gói dữ liệu đã được tải vào thế giới này!",
   "dialog.white.elephant.new_player.author": "Tác giả:",
   "dialog.white.elephant.new_player.tech_support": "Hỗ trợ kỹ thuật:",
   "dialog.white.elephant.new_player.license": "Gói dữ liệu này sử dụng giấy phép mã nguồn mở %s",
