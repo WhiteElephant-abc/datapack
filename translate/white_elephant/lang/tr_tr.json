@@ -1,11 +1,11 @@
 {
   "banner.white.elephant.enabled": "%s veri paketi başarıyla yüklendi",
   "banner.white.elephant.author": "Yazar: %s",
-  "banner.white.elephant.license": "Bu veri paketi %s lisansı ile açık kaynaklıdır",
+  "banner.white.elephant.license": "Bu veri paketi %s lisansıyla açık kaynaklıdır",
   "banner.white.elephant.official": "Veri Paketi Resmi Sitesi",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
-  "need.dfl.white.elephant.no": "Önkoşul eksik",
+  "need.dfl.white.elephant.no": "Ön gereksinim eksik",
   "need.dfl.white.elephant.please.install": "Lütfen veri paketini yükleyin: ",
   "dialog.white.elephant.new_player.line1": "%s veri paketi bu dünyaya yüklendi!",
   "dialog.white.elephant.new_player.author": "Yazar:",
