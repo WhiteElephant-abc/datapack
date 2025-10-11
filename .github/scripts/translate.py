@@ -1247,23 +1247,28 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
         if not source_dict:
             continue
 
-        # 创建虚拟变更，将所有合并后的键标记为新增
-        added_keys = []
-        for key, value in source_dict.items():
-            # 处理列表值的情况
-            if isinstance(value, list):
-                # 对于列表值，使用第一个值作为翻译源
-                added_keys.append(KeyChange(key=key, old_value=None, new_value=value[0], operation='added'))
-            else:
-                added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation='added'))
+        # 为每个缺失的语言文件创建虚拟变更
+        for lang_code in lang_codes:
+            # 创建虚拟变更，将所有合并后的键标记为新增
+            added_keys = []
+            for key, value in source_dict.items():
+                # 处理列表值的情况
+                if isinstance(value, list):
+                    # 对于列表值，使用第一个值作为翻译源
+                    added_keys.append(KeyChange(key=key, old_value=None, new_value=value[0], operation='added'))
+                else:
+                    added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation='added'))
 
-        virtual_changes.append(FileChanges(
-            namespace=namespace,
-            file_path=str(source_file),
-            added_keys=added_keys,
-            deleted_keys=[],
-            modified_keys=[]
-        ))
+            # 构建缺失文件的路径
+            missing_file_path = f"{namespace}/{lang_code}.json"
+            
+            virtual_changes.append(FileChanges(
+                namespace=namespace,
+                file_path=missing_file_path,
+                added_keys=added_keys,
+                deleted_keys=[],
+                modified_keys=[]
+            ))
 
         log_progress(f"为命名空间 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
 
