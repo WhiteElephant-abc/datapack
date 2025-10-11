@@ -75,22 +75,22 @@ def log_progress(message: str, level: str = "info"):
     """统一的进度日志函数，在GitHub Actions中使用特殊格式"""
     timestamp = datetime.now().strftime("%H:%M:%S")
 
+    # 始终写入日志文件
+    if level == "error":
+        logger.error(message)
+    elif level == "warning":
+        logger.warning(message)
+    else:
+        logger.info(message)
+
     if IS_GITHUB_ACTIONS:
-        # GitHub Actions 特殊格式
+        # GitHub Actions 特殊格式输出到控制台
         if level == "error":
             print(f"::error::{message}")
         elif level == "warning":
             print(f"::warning::{message}")
         else:
             print(f"::notice::[{timestamp}] {message}")
-    else:
-        # 标准日志输出（仅在非GitHub Actions环境中）
-        if level == "error":
-            logger.error(message)
-        elif level == "warning":
-            logger.warning(message)
-        else:
-            logger.info(message)
 
     # 强制刷新输出缓冲区
     sys.stdout.flush()
