@@ -1,5 +1,5 @@
 {
-  "banner.white.elephant.enabled": "Пакет данных %s успешно загружен",
+  "banner.white.elephant.enabled": "%s пакет данных успешно загружен",
   "banner.white.elephant.author": "Автор: %s",
   "banner.white.elephant.license": "Этот пакет данных распространяется под лицензией %s",
   "banner.white.elephant.official": "Официальный сайт пакета данных",
@@ -7,7 +7,7 @@
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Отсутствует зависимость",
   "need.dfl.white.elephant.please.install": "Пожалуйста, установите пакет данных: ",
-  "dialog.white.elephant.new_player.line1": "Пакет данных %s загружен в этот мир!",
+  "dialog.white.elephant.new_player.line1": "%s пакет данных загружен в этот мир!",
   "dialog.white.elephant.new_player.author": "Автор:",
   "dialog.white.elephant.new_player.tech_support": "Техническая поддержка:",
   "dialog.white.elephant.new_player.license": "Этот пакет данных использует лицензию %s",

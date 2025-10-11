@@ -1,5 +1,5 @@
 {
-  "banner.white.elephant.enabled": "%s pacchetto dati caricato con successo",
+  "banner.white.elephant.enabled": "Pacchetto dati %s caricato correttamente",
   "banner.white.elephant.author": "Autore: %s",
   "banner.white.elephant.license": "Questo pacchetto dati è open source con licenza %s",
   "banner.white.elephant.official": "Sito ufficiale del pacchetto dati",
@@ -7,7 +7,7 @@
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Prerequisito mancante",
   "need.dfl.white.elephant.please.install": "Installa il pacchetto dati: ",
-  "dialog.white.elephant.new_player.line1": "%s pacchetto dati caricato in questo mondo!",
+  "dialog.white.elephant.new_player.line1": "Pacchetto dati %s caricato in questo mondo!",
   "dialog.white.elephant.new_player.author": "Autore:",
   "dialog.white.elephant.new_player.tech_support": "Supporto tecnico:",
   "dialog.white.elephant.new_player.license": "Questo pacchetto dati utilizza la licenza open source %s",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Salva ed esci",
   "dialog.white.elephant.common.cancel_tooltip": "Annulla le modifiche correnti",
   "dialog.white.elephant.common.save_tooltip": "Salva le impostazioni correnti",
-  "dialog.white.elephant.common.technical_limitation": "A causa di limitazioni tecniche, le impostazioni qui mostrate sono quelle predefinite"
+  "dialog.white.elephant.common.technical_limitation": "A causa di limitazioni tecniche, le impostazioni mostrate qui sono i valori predefiniti"
 }
