@@ -5,7 +5,7 @@
   "banner.white.elephant.official": "データパック公式サイト",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
-  "need.dfl.white.elephant.no": "前提データパックが不足しています",
+  "need.dfl.white.elephant.no": "前提条件が不足しています",
   "need.dfl.white.elephant.please.install": "データパックをインストールしてください：",
   "dialog.white.elephant.new_player.line1": "%s データパックがこのワールドに読み込まれました！",
   "dialog.white.elephant.new_player.author": "作者：",
