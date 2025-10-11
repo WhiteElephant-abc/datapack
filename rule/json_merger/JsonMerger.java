@@ -22,7 +22,7 @@ public class JsonMerger extends Worker {
     @Override
     protected int handleRequest(WorkRequest request, PrintWriter out) {
         var args = request.arguments();
-        if (args.size() < 3) {
+        if (args.size() < 2) {
             out.println("Usage: JsonMerger <output_file> <input_file1> [input_file2] ...");
             return 1;
         }

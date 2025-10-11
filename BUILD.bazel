@@ -3,3 +3,13 @@ alias(
     actual = "LICENSE",
     visibility = ["//visibility:public"],
 )
+
+# 导出translate目录中的JSON文件供其他包使用
+filegroup(
+    name = "translate_files",
+    srcs = glob(
+        ["translate/**/*.json"],
+        allow_empty = True,
+    ),
+    visibility = ["//visibility:public"],
+)

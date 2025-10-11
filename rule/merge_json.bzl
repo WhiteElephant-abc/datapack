@@ -34,25 +34,57 @@ def _merge_json_impl(ctx):
     output_files = []
     dest_src_map = {}
 
-    # 按文件名分组输入文件
+    # 按文件名和命名空间分组输入文件
     file_groups = {}
     for src in ctx.files.srcs:
         basename = src.basename
-        if basename not in file_groups:
-            file_groups[basename] = []
-        file_groups[basename].append(src)
+        rel_path = _path_relative_to_package(src)
+        
+        # 提取命名空间信息
+        namespace = None
+        if "assets/" in rel_path:
+            # assets/namespace/lang/file.json
+            parts = rel_path.split("/")
+            if len(parts) >= 4 and parts[0] == "assets" and parts[2] == "lang":
+                namespace = parts[1]
+        elif "translate/" in rel_path:
+            # translate/namespace/lang/file.json
+            parts = rel_path.split("/")
+            if len(parts) >= 4 and parts[0] == "translate" and parts[2] == "lang":
+                namespace = parts[1]
+        
+        # 使用 namespace/basename 作为分组键
+        group_key = namespace + "/" + basename if namespace else basename
+        if group_key not in file_groups:
+            file_groups[group_key] = []
+        file_groups[group_key].append(src)
 
     # 为每个文件组创建合并后的输出文件
-    for basename, files in file_groups.items():
+    for group_key, files in file_groups.items():
         # 按路径排序，确保合并顺序一致
         files = sorted(files, key = lambda f: f.path)
 
-        output_file = ctx.actions.declare_file(basename)
+        # 智能选择目标路径：优先使用assets目录中的路径结构
+        target_path = None
+        for file in files:
+            rel_path = _path_relative_to_package(file)
+            if "assets/" in rel_path:
+                target_path = rel_path
+                break
+        
+        # 如果没有找到assets路径，将translate路径转换为assets路径
+        if target_path == None:
+            translate_path = _path_relative_to_package(files[0])
+            if "translate/" in translate_path:
+                # 将 translate/namespace/lang/file.json 转换为 assets/namespace/lang/file.json
+                target_path = translate_path.replace("translate/", "assets/")
+            else:
+                target_path = translate_path
+        
+        # 使用目标路径作为输出文件路径
+        output_file = ctx.actions.declare_file(target_path)
         output_files.append(output_file)
-
-        # 使用第一个文件的相对路径作为目标路径
-        src_path = _path_relative_to_package(files[0])
-        dest_src_map[src_path] = output_file
+        dest_src_map[target_path] = output_file
 
         args = ctx.actions.args()
         args.add(output_file)  # 输出文件
@@ -66,7 +98,7 @@ def _merge_json_impl(ctx):
             executable = ctx.executable._json_merger,
             arguments = [args],
             mnemonic = "MergeJson",
-            progress_message = "Merging JSON files into %s" % basename,
+            progress_message = "Merging JSON files into %s" % group_key,
             execution_requirements = {
                 "supports-workers": "1",
                 "requires-worker-protocol": "json",

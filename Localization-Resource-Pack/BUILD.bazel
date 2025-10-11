@@ -23,10 +23,9 @@ merge_json(
                ["assets/**/*.json"],
                allow_empty = True,
            ) +
-           glob(
-               ["../translate/**/*.json"],
-               allow_empty = True,
-           ),
+           [
+               "//:translate_files",
+           ],
 )
 
 pkg_files(
