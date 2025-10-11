@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "Pacote de dados %s carregado com sucesso",
   "banner.white.elephant.author": "Autor: %s",
-  "banner.white.elephant.license": "Este pacote de dados usa a licença %s de código aberto",
+  "banner.white.elephant.license": "Este pacote de dados é de código aberto sob a licença %s",
   "banner.white.elephant.official": "Site oficial do pacote de dados",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -10,7 +10,7 @@
   "dialog.white.elephant.new_player.line1": "Pacote de dados %s foi carregado neste mundo!",
   "dialog.white.elephant.new_player.author": "Autor:",
   "dialog.white.elephant.new_player.tech_support": "Suporte técnico:",
-  "dialog.white.elephant.new_player.license": "Este pacote de dados usa a licença %s de código aberto",
+  "dialog.white.elephant.new_player.license": "Este pacote de dados usa a licença de código aberto %s",
   "dialog.white.elephant.new_player.view_license": "Ver licença de código aberto",
   "dialog.white.elephant.options.admin_only": "Apenas administradores podem modificar as configurações!",
   "dialog.white.elephant.common.cancel": "Cancelar",

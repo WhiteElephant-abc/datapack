@@ -15,7 +15,7 @@
   "dialog.white.elephant.options.admin_only": "Seuls les administrateurs peuvent modifier les paramètres !",
   "dialog.white.elephant.common.cancel": "Annuler",
   "dialog.white.elephant.common.save_and_exit": "Sauvegarder et quitter",
-  "dialog.white.elephant.common.cancel_tooltip": "Annuler les modifications actuelles",
+  "dialog.white.elephant.common.cancel_tooltip": "Abandonner les modifications actuelles",
   "dialog.white.elephant.common.save_tooltip": "Sauvegarder les paramètres actuels",
   "dialog.white.elephant.common.technical_limitation": "En raison de limitations techniques, les paramètres affichés ici sont les valeurs par défaut"
 }

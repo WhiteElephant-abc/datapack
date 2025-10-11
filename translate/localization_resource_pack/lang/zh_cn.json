@@ -3,7 +3,7 @@
   "dialog.stone_disappearance.advanced_common.title": "石头消失高级设置：通用设置",
   "dialog.stone_disappearance.advanced_common.success_num": "一次区块清除被视为成功的清除方块数量",
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "用于替换可下落方块的方块",
-  "dialog.stone_disappearance.advanced_common.tick_fill": "实时清理玩家附近3*3*3区域内的石头",
+  "dialog.stone_disappearance.advanced_common.tick_fill": "实时清除玩家附近3*3*3区域内的石头",
   "dialog.stone_disappearance.advanced_overworld.title": "石头消失高级设置：主世界设置",
   "dialog.stone_disappearance.advanced.replace_stone_with": "将石头替换为：",
   "dialog.stone_disappearance.advanced_overworld.min": "主世界下限",
