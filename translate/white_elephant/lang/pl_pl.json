@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s paczka danych załadowana pomyślnie",
   "banner.white.elephant.author": "Autor: %s",
-  "banner.white.elephant.license": "Ta paczka danych jest dostępna na licencji %s",
+  "banner.white.elephant.license": "Ta paczka danych jest open source na licencji %s",
   "banner.white.elephant.official": "Oficjalna strona paczki danych",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -11,11 +11,11 @@
   "dialog.white.elephant.new_player.author": "Autor:",
   "dialog.white.elephant.new_player.tech_support": "Wsparcie techniczne:",
   "dialog.white.elephant.new_player.license": "Ta paczka danych używa licencji open source %s",
-  "dialog.white.elephant.new_player.view_license": "Zobacz licencję",
+  "dialog.white.elephant.new_player.view_license": "Zobacz licencję open source",
   "dialog.white.elephant.options.admin_only": "Tylko administratorzy mogą zmieniać ustawienia!",
   "dialog.white.elephant.common.cancel": "Anuluj",
   "dialog.white.elephant.common.save_and_exit": "Zapisz i wyjdź",
   "dialog.white.elephant.common.cancel_tooltip": "Porzuć bieżące zmiany",
   "dialog.white.elephant.common.save_tooltip": "Zapisz bieżące ustawienia",
-  "dialog.white.elephant.common.technical_limitation": "Ze względu na ograniczenia techniczne, wyświetlane są tutaj wartości domyślne ustawień"
+  "dialog.white.elephant.common.technical_limitation": "Ze względu na ograniczenia techniczne, wyświetlane tutaj ustawienia są wartościami domyślnymi"
 }
