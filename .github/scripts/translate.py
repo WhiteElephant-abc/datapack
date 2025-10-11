@@ -260,8 +260,12 @@ class DeepSeekTranslator:
         # 排序后比较，确保占位符完全一致
         return sorted(original_placeholders) == sorted(translated_placeholders)
 
-    def validate_translation_result(self, original: Dict[str, str], translated: Dict[str, str]) -> List[str]:
+    def validate_translation_result(self, original: Dict[str, any], translated: Dict[str, str]) -> List[str]:
         """验证翻译结果的完整性和格式正确性
+
+        Args:
+            original: 原始文本字典，可能包含列表类型的值
+            translated: 翻译结果字典，应该只包含字符串类型的值
 
         Returns:
             List[str]: 错误信息列表，空列表表示验证通过
@@ -285,14 +289,27 @@ class DeepSeekTranslator:
         for key in original_keys & translated_keys:
             translated_value = translated.get(key)
 
+            # 翻译结果必须是字符串
             if not isinstance(translated_value, str):
                 errors.append(f"键 '{key}' 的值不是字符串类型: {type(translated_value)}")
                 continue
 
-            # 检查占位符一致性（允许空值）
+            # 获取原始值进行占位符检查
             original_value = original[key]
-            if not self.validate_placeholder_consistency(original_value, translated_value):
-                errors.append(f"键 '{key}' 的占位符不一致: '{original_value}' -> '{translated_value}'")
+
+            # 如果原始值是列表，使用第一个元素进行占位符验证
+            # 因为列表中的所有元素应该具有相同的占位符模式
+            if isinstance(original_value, list):
+                if original_value:  # 确保列表不为空
+                    reference_value = str(original_value[0])
+                else:
+                    reference_value = ""
+            else:
+                reference_value = str(original_value)
+
+            # 检查占位符一致性（允许空值）
+            if not self.validate_placeholder_consistency(reference_value, translated_value):
+                errors.append(f"键 '{key}' 的占位符不一致: '{reference_value}' -> '{translated_value}'")
 
         return errors
 
