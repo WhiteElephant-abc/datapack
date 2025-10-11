@@ -7,7 +7,7 @@
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Prerequisito mancante",
   "need.dfl.white.elephant.please.install": "Installa il pacchetto dati: ",
-  "dialog.white.elephant.new_player.line1": "%s pacchetto dati è stato caricato in questo mondo!",
+  "dialog.white.elephant.new_player.line1": "%s pacchetto dati caricato in questo mondo!",
   "dialog.white.elephant.new_player.author": "Autore:",
   "dialog.white.elephant.new_player.tech_support": "Supporto tecnico:",
   "dialog.white.elephant.new_player.license": "Questo pacchetto dati utilizza la licenza open source %s",

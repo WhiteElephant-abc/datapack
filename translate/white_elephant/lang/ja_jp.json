@@ -6,7 +6,7 @@
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "前提条件が不足しています",
-  "need.dfl.white.elephant.please.install": "データパックをインストールしてください：",
+  "need.dfl.white.elephant.please.install": "データパックをインストールしてください: ",
   "dialog.white.elephant.new_player.line1": "%s データパックがこのワールドに読み込まれました！",
   "dialog.white.elephant.new_player.author": "作者：",
   "dialog.white.elephant.new_player.tech_support": "技術サポート：",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "保存して終了",
   "dialog.white.elephant.common.cancel_tooltip": "現在の変更を破棄",
   "dialog.white.elephant.common.save_tooltip": "現在の設定を保存",
-  "dialog.white.elephant.common.technical_limitation": "技術的な制限により、ここに表示される設定はすべてデフォルト値です"
+  "dialog.white.elephant.common.technical_limitation": "技術的な制限により、ここに表示されている設定はすべてデフォルト値です"
 }
