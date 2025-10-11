@@ -354,11 +354,9 @@ class DeepSeekTranslator:
 
         for key, value in texts.items():
             if isinstance(value, list):
-                # 对于列表值，使用第一个值作为翻译源
-                if value:  # 确保列表不为空
-                    prepared_texts[key] = value[0]
-                else:
-                    prepared_texts[key] = ""
+                # 对于列表值，保留列表形式为AI提供更多上下文
+                # AI会根据用户提示词中的指导只输出目标语言的字符串
+                prepared_texts[key] = value
             else:
                 prepared_texts[key] = str(value)
 
@@ -1198,7 +1196,7 @@ def get_merged_reference_translations(namespace: str) -> Dict[str, any]:
         namespace: 命名空间名称
 
     Returns:
-        Dict[str, any]: 合并后的参考翻译字典，包含所有已有的键值对
+        Dict[str, any]: 合并后的参考翻译字典，重复键的值为列表
     """
     merged_dict = {}
     namespace_lang_dir = Path(ASSETS_DIR) / namespace / "lang"
@@ -1211,9 +1209,20 @@ def get_merged_reference_translations(namespace: str) -> Dict[str, any]:
         try:
             with open(lang_file, 'r', encoding='utf-8') as f:
                 lang_data = json.load(f)
-                # 合并键值对，如果键已存在则保持现有值
+                # 合并键值对，处理重复键转换为列表
                 for key, value in lang_data.items():
-                    if key not in merged_dict:
+                    if key in merged_dict:
+                        # 处理重复键：转换为列表形式
+                        existing_value = merged_dict[key]
+                        if isinstance(existing_value, list):
+                            # 如果已经是列表，添加新值
+                            if value not in existing_value:
+                                existing_value.append(value)
+                        else:
+                            # 如果不是列表，创建新列表
+                            if existing_value != value:
+                                merged_dict[key] = [existing_value, value]
+                    else:
                         merged_dict[key] = value
         except (json.JSONDecodeError, IOError) as e:
             log_progress(f"警告：无法读取语言文件 {lang_file}: {e}", "warning")
