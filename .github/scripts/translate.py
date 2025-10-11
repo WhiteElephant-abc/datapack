@@ -57,7 +57,7 @@ IS_GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS') == 'true'
 def log_progress(message: str, level: str = "info"):
     """统一的进度日志函数，在GitHub Actions中使用特殊格式"""
     timestamp = datetime.now().strftime("%H:%M:%S")
-    
+
     if IS_GITHUB_ACTIONS:
         # GitHub Actions 特殊格式
         if level == "error":
@@ -74,7 +74,7 @@ def log_progress(message: str, level: str = "info"):
             logger.warning(message)
         else:
             logger.info(message)
-    
+
     # 强制刷新输出缓冲区
     sys.stdout.flush()
 
@@ -97,23 +97,23 @@ class ProgressTracker:
         self.current_language = 0
         self.current_namespace = 0
         self.start_time = time.time()
-        
+
     def start_language(self, lang_code: str, lang_name: str):
         self.current_language += 1
         self.current_namespace = 0
         elapsed = time.time() - self.start_time
         log_section(f"语言 {self.current_language}/{self.total_languages}: {lang_code} ({lang_name}) - 已用时 {elapsed:.1f}s")
-        
+
     def start_namespace(self, namespace: str):
         self.current_namespace += 1
         log_progress(f"  命名空间 {self.current_namespace}/{self.total_namespaces}: {namespace}")
-        
+
     def log_batch_progress(self, batch_num: int, total_batches: int, batch_size: int):
         log_progress(f"    批次 {batch_num}/{total_batches} (每批 {batch_size} 个键)")
-        
+
     def finish_language(self):
         log_section_end()
-        
+
     def get_total_progress(self) -> str:
         total_tasks = self.total_languages * self.total_namespaces
         completed_tasks = (self.current_language - 1) * self.total_namespaces + self.current_namespace
@@ -166,7 +166,7 @@ class DeepSeekTranslator:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
-            
+
             # 跳过以 # 开头的标题行和空行
             content_lines = []
             for line in lines:
@@ -174,7 +174,7 @@ class DeepSeekTranslator:
                 # 跳过标题行（以#开头）和空行，但保留内容开始后的空行
                 if content_lines or (stripped_line and not stripped_line.startswith('#')):
                     content_lines.append(line)
-            
+
             return ''.join(content_lines).strip()
         except FileNotFoundError:
             log_progress(f"警告：提示词模板文件 {file_path} 不存在，使用默认提示词", "warning")
@@ -285,7 +285,7 @@ class DeepSeekTranslator:
         翻译一批文本，包含重试机制和完整性验证
         """
         max_retries = 3
-        
+
         if not texts:
             return {}
 
@@ -295,7 +295,7 @@ class DeepSeekTranslator:
         for attempt in range(max_retries):
             try:
                 log_progress(f"      尝试 {attempt + 1}/{max_retries}")
-                
+
                 # 使用提示词模板或回退到默认提示词
                 if self.system_prompt:
                     system_prompt = self._format_prompt(
@@ -335,7 +335,7 @@ class DeepSeekTranslator:
                 # 根据模式选择模型
                 model = "deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"
                 log_progress(f"      使用模型: {model} ({'非思考模式' if self.non_thinking_mode else '思考模式'})")
-                
+
                 payload = {
                     "model": model,
                     "messages": [
@@ -358,7 +358,7 @@ class DeepSeekTranslator:
                 response = requests.post(DEEPSEEK_API_URL, headers=self.headers, json=payload, timeout=60)
                 api_time = time.time() - start_time
                 log_progress(f"      API响应时间: {api_time:.2f}s, 状态码: {response.status_code}")
-                
+
                 response.raise_for_status()
 
                 result = response.json()
@@ -374,7 +374,7 @@ class DeepSeekTranslator:
                 if translated_content.endswith("```"):
                     translated_content = translated_content[:-3]
                 translated_content = translated_content.strip()
-                
+
                 if original_content != translated_content:
                     log_progress(f"      清理代码块标记后长度: {len(translated_content)} 字符")
 
@@ -428,32 +428,32 @@ def get_git_changes() -> List[FileChanges]:
         result = subprocess.run([
             'git', 'diff', '--name-only', 'HEAD~1', 'HEAD'
         ], capture_output=True, text=True, cwd='.')
-        
+
         if result.returncode != 0:
             log_progress("无法获取Git差异，使用全量翻译模式", "warning")
             return []
-        
+
         changed_files = result.stdout.strip().split('\n') if result.stdout.strip() else []
         log_progress(f"检测到 {len(changed_files)} 个变更文件")
-        
+
         file_changes = []
-        
+
         for file_path in changed_files:
             # 只处理源翻译文件 (en_us.json)
             if not file_path.endswith('/lang/en_us.json'):
                 continue
-                
+
             # 提取命名空间
             parts = file_path.split('/')
             if len(parts) < 4 or 'assets' not in parts:
                 continue
-                
+
             assets_index = parts.index('assets')
             if assets_index + 1 >= len(parts):
                 continue
-                
+
             namespace = parts[assets_index + 1]
-            
+
             # 获取文件的具体变更
             changes = get_file_key_changes(file_path)
             if changes:
@@ -464,9 +464,9 @@ def get_git_changes() -> List[FileChanges]:
                     deleted_keys=changes['deleted'],
                     modified_keys=changes['modified']
                 ))
-        
+
         return file_changes
-        
+
     except Exception as e:
         log_progress(f"Git差异检测失败: {e}", "error")
         return []
@@ -478,27 +478,27 @@ def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]
         old_content_result = subprocess.run([
             'git', 'show', f'HEAD~1:{file_path}'
         ], capture_output=True, text=True, cwd='.')
-        
+
         old_data = {}
         if old_content_result.returncode == 0:
             try:
                 old_data = json.loads(old_content_result.stdout)
             except json.JSONDecodeError:
                 pass
-        
+
         # 获取新版本文件内容
         new_data = {}
         if os.path.exists(file_path):
             new_data = load_json_file(file_path) or {}
-        
+
         # 比较变更
         old_keys = set(old_data.keys())
         new_keys = set(new_data.keys())
-        
+
         added_keys = []
         deleted_keys = []
         modified_keys = []
-        
+
         # 添加的键
         for key in new_keys - old_keys:
             added_keys.append(KeyChange(
@@ -507,7 +507,7 @@ def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]
                 new_value=new_data[key],
                 operation=ChangeType.ADDED.value
             ))
-        
+
         # 删除的键
         for key in old_keys - new_keys:
             deleted_keys.append(KeyChange(
@@ -516,7 +516,7 @@ def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]
                 new_value=None,
                 operation=ChangeType.DELETED.value
             ))
-        
+
         # 修改的键
         for key in old_keys & new_keys:
             if old_data[key] != new_data[key]:
@@ -526,13 +526,13 @@ def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]
                     new_value=new_data[key],
                     operation=ChangeType.MODIFIED.value
                 ))
-        
+
         return {
             'added': added_keys,
             'deleted': deleted_keys,
             'modified': modified_keys
         }
-        
+
     except Exception as e:
         log_progress(f"获取文件变更失败 {file_path}: {e}", "error")
         return None
@@ -584,19 +584,19 @@ def load_namespace_translations(namespace: str, lang_code: str) -> Dict[str, str
     assets_file = Path(ASSETS_DIR) / namespace / "lang" / f"{lang_code}.json"
     if assets_file.exists():
         return load_json_file(str(assets_file)) or {}
-    
+
     # 再尝试从translate目录加载
     translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
     if translate_file.exists():
         return load_json_file(str(translate_file)) or {}
-    
+
     return {}
 
 def save_namespace_translations(namespace: str, lang_code: str, translations: Dict[str, str]) -> bool:
     """保存指定命名空间的翻译到translate目录"""
     translate_dir = Path(TRANSLATE_DIR) / namespace / "lang"
     translate_dir.mkdir(parents=True, exist_ok=True)
-    
+
     translate_file = translate_dir / f"{lang_code}.json"
     return save_json_file(str(translate_file), translations)
 
@@ -616,27 +616,27 @@ def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], ma
     if len(target_keys) >= max_context:
         # 如果目标键数量已经超过最大上下文数，直接返回目标键
         return {key: source_dict[key] for key in target_keys if key in source_dict}
-    
+
     source_keys = list(source_dict.keys())
     target_set = set(target_keys)
     context_dict = {}
-    
+
     # 添加目标键
     for key in target_keys:
         if key in source_dict:
             context_dict[key] = source_dict[key]
-    
+
     # 如果目标键数量已经达到上下文限制，直接返回
     if len(context_dict) >= max_context:
         return context_dict
-    
+
     # 计算需要添加的上下文数量
     needed_context = max_context - len(context_dict)
-    
+
     # 为每个目标键段落添加上下文
     segments = []
     current_segment = []
-    
+
     # 将连续的目标键分组为段落
     for i, key in enumerate(source_keys):
         if key in target_set:
@@ -645,26 +645,26 @@ def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], ma
             if current_segment:
                 segments.append(current_segment)
                 current_segment = []
-    
+
     if current_segment:
         segments.append(current_segment)
-    
+
     # 为每个段落添加前后上下文
     context_indices = set()
     context_per_segment = max(1, needed_context // (len(segments) * 2)) if segments else 0
-    
+
     for segment in segments:
         start_idx = segment[0]
         end_idx = segment[-1]
-        
+
         # 添加段落前的上下文
         for i in range(max(0, start_idx - context_per_segment), start_idx):
             context_indices.add(i)
-        
+
         # 添加段落后的上下文
         for i in range(end_idx + 1, min(len(source_keys), end_idx + 1 + context_per_segment)):
             context_indices.add(i)
-    
+
     # 如果还需要更多上下文，继续扩展
     remaining_needed = needed_context - len(context_indices)
     if remaining_needed > 0:
@@ -673,96 +673,96 @@ def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], ma
                 break
             start_idx = segment[0]
             end_idx = segment[-1]
-            
+
             # 继续向前扩展
             for i in range(max(0, start_idx - context_per_segment - 1), max(0, start_idx - context_per_segment)):
                 if remaining_needed <= 0:
                     break
                 context_indices.add(i)
                 remaining_needed -= 1
-            
+
             # 继续向后扩展
-            for i in range(min(len(source_keys), end_idx + 1 + context_per_segment), 
+            for i in range(min(len(source_keys), end_idx + 1 + context_per_segment),
                           min(len(source_keys), end_idx + 1 + context_per_segment + 1)):
                 if remaining_needed <= 0:
                     break
                 context_indices.add(i)
                 remaining_needed -= 1
-    
+
     # 添加上下文键到结果中
     for idx in sorted(context_indices):
         key = source_keys[idx]
         if key not in context_dict and len(context_dict) < max_context:
             context_dict[key] = source_dict[key]
-    
+
     return context_dict
 
 def check_missing_translation_files() -> Dict[str, List[str]]:
     """检查缺失的翻译文件
-    
+
     Returns:
         Dict[namespace, List[missing_lang_codes]]: 缺失翻译文件的命名空间和语言代码
     """
     missing_files = {}
-    
+
     # 获取所有命名空间
     namespaces = get_namespace_list()
     if not namespaces:
         return missing_files
-    
+
     log_progress("检查翻译文件完整性...")
-    
+
     for namespace in namespaces:
         # 检查源文件是否存在
         source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
         if not source_file.exists():
             continue
-        
+
         missing_langs = []
-        
+
         # 检查每种目标语言的翻译文件
         for lang_code, lang_name in TARGET_LANGUAGES.items():
             if lang_code == 'en_us':  # 跳过源语言
                 continue
-                
+
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_langs.append(lang_code)
-        
+
         if missing_langs:
             missing_files[namespace] = missing_langs
             log_progress(f"  {namespace}: 缺失 {len(missing_langs)} 个语言的翻译文件")
-    
+
     if missing_files:
         total_missing = sum(len(langs) for langs in missing_files.values())
         log_progress(f"发现 {len(missing_files)} 个命名空间缺失翻译文件，共 {total_missing} 个文件")
     else:
         log_progress("所有翻译文件完整")
-    
+
     return missing_files
 
 def create_virtual_changes_for_missing_files(missing_translations: Dict[str, List[str]]) -> List[FileChanges]:
     """为缺失的翻译文件创建虚拟变更
-    
+
     Args:
         missing_translations: 缺失翻译文件的命名空间和语言代码
-        
+
     Returns:
         List[FileChanges]: 虚拟的文件变更列表
     """
     virtual_changes = []
-    
+
     for namespace, missing_langs in missing_translations.items():
         # 加载源文件
         source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
         source_dict = load_json_file(str(source_file))
         if not source_dict:
             continue
-        
+
         # 创建虚拟变更，将所有源文件的键标记为新增
-        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added') 
+        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added')
                      for key, value in source_dict.items()]
-        
+
         virtual_change = FileChanges(
             namespace=namespace,
             file_path=str(source_file),
@@ -770,53 +770,53 @@ def create_virtual_changes_for_missing_files(missing_translations: Dict[str, Lis
             deleted_keys=[],
             modified_keys=[]
         )
-        
+
         virtual_changes.append(virtual_change)
         log_progress(f"  为 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
-    
+
     return virtual_changes
 
 def check_missing_translation_files() -> List[Tuple[str, str]]:
     """检查缺失的翻译文件
-    
+
     Returns:
         List[Tuple[str, str]]: 缺失文件的 (namespace, lang_code) 列表
     """
     missing_files = []
-    
+
     # 获取所有命名空间
     namespaces = get_namespace_list()
-    
+
     for namespace in namespaces:
         # 检查源文件是否存在
         source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
         if not source_file.exists():
             continue
-            
+
         # 检查每种目标语言的翻译文件
         for lang_code, _ in TARGET_LANGUAGES.items():
             if lang_code == 'zh_cn':  # 跳过源语言
                 continue
-                
+
             translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
             if not translate_file.exists():
                 missing_files.append((namespace, lang_code))
-    
+
     if missing_files:
         log_progress(f"发现 {len(missing_files)} 个缺失的翻译文件")
         for namespace, lang_code in missing_files[:5]:  # 只显示前5个
             log_progress(f"  缺失: {namespace}/{lang_code}.json")
         if len(missing_files) > 5:
             log_progress(f"  ... 还有 {len(missing_files) - 5} 个文件")
-    
+
     return missing_files
 
 def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]]) -> List[FileChanges]:
     """为缺失的翻译文件创建虚拟变更
-    
+
     Args:
         missing_files: 缺失文件的 (namespace, lang_code) 列表
-        
+
     Returns:
         List[FileChanges]: 虚拟变更列表
     """
@@ -826,20 +826,20 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
         if namespace not in namespace_groups:
             namespace_groups[namespace] = []
         namespace_groups[namespace].append(lang_code)
-    
+
     virtual_changes = []
-    
+
     for namespace, lang_codes in namespace_groups.items():
         # 加载源文件以获取所有键
         source_file = Path(ASSETS_DIR) / namespace / "lang" / "zh_cn.json"
         source_dict = load_json_file(str(source_file))
         if not source_dict:
             continue
-        
+
         # 创建虚拟变更，将所有键标记为新增
-        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added') 
+        added_keys = [KeyChange(key=key, old_value=None, new_value=value, operation='added')
                      for key, value in source_dict.items()]
-        
+
         virtual_changes.append(FileChanges(
             namespace=namespace,
             file_path=str(source_file),
@@ -847,35 +847,35 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
             deleted_keys=[],
             modified_keys=[]
         ))
-        
+
         log_progress(f"为命名空间 {namespace} 创建虚拟变更，包含 {len(added_keys)} 个键")
-    
+
     return virtual_changes
 
 def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> bool:
     """从所有翻译文件中删除指定的键"""
     success = True
-    
+
     for lang_code, _ in TARGET_LANGUAGES.items():
         if lang_code == 'zh_cn':  # 跳过源语言
             continue
-            
+
         translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
         if not translate_file.exists():
             continue
-        
+
         # 加载现有翻译
         translations = load_json_file(str(translate_file))
         if not translations:
             continue
-        
+
         # 删除指定的键
         modified = False
         for key in keys_to_delete:
             if key in translations:
                 del translations[key]
                 modified = True
-        
+
         # 如果有修改，保存文件
         if modified:
             if save_json_file(str(translate_file), translations):
@@ -883,7 +883,7 @@ def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> 
             else:
                 log_progress(f"    ✗ 删除键失败: {translate_file}", "error")
                 success = False
-    
+
     return success
 
 def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str]) -> bool:
@@ -895,7 +895,7 @@ def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str
 
     # 检查已有翻译是否完整
     existing_translations = load_namespace_translations(namespace, lang_code)
-    
+
     # 如果没有任何翻译，需要翻译
     if not existing_translations:
         return True
@@ -911,13 +911,13 @@ def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str
 def main():
     """主函数"""
     log_section("翻译脚本启动")
-    
+
     # 检查环境变量
     api_key = os.getenv('DEEPSEEK_API_KEY')
     if not api_key:
         log_progress("错误：未找到DEEPSEEK_API_KEY环境变量", "error")
         sys.exit(1)
-    
+
     log_progress("✓ API密钥已配置")
 
     # 检查是否使用非思考模式
@@ -933,7 +933,7 @@ def main():
 
     # 检查是否强制翻译
     force_translate = os.getenv('FORCE_TRANSLATE', 'false').lower() == 'true'
-    
+
     if force_translate:
         log_progress("🔄 强制翻译模式：将重新翻译所有内容")
         # 使用原有的全量翻译逻辑
@@ -956,12 +956,12 @@ def run_full_translation(translator):
     # 计算实际需要翻译的语言数（排除源语言zh_cn）
     target_lang_count = len(TARGET_LANGUAGES) - 1  # 排除zh_cn
     log_progress(f"✓ 目标语言: {target_lang_count} 种")
-    
+
     # 创建进度跟踪器
     progress_tracker = ProgressTracker(target_lang_count, len(namespaces))
-    
+
     log_section_end()
-    
+
     # 调用原有的翻译逻辑
     continue_full_translation(translator, progress_tracker, namespaces)
 
@@ -969,85 +969,85 @@ def run_smart_translation(translator):
     """运行智能差异翻译"""
     # 检测Git变更
     file_changes = get_git_changes()
-    
+
     # 检查输出文件缺失情况
     missing_translations = check_missing_translation_files()
-    
+
     if not file_changes and not missing_translations:
         log_progress("未检测到源翻译文件变更，且所有翻译文件完整，跳过翻译")
         return
-    
+
     if not file_changes and missing_translations:
         log_progress("未检测到源文件变更，但发现缺失的翻译文件，将补充翻译")
         # 为缺失的翻译文件创建虚拟变更
         file_changes = create_virtual_changes_for_missing_files(missing_translations)
-    
+
     log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
-    
+
     # 处理每个有变更的命名空间
     for changes in file_changes:
         log_section(f"处理命名空间: {changes.namespace}")
-        
+
         # 首先处理删除的键
         if changes.deleted_keys:
             deleted_key_names = [change.key for change in changes.deleted_keys]
             log_progress(f"删除 {len(deleted_key_names)} 个键: {', '.join(deleted_key_names[:5])}{'...' if len(deleted_key_names) > 5 else ''}")
             delete_keys_from_translations(changes.namespace, deleted_key_names)
-        
+
         # 处理添加和修改的键（视为添加）
         added_and_modified = changes.added_keys + changes.modified_keys
         if not added_and_modified:
             log_progress("没有需要翻译的新增或修改内容")
             continue
-        
+
         # 加载源文件
         source_file = Path(ASSETS_DIR) / changes.namespace / "lang" / "en_us.json"
         source_dict = load_json_file(str(source_file))
         if not source_dict:
             log_progress(f"无法加载源文件: {source_file}", "error")
             continue
-        
+
         # 获取需要翻译的键
         keys_to_translate = [change.key for change in added_and_modified]
         log_progress(f"需要翻译 {len(keys_to_translate)} 个键")
-        
+
         # 获取翻译上下文
         context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10)
         log_progress(f"翻译上下文包含 {len(context_dict)} 个键值对")
-        
+
         # 翻译到各种目标语言
         for lang_code, lang_name in TARGET_LANGUAGES.items():
             if lang_code == 'zh_cn':  # 跳过源语言
                 continue
-                
+
             log_progress(f"  翻译到 {lang_name} ({lang_code})")
-            
+
             # 翻译上下文
             translated_context = translator.translate_batch(context_dict, lang_code, lang_name)
             if not translated_context:
                 log_progress(f"    ✗ 翻译失败", "error")
                 continue
-            
+
             # 加载现有翻译
             existing_translations = load_namespace_translations(changes.namespace, lang_code)
-            
+
             # 只保存目标键的翻译（不包括上下文）
-            target_translations = {key: translated_context[key] 
-                                 for key in keys_to_translate 
+            target_translations = {key: translated_context[key]
+                                 for key in keys_to_translate
                                  if key in translated_context}
-            
+
             # 合并翻译结果
             final_translations = existing_translations.copy()
             final_translations.update(target_translations)
-            
+
             # 保存翻译结果
             if save_namespace_translations(changes.namespace, lang_code, final_translations):
                 log_progress(f"    ✓ 成功翻译 {len(target_translations)} 个键")
             else:
                 log_progress(f"    ✗ 保存翻译失败", "error")
-        
+
         log_section_end()
-    
+
     log_section("智能翻译完成")
     log_progress("🎉 所有变更已处理完成！")
     log_section_end()
@@ -1058,7 +1058,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
     for lang_code, lang_name in TARGET_LANGUAGES.items():
         if lang_code == 'zh_cn':  # 跳过源语言
             continue
-            
+
         progress_tracker.start_language(lang_code, lang_name)
 
         # 处理每个命名空间
@@ -1107,7 +1107,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             keys_list = list(keys_to_translate.items())
             total_batches = (len(keys_list) + batch_size - 1) // batch_size
             log_progress(f"    开始分批翻译，共 {total_batches} 批，每批最多 {batch_size} 个键")
-            
+
             successful_translations = 0
             for i in range(0, len(keys_list), batch_size):
                 batch = dict(keys_list[i:i + batch_size])
@@ -1129,7 +1129,7 @@ def continue_full_translation(translator, progress_tracker, namespaces):
                 log_progress(f"    ✓ 总计翻译 {successful_translations} 个新键，文件包含 {len(all_translated)} 个键")
             else:
                 log_progress(f"    ✗ 保存失败: {TRANSLATE_DIR}/{namespace}/lang/{lang_code}.json", "error")
-                
+
             log_progress(progress_tracker.get_total_progress())
 
         progress_tracker.finish_language()
