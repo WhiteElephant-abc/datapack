@@ -1,21 +1,21 @@
 {
-  "banner.white.elephant.enabled": "Датапак %s успешно загружен",
+  "banner.white.elephant.enabled": "%s датапак успешно загружен",
   "banner.white.elephant.author": "Автор: %s",
-  "banner.white.elephant.license": "Этот датапак распространяется под лицензией %s",
+  "banner.white.elephant.license": "Этот датапак использует открытую лицензию %s",
   "banner.white.elephant.official": "Официальный сайт датапака",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
-  "need.dfl.white.elephant.no": "Отсутствует зависимость",
+  "need.dfl.white.elephant.no": "Отсутствует необходимое условие",
   "need.dfl.white.elephant.please.install": "Пожалуйста, установите датапак: ",
-  "dialog.white.elephant.new_player.line1": "Датапак %s загружен в этот мир!",
+  "dialog.white.elephant.new_player.line1": "%s датапак загружен в этот мир!",
   "dialog.white.elephant.new_player.author": "Автор:",
   "dialog.white.elephant.new_player.tech_support": "Техническая поддержка:",
-  "dialog.white.elephant.new_player.license": "Этот датапак использует лицензию %s",
-  "dialog.white.elephant.new_player.view_license": "Посмотреть лицензию",
+  "dialog.white.elephant.new_player.license": "Этот датапак использует открытую лицензию %s",
+  "dialog.white.elephant.new_player.view_license": "Просмотреть открытую лицензию",
   "dialog.white.elephant.options.admin_only": "Только администраторы могут изменять настройки!",
   "dialog.white.elephant.common.cancel": "Отмена",
   "dialog.white.elephant.common.save_and_exit": "Сохранить и выйти",
   "dialog.white.elephant.common.cancel_tooltip": "Отменить текущие изменения",
   "dialog.white.elephant.common.save_tooltip": "Сохранить текущие настройки",
-  "dialog.white.elephant.common.technical_limitation": "В связи с техническими ограничениями здесь отображаются настройки по умолчанию"
+  "dialog.white.elephant.common.technical_limitation": "Из-за технических ограничений, настройки, отображаемые здесь, являются значениями по умолчанию"
 }
