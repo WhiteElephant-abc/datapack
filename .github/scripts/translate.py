@@ -390,18 +390,14 @@ class DeepSeekTranslator:
 
         for attempt in range(max_retries):
             try:
-                log_progress(f"      尝试 {attempt + 1}/{max_retries}")
-
                 # 使用提示词模板或回退到默认提示词
                 if self.system_prompt:
                     system_prompt = self._format_prompt(
                         self.system_prompt,
                         target_language=target_lang_name
                     )
-                    log_progress(f"      使用自定义系统提示词 (长度: {len(system_prompt)} 字符)")
                 else:
                     system_prompt = "你是一个专业的游戏本地化翻译专家，擅长Minecraft相关内容的翻译。"
-                    log_progress(f"      使用默认系统提示词")
 
                 if self.user_prompt:
                     user_prompt = self._format_prompt(
@@ -409,7 +405,6 @@ class DeepSeekTranslator:
                         target_language=target_lang_name,
                         content_to_translate=source_text
                     )
-                    log_progress(f"      使用自定义用户提示词 (长度: {len(user_prompt)} 字符)")
                 else:
                     user_prompt = f"""请将以下JSON格式的游戏本地化文本翻译为{target_lang_name}。
 
@@ -425,11 +420,9 @@ class DeepSeekTranslator:
 {source_text}
 
 请直接返回翻译后的JSON，不要添加任何解释文字。"""
-                    log_progress(f"      使用默认用户提示词")
 
                 # 根据模式选择模型
                 model = "deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"
-                log_progress(f"      使用模型: {model} ({'非思考模式' if self.non_thinking_mode else '思考模式'})")
 
                 payload = {
                     "model": model,
@@ -448,11 +441,9 @@ class DeepSeekTranslator:
                 }
 
                 # 调用API
-                log_progress(f"      发送API请求到DeepSeek...")
                 start_time = time.time()
                 response = requests.post(DEEPSEEK_API_URL, headers=self.headers, json=payload, timeout=60)
                 api_time = time.time() - start_time
-                log_progress(f"      API响应时间: {api_time:.2f}s, 状态码: {response.status_code}")
 
                 response.raise_for_status()
 
@@ -496,32 +487,21 @@ class DeepSeekTranslator:
                     translated_content = translated_content[:-3]
                 translated_content = translated_content.strip()
 
-                if original_content != translated_content:
-                    log_progress(f"      清理代码块标记后长度: {len(translated_content)} 字符")
-
                 # 解析JSON
                 try:
-                    log_progress(f"      解析JSON响应...")
                     translated_dict = json.loads(translated_content)
-                    log_progress(f"      JSON解析成功，包含 {len(translated_dict)} 个键")
                 except json.JSONDecodeError as e:
                     raise ValueError(f"JSON解析失败: {e}")
 
                 # 验证翻译结果
-                log_progress(f"      验证翻译结果...")
                 validation_errors = self.validate_translation_result(texts, translated_dict)
                 if validation_errors:
-                    log_progress(f"      验证失败: {'; '.join(validation_errors)}", "warning")
                     raise ValueError(f"翻译验证失败: {'; '.join(validation_errors)}")
 
                 # 验证成功，返回结果
-                log_progress(f"      翻译成功！尝试次数: {attempt + 1}, 总耗时: {time.time() - start_time:.2f}s")
                 return translated_dict
 
             except Exception as e:
-                error_msg = f"翻译尝试 {attempt + 1} 失败: {str(e)}"
-                log_progress(error_msg, "error")
-
                 # 记录失败详情
                 self.log_translation_failure(
                     attempt=attempt + 1,
@@ -535,11 +515,9 @@ class DeepSeekTranslator:
                 # 如果不是最后一次尝试，等待后重试
                 if attempt < max_retries - 1:
                     wait_time = (attempt + 1) * 2  # 递增等待时间
-                    log_progress(f"等待 {wait_time} 秒后重试...")
                     time.sleep(wait_time)
                 else:
                     # 最后一次尝试失败，返回空字典
-                    log_progress(f"翻译失败，已重试 {max_retries} 次: {str(e)}", "error")
                     return {}
 
     # 新的多线程架构：请求预处理 + 统一并发执行
@@ -554,7 +532,7 @@ class DeepSeekTranslator:
         batch_size: int = 40
         
     def prepare_translation_requests(self, all_texts: Dict[str, str], target_languages: List[Tuple[str, str]], 
-                                   batch_size: int = 40) -> List['DeepSeekTranslator.TranslationRequest']:
+                                   batch_size: int = 40, silent: bool = False) -> List['DeepSeekTranslator.TranslationRequest']:
         """
         预处理所有翻译请求，将文本按语言和批次分割
         
@@ -562,6 +540,7 @@ class DeepSeekTranslator:
             all_texts: 所有需要翻译的文本
             target_languages: 目标语言列表 [(lang_code, lang_name), ...]
             batch_size: 每个请求的批次大小
+            silent: 是否静默模式（不输出详细日志）
             
         Returns:
             预处理好的翻译请求列表
@@ -569,10 +548,8 @@ class DeepSeekTranslator:
         requests = []
         request_id = 1
         
-        log_progress(f"开始预处理翻译请求...")
-        log_progress(f"  文本总数: {len(all_texts)}")
-        log_progress(f"  目标语言: {len(target_languages)} 种")
-        log_progress(f"  批次大小: {batch_size}")
+        if not silent:
+            log_progress(f"预处理翻译请求: {len(all_texts)} 个文本 -> {len(target_languages)} 种语言")
         
         for target_lang, target_lang_name in target_languages:
             # 将文本分批
@@ -592,13 +569,10 @@ class DeepSeekTranslator:
                 requests.append(request)
                 request_id += 1
         
-        total_requests = len(requests)
-        total_texts_to_translate = sum(len(req.texts) for req in requests)
-        
-        log_progress(f"预处理完成:")
-        log_progress(f"  总请求数: {total_requests}")
-        log_progress(f"  总翻译文本数: {total_texts_to_translate}")
-        log_progress(f"  平均每请求: {total_texts_to_translate / total_requests:.1f} 个文本")
+        if not silent:
+            total_requests = len(requests)
+            total_texts_to_translate = sum(len(req.texts) for req in requests)
+            log_progress(f"创建了 {total_requests} 个翻译请求，共 {total_texts_to_translate} 个文本")
         
         return requests
     
@@ -742,7 +716,7 @@ class DeepSeekTranslator:
             
             # 为这个批次创建翻译请求
             target_languages = [(target_lang, target_lang_name)]
-            batch_requests = self.prepare_translation_requests(batch_copy, target_languages, batch_size=len(batch_copy))
+            batch_requests = self.prepare_translation_requests(batch_copy, target_languages, batch_size=len(batch_copy), silent=True)
             
             # 标记这些请求属于哪个批次
             for request in batch_requests:
@@ -1582,7 +1556,7 @@ def run_smart_translation(translator):
             target_languages_list = [(task['lang_code'], task['lang_name'])]
             
             # 创建翻译请求
-            requests = translator.prepare_translation_requests(prepared_context, target_languages_list, batch_size=40)
+            requests = translator.prepare_translation_requests(prepared_context, target_languages_list, batch_size=40, silent=True)
             
             # 为每个请求添加任务信息
             for request in requests:
