@@ -385,7 +385,13 @@ class DeepSeekTranslator:
         if not texts:
             return {}
 
-        source_text = json.dumps(texts, ensure_ascii=False, indent=2)
+        # 过滤掉特殊键（如__core_keys__），只翻译实际的文本内容
+        texts_to_translate = {k: v for k, v in texts.items() if not k.startswith('__')}
+
+        if not texts_to_translate:
+            return {}
+
+        source_text = json.dumps(texts_to_translate, ensure_ascii=False, indent=2)
 
         for attempt in range(max_retries):
             try:
@@ -491,7 +497,7 @@ class DeepSeekTranslator:
                     raise ValueError(f"JSON解析失败: {e}")
 
                 # 验证翻译结果
-                validation_errors = self.validate_translation_result(texts, translated_dict)
+                validation_errors = self.validate_translation_result(texts_to_translate, translated_dict)
                 if validation_errors:
                     raise ValueError(f"翻译验证失败: {'; '.join(validation_errors)}")
 
@@ -798,7 +804,7 @@ class DeepSeekTranslator:
 
             # 标记哪些是核心内容（需要保存），哪些是上下文（不保存）
             core_keys = set(key for key, _ in core_items)
-            batch_dict['__core_keys__'] = core_keys
+            batch_dict['__core_keys__'] = list(core_keys)  # 转换为list以支持JSON序列化
 
             batches.append(batch_dict)
 
