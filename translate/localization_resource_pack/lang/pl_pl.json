@@ -30,6 +30,7 @@
   "tick.kill.dfl.add": "Dodaj",
   "tick.kill.dfl.tag": "Etykieta",
   "redstone.kill.item.dfl.entity.clear": "Wyczyszczono",
+  "redstone.kill.item.dfl.entity.item": "przedmiotów upuszczonych",
   "redstone.show.entity.dfl.entity.entity": "Liczba jednostek:",
   "redstone.show.entity.dfl.entity.other.entity": "Liczba jednostek niebędących graczami:",
   "redstone.show.entity.dfl.entity.item": "Liczba upuszczonych przedmiotów:",

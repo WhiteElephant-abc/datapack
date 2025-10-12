@@ -8,6 +8,7 @@
   "tick.kill.dfl.add": "Добавить",
   "tick.kill.dfl.tag": "метку",
   "redstone.kill.item.dfl.entity.clear": "Очищено",
+  "redstone.kill.item.dfl.entity.item": "предметов",
   "redstone.show.entity.dfl.entity.entity": "Количество сущностей:",
   "redstone.show.entity.dfl.entity.other.entity": "Количество неигровых сущностей:",
   "redstone.show.entity.dfl.entity.item": "Количество предметов:",

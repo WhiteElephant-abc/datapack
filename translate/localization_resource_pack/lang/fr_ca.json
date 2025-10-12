@@ -8,6 +8,7 @@
   "tick.kill.dfl.add": "Ajouter",
   "tick.kill.dfl.tag": "Étiquette",
   "redstone.kill.item.dfl.entity.clear": "A nettoyé",
+  "redstone.kill.item.dfl.entity.item": "objets tombés",
   "redstone.show.entity.dfl.entity.entity": "Nombre d'entités :",
   "redstone.show.entity.dfl.entity.other.entity": "Nombre d'entités non-joueurs :",
   "redstone.show.entity.dfl.entity.item": "Nombre d'items :",

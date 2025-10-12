@@ -30,6 +30,7 @@
   "tick.kill.dfl.add": "ekle",
   "tick.kill.dfl.tag": "etiket",
   "redstone.kill.item.dfl.entity.clear": "temizlendi",
+  "redstone.kill.item.dfl.entity.item": "eşya",
   "redstone.show.entity.dfl.entity.entity": "varlık sayısı:",
   "redstone.show.entity.dfl.entity.other.entity": "oyuncu olmayan varlık sayısı:",
   "redstone.show.entity.dfl.entity.item": "eşya sayısı:",

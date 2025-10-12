@@ -8,6 +8,7 @@
   "tick.kill.dfl.add": "追加",
   "tick.kill.dfl.tag": "タグ",
   "redstone.kill.item.dfl.entity.clear": "クリアしました",
+  "redstone.kill.item.dfl.entity.item": "個のドロップアイテム",
   "redstone.show.entity.dfl.entity.entity": "エンティティ数：",
   "redstone.show.entity.dfl.entity.other.entity": "非プレイヤーエンティティ数：",
   "redstone.show.entity.dfl.entity.item": "ドロップアイテム数：",

@@ -30,6 +30,7 @@
   "tick.kill.dfl.add": "adicionar",
   "tick.kill.dfl.tag": "tag",
   "redstone.kill.item.dfl.entity.clear": "limpou",
+  "redstone.kill.item.dfl.entity.item": "itens dropados",
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
   "redstone.show.entity.dfl.entity.other.entity": "Número de entidades não jogador:",
   "redstone.show.entity.dfl.entity.item": "Número de itens dropados:",
