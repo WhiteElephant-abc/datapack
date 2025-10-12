@@ -313,6 +313,7 @@ class DeepSeekTranslator:
     def log_translation_failure(self, attempt: int, system_prompt: str, user_prompt: str,
                               api_response: str, error: str, texts: Dict[str, str],
                               namespace: str = "unknown", target_lang_name: str = "unknown",
+                              model: str = "unknown", temperature: float = 1.3,
                               log_to_main: bool = True) -> None:
         """记录翻译失败的详细信息到日志文件"""
         log_dir = os.path.join(os.path.dirname(__file__), "logs")
@@ -325,6 +326,10 @@ class DeepSeekTranslator:
         with open(log_file, 'w', encoding='utf-8') as f:
             f.write(f"翻译失败日志 - 尝试次数: {attempt}\n")
             f.write(f"时间: {datetime.now().isoformat()}\n")
+            f.write(f"命名空间: {namespace}\n")
+            f.write(f"目标语言: {target_lang_name}\n")
+            f.write(f"模型: {model}\n")
+            f.write(f"温度: {temperature}\n")
             f.write(f"文本数量: {len(texts)}\n")
             f.write("=" * 80 + "\n\n")
 
@@ -354,7 +359,9 @@ class DeepSeekTranslator:
             f.write(f"  命名空间: {namespace}\n")
             f.write(f"  目标语言: {target_lang_name}\n")
             f.write(f"  文件: {os.path.basename(log_file)}\n")
-            f.write(f"  文本数量: {len(texts)}\n\n")
+            f.write(f"  文本数量: {len(texts)}\n")
+            f.write(f"  模型: {model}\n")
+            f.write(f"  温度: {temperature}\n\n")
 
         # 只在需要时记录主日志
         if log_to_main:
@@ -519,6 +526,8 @@ class DeepSeekTranslator:
                 texts=texts,
                 namespace=namespace,
                 target_lang_name=target_lang_name,
+                model=model,
+                temperature=temperature,
                 log_to_main=False  # 不记录主日志，由execute_translation_request统一管理
             )
             # 抛出异常让上层处理重试
