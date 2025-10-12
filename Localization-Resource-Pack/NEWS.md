@@ -1,5 +1,7 @@
-更新本地化相关内容，适配 Lucky-Block-Island
+- 添加了 17 种语言的翻译
+- 清理了不再使用的本地化键名
 
 ---
 
-Update localization content to support Lucky-Block-Island
+- Added translations for 17 languages
+- Cleaned up unused localization key names

@@ -15,17 +15,15 @@
 
 ### 🌍 多语言支持
 
-支持18种目标语言，按优先级分组：
+- 目标语言从 `Localization-Resource-Pack/languages.json` 动态加载。默认包含 19 种语言（含 `zh_cn`）。
+- 如需增删语言，请编辑 `Localization-Resource-Pack/languages.json` 并提交 PR；本地运行直接修改该文件即可。
 
-#### 第一优先级（强烈推荐）
+当前默认语言：
 
 - `en_us` - English (US)
 - `pt_br` - Portuguese (Brazil)
 - `ru_ru` - Russian
 - `de_de` - German
-
-#### 第二优先级（推荐）
-
 - `es_es` - Spanish (Spain)
 - `es_mx` - Spanish (Mexico)
 - `fr_fr` - French (France)
@@ -33,9 +31,6 @@
 - `tr_tr` - Turkish
 - `ja_jp` - Japanese
 - `ko_kr` - Korean
-
-#### 第三优先级（可选）
-
 - `pl_pl` - Polish
 - `nl_nl` - Dutch
 - `it_it` - Italian
@@ -43,6 +38,7 @@
 - `vi_vn` - Vietnamese
 - `zh_tw` - Traditional Chinese (Taiwan)
 - `zh_hk` - Traditional Chinese (Hong Kong)
+- `zh_cn` - Simplified Chinese (China)
 
 ### 🔍 质量保证
 
@@ -50,6 +46,13 @@
 - **JSON完整性检查** - 验证翻译结果的键完整性和值类型
 - **智能重试机制** - 区分API失败和验证失败，各自独立重试（最多10次），并结合温度调整和思考模式切换策略，确保翻译成功率。
 - **详细日志记录** - 记录翻译失败的详细信息、错误原因、模型、温度、命名空间和目标语言。
+
+### ⚙️ 并发与重试优化
+
+- **并发批处理** - 使用线程池并发执行请求，默认每批 `40` 个键；超出将自动分批并保留上下文片段以提高一致性。
+- **独立重试计数** - 对 API 失败与验证失败分别计数，单类失败最多重试 `10` 次，失败总览会在日志中汇总显示。
+- **自适应温度与模式** - 验证失败前 `1–5` 次按温度序列 `[1.3, 1.3, 1.2, 1.0, 0.7]` 保持当前模式；之后按同温度序列交替切换思考/非思考模式，帮助稳定结果。
+- **进度与批次日志** - 输出批次规模与总进度，失败时记录尝试次数、失败类型与等待回退时间。
 
 ### ⚡ 自动化工作流
 
@@ -134,6 +137,8 @@ python .github/scripts/translate.py
 - `DEEPSEEK_API_KEY` - DeepSeek API密钥（在GitHub Secrets中配置）
 - `FORCE_TRANSLATE` - 强制重新翻译所有文件（可选，默认为false）
 - `NON_THINKING_MODE` - 使用非思考模式翻译（可选，默认为false）
+- `TRANSLATION_DEBUG` - 开启详细请求/响应记录（可选，默认为false）
+- `GITHUB_ACTIONS` - CI环境标识，启用日志分组与提示格式（自动）
 
 ### 提示词模板变量
 
@@ -168,7 +173,8 @@ python .github/scripts/translate.py
 ### 日志查看
 
 - **GitHub Actions日志** - 查看工作流运行的详细过程
-- **本地日志文件** - 翻译失败时在 `logs/` 目录生成详细日志
+- **本地主日志** - 在仓库根目录生成 `translation.log`
+- **详细失败日志** - 在 `.github/scripts/logs/` 目录生成失败明细于 `error_summary.log`
 
 ## 📈 更新历史
 
@@ -176,6 +182,7 @@ python .github/scripts/translate.py
 - **v1.5** - 支持DeepSeek-V3.2-Exp双模式，添加非思考模式选项
 - **v1.6** - 优化工作流，移除冗余步骤，完善日志系统
 - **v1.7** - 优化重试机制（独立计数、智能调整）、完善日志记录（模型、温度、命名空间、目标语言）、优化提示词。
+- **v1.8** - 新增环境变量（`TRANSLATION_DEBUG`、改进 `FORCE_TRANSLATE` 行为）、完善并发批处理与自适应重试（API/验证各自最多10次），目标语言包含 `zh_cn`，缺失/清理逻辑以 `translate/` 为准并在构建时与 `assets/` 合并。
 
 ## 🤝 贡献指南
 

@@ -143,9 +143,10 @@ ASSETS_DIR = "Localization-Resource-Pack/assets"
 TRANSLATE_DIR = "translate"
 SYSTEM_PROMPT_FILE = "Localization-Resource-Pack/assets/system_prompt.md"
 USER_PROMPT_FILE = "Localization-Resource-Pack/assets/user_prompt.md"
+LANGUAGES_FILE = "Localization-Resource-Pack/languages.json"
 
-# 目标语言列表（基于之前的推荐）
-TARGET_LANGUAGES = {
+# 默认目标语言列表（当外部文件不存在或无效时使用）
+DEFAULT_TARGET_LANGUAGES = {
     "en_us": "English (US)",
     "pt_br": "Portuguese (Brazil)",
     "ru_ru": "Russian",
@@ -167,15 +168,32 @@ TARGET_LANGUAGES = {
     "zh_cn": "Simplified Chinese (China)"
 }
 
+def load_target_languages(file_path: str = LANGUAGES_FILE) -> dict:
+    """从文件加载目标语言列表，失败则回退到默认列表"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        if isinstance(data, dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in data.items()):
+            log_progress(f"已从 {file_path} 加载目标语言列表，共 {len(data)} 种")
+            return data
+        else:
+            log_progress("语言列表文件格式无效，使用默认列表", "warning")
+            return DEFAULT_TARGET_LANGUAGES
+    except FileNotFoundError:
+        log_progress(f"未找到语言列表文件 {file_path}，使用默认列表", "warning")
+        return DEFAULT_TARGET_LANGUAGES
+    except Exception as e:
+        log_progress(f"加载语言列表失败：{e}，使用默认列表", "warning")
+        return DEFAULT_TARGET_LANGUAGES
+
+# 在导入时加载一次语言列表，提供常量以兼容旧用法
+TARGET_LANGUAGES = load_target_languages()
+
 
 
 def get_all_target_languages() -> dict:
-    """
-    获取所有目标语言
-
-    Returns:
-        dict: 所有目标语言字典
-    """
+    """获取所有目标语言（从文件或默认值）"""
     return TARGET_LANGUAGES
 
 
