@@ -7,7 +7,7 @@
   "no.resource.pack.white.elephant.nothing": "",
   "need.dfl.white.elephant.no": "Отсутствует зависимость",
   "need.dfl.white.elephant.please.install": "Пожалуйста, установите пакет данных: ",
-  "dialog.white.elephant.new_player.line1": "%s пакет данных был загружен в этот мир!",
+  "dialog.white.elephant.new_player.line1": "%s пакет данных загружен в этот мир!",
   "dialog.white.elephant.new_player.author": "Автор:",
   "dialog.white.elephant.new_player.tech_support": "Техническая поддержка:",
   "dialog.white.elephant.new_player.license": "Этот пакет данных использует открытую лицензию %s",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Сохранить и выйти",
   "dialog.white.elephant.common.cancel_tooltip": "Отменить текущие изменения",
   "dialog.white.elephant.common.save_tooltip": "Сохранить текущие настройки",
-  "dialog.white.elephant.common.technical_limitation": "Из-за технических ограничений, настройки, отображаемые здесь, являются значениями по умолчанию"
+  "dialog.white.elephant.common.technical_limitation": "Из-за технических ограничений, здесь отображаются настройки по умолчанию"
 }

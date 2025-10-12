@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s pack de données chargé avec succès",
   "banner.white.elephant.author": "Auteur : %s",
-  "banner.white.elephant.license": "Ce pack de données utilise la licence open source %s",
+  "banner.white.elephant.license": "Ce pack de données utilise la licence %s open source",
   "banner.white.elephant.official": "Site officiel du pack de données",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -17,5 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Sauvegarder et quitter",
   "dialog.white.elephant.common.cancel_tooltip": "Abandonner les modifications actuelles",
   "dialog.white.elephant.common.save_tooltip": "Sauvegarder les paramètres actuels",
-  "dialog.white.elephant.common.technical_limitation": "En raison de limitations techniques, les paramètres affichés ici sont tous des valeurs par défaut"
+  "dialog.white.elephant.common.technical_limitation": "En raison de limitations techniques, les paramètres affichés ici sont les valeurs par défaut"
 }

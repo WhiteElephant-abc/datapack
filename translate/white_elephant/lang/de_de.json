@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s Datenpaket erfolgreich geladen",
   "banner.white.elephant.author": "Autor: %s",
-  "banner.white.elephant.license": "Dieses Datenpaket verwendet die %s Lizenz und ist Open Source",
+  "banner.white.elephant.license": "Dieses Datenpaket verwendet die %s Open-Source-Lizenz",
   "banner.white.elephant.official": "Offizielle Website des Datenpakets",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -12,7 +12,7 @@
   "dialog.white.elephant.new_player.tech_support": "Technischer Support: ",
   "dialog.white.elephant.new_player.license": "Dieses Datenpaket verwendet die %s Open-Source-Lizenz",
   "dialog.white.elephant.new_player.view_license": "Open-Source-Lizenz anzeigen",
-  "dialog.white.elephant.options.admin_only": "Nur Administratoren können die Einstellungen ändern!",
+  "dialog.white.elephant.options.admin_only": "Nur Administratoren können Einstellungen ändern!",
   "dialog.white.elephant.common.cancel": "Abbrechen",
   "dialog.white.elephant.common.save_and_exit": "Speichern und beenden",
   "dialog.white.elephant.common.cancel_tooltip": "Aktuelle Änderungen verwerfen",
