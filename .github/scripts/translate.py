@@ -644,7 +644,7 @@ class DeepSeekTranslator:
 
         while api_failure_count < max_individual_retries and validation_failure_count < max_individual_retries:
             total_attempts += 1
-            
+
             try:
                 # 根据验证失败次数调整参数
                 if validation_failure_count > 0:
@@ -657,7 +657,7 @@ class DeepSeekTranslator:
                     original_mode = self.non_thinking_mode
 
                 # 执行翻译
-                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name, 
+                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name,
                                             request.namespace, total_attempts, temperature)
 
                 # 恢复原始模式
@@ -682,7 +682,7 @@ class DeepSeekTranslator:
 
             except Exception as e:
                 error_str = str(e)
-                
+
                 # 判断错误类型
                 if "翻译验证失败" in error_str:
                     # 模型输出验证失败
@@ -1770,6 +1770,60 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             log_progress(f"✗ 未找到翻译结果: {namespace} -> {lang_code}", "warning")
 
     log_progress(f"🎉 全并发翻译完成！成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
+
+    # 清理多余的键值对
+    log_progress("开始清理多余的键值对...")
+    cleaned_count = 0
+    total_keys_removed = 0
+
+    # 获取所有命名空间
+    all_namespaces = get_namespace_list()
+    log_progress(f"处理的命名空间: {', '.join(all_namespaces)}")
+
+    for namespace in all_namespaces:
+        # 获取源字典（参考翻译）
+        source_dict = get_merged_reference_translations(namespace)
+        if not source_dict:
+            log_progress(f"⚠️ 命名空间 {namespace} 没有源字典", "warning")
+            continue
+
+        log_progress(f"命名空间 {namespace} 源字典包含 {len(source_dict)} 个键")
+
+        # 获取所有目标语言
+        for lang_code, lang_name in get_all_target_languages().items():
+            # 加载现有翻译
+            existing_translations = load_namespace_translations(namespace, lang_code)
+            if not existing_translations:
+                log_progress(f"⚠️ 未找到翻译文件: {namespace} -> {lang_code}", "warning")
+                continue
+
+            log_progress(f"检查 {namespace} -> {lang_code}: 包含 {len(existing_translations)} 个键")
+
+            # 找出多余的键（在翻译中存在但在源字典中不存在的键）
+            source_keys = set(source_dict.keys())
+            keys_to_remove = [key for key in existing_translations if key not in source_keys]
+
+            if keys_to_remove:
+                log_progress(f"发现 {len(keys_to_remove)} 个多余键: {', '.join(keys_to_remove[:5])}{' 等' if len(keys_to_remove) > 5 else ''}")
+
+                # 移除多余的键
+                for key in keys_to_remove:
+                    del existing_translations[key]
+
+                # 保存更新后的翻译
+                try:
+                    if save_namespace_translations(namespace, lang_code, existing_translations):
+                        cleaned_count += 1
+                        total_keys_removed += len(keys_to_remove)
+                        log_progress(f"✓ 清理 {namespace} -> {lang_code}: 移除了 {len(keys_to_remove)} 个多余键", "info")
+                    else:
+                        log_progress(f"✗ 清理失败: {namespace} -> {lang_code}", "error")
+                except Exception as e:
+                    log_progress(f"✗ 清理时发生错误: {namespace} -> {lang_code}, 错误: {str(e)}", "error")
+            else:
+                log_progress(f"✓ {namespace} -> {lang_code}: 没有多余键", "info")
+
+    log_progress(f"清理完成，共清理了 {cleaned_count} 个文件，移除了 {total_keys_removed} 个多余键")
     flush_logs()
 
 if __name__ == "__main__":
