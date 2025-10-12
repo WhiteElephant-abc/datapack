@@ -1,8 +1,4 @@
 {
-  "start.dfl.enable": "加载成功",
-  "start.dfl.license.a": "本数据包使用",
-  "start.dfl.license.b": "协议开源",
-  "start.dfl.official": "数据包官网",
   "tick.ban.dfl.ban": "您已被此服务器软封禁",
   "tick.ban.dfl.from": "通过数据包",
   "tick.show.entity.dfl.entity.num": "实体数量：",
@@ -16,8 +12,6 @@
   "redstone.show.entity.dfl.entity.entity": "实体数量：",
   "redstone.show.entity.dfl.entity.other.entity": "非玩家实体数量：",
   "redstone.show.entity.dfl.entity.item": "掉落物数量：",
-  "redstone.lucky.block.island.kill.entity": "[数据包消息] 已清理实体",
-  "dialog.stone_disappearance.options.title": "石头消失设置",
   "dialog.sd.options.title": "石头消失设置",
   "dialog.stone_disappearance.options.performance.label": "性能设置",
   "dialog.stone_disappearance.options.performance.tooltip": "配置一些将会影响性能的设置",
