@@ -1130,6 +1130,18 @@ def load_namespace_translations(namespace: str, lang_code: str) -> Dict[str, str
 
     return {}
 
+def load_namespace_translations_from_translate(namespace: str, lang_code: str) -> Dict[str, str]:
+    """仅从 translate 目录加载指定命名空间的翻译。
+
+    用途：
+    - 缺失键扫描与冗余清理仅针对工作目录（translate）
+    - assets 目录在构建阶段参与合并，不参与完整性约束
+    """
+    translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+    if translate_file.exists():
+        return load_json_file(str(translate_file)) or {}
+    return {}
+
 def save_namespace_translations(namespace: str, lang_code: str, translations: Dict[str, str]) -> bool:
     """保存指定命名空间的翻译到translate目录"""
     translate_dir = Path(TRANSLATE_DIR) / namespace / "lang"
@@ -1503,7 +1515,8 @@ def create_virtual_changes_for_missing_keys() -> List[FileChanges]:
                 # 文件缺失的场景由 create_virtual_changes_for_missing_files 处理
                 continue
 
-            existing_translations = load_namespace_translations(namespace, lang_code)
+            # 仅基于 translate 目录检查缺失，assets 将在构建时合并
+            existing_translations = load_namespace_translations_from_translate(namespace, lang_code)
             existing_keys = set(existing_translations.keys())
 
             # 仅扫描缺失键（忽略输出目录的修改）
@@ -1783,10 +1796,10 @@ def perform_cleanup_extra_keys():
 
         # 获取所有目标语言
         for lang_code, lang_name in get_all_target_languages().items():
-            # 加载现有翻译
-            existing_translations = load_namespace_translations(namespace, lang_code)
+            # 加载现有翻译（仅检查 translate 目录；assets 在构建时合并，不参与完整性检查）
+            existing_translations = load_namespace_translations_from_translate(namespace, lang_code)
             if not existing_translations:
-                log_progress(f"⚠️ 未找到翻译文件: {namespace} -> {lang_code}", "warning")
+                log_progress(f"⚠️ 未在 translate 目录找到翻译文件: {namespace} -> {lang_code}", "warning")
                 continue
 
             log_progress(f"检查 {namespace} -> {lang_code}: 包含 {len(existing_translations)} 个键")
@@ -1802,7 +1815,7 @@ def perform_cleanup_extra_keys():
                 for key in keys_to_remove:
                     del existing_translations[key]
 
-                # 保存更新后的翻译
+                # 保存更新后的翻译（保存到 translate 目录）
                 try:
                     if save_namespace_translations(namespace, lang_code, existing_translations):
                         cleaned_count += 1
