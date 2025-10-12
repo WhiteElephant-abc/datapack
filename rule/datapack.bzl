@@ -66,6 +66,7 @@ _ALL_MINECRAFT_VERSIONS = [
     "1.21.7",
     "1.21.8",
     "1.21.9",
+    "1.21.10",
 ]
 
 def minecraft_versions_range(start_version, end_version = None):
@@ -142,6 +143,9 @@ def _datapack_impl(
         minecraft_version,
         namespace_json,
         minecraft_json):
+    # 默认使用版本列表中的最新版本
+    if not minecraft_version:
+        minecraft_version = _ALL_MINECRAFT_VERSIONS[-1]
     expand_enjoy(
         name = name + "_pack_functions_expanded",
         visibility = visibility,
@@ -240,19 +244,21 @@ def _datapack_impl(
         ],
     )
 
-datapack = macro(
-    attrs = {
-        "pack_id": attr.string(configurable = False, mandatory = True),
-        "functions_expand": attr.label_list(default = []),
-        "functions": attr.label_list(default = []),
-        "function_tags": attr.label_list(default = []),
-        "namespace_json": attr.label_list(default = []),
-        "minecraft_json": attr.label_list(default = []),
-        "deps": attr.label_list(default = []),
-        "minecraft_version": attr.string(configurable = False, default = "1.21.9"),
-    },
-    implementation = _datapack_impl,
-)
+    # buildifier: disable=unused-variable
+    datapack = macro(
+        attrs = {
+            "pack_id": attr.string(configurable = False, mandatory = True),
+            "functions_expand": attr.label_list(default = []),
+            "functions": attr.label_list(default = []),
+            "function_tags": attr.label_list(default = []),
+            "namespace_json": attr.label_list(default = []),
+            "minecraft_json": attr.label_list(default = []),
+            "deps": attr.label_list(default = []),
+            # 留空则在实现中自动选取最新版本
+            "minecraft_version": attr.string(configurable = False, default = ""),
+        },
+        implementation = _datapack_impl,
+    )
 
 def datapack_modrinth_upload(
         name,
