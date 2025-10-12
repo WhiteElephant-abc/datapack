@@ -15,7 +15,6 @@
   "dialog.stone_disappearance.advanced_end.min": "End minimum",
   "dialog.stone_disappearance.advanced_end.max": "End maximum",
   "title.lucky_block_island.lbi": "[LBI] Lucky Block Island",
-  "title.lucky_block_island.error.subtitle": "Dimension settings validation failed! Please load the datapack when creating the world.",
   "title.lucky_block_island.error.actionbar": "Dimension settings validation failed! Please load the datapack when creating the world.",
   "dialog.stone_disappearance.advanced.overworld.tooltip": "These settings only apply in the Overworld",
   "dialog.stone_disappearance.advanced.nether.label": "Nether",

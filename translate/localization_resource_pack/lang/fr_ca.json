@@ -8,7 +8,6 @@
   "tick.kill.dfl.add": "Ajouter",
   "tick.kill.dfl.tag": "Étiquette",
   "redstone.kill.item.dfl.entity.clear": "A nettoyé",
-  "redstone.kill.item.dfl.entity.item": "objets tombés",
   "redstone.show.entity.dfl.entity.entity": "Nombre d'entités :",
   "redstone.show.entity.dfl.entity.other.entity": "Nombre d'entités non-joueurs :",
   "redstone.show.entity.dfl.entity.item": "Nombre d'items :",
@@ -49,6 +48,5 @@
   "dialog.stone_disappearance.advanced_end.min": "Limite inférieure de l'End",
   "dialog.stone_disappearance.advanced_end.max": "Limite supérieure de l'End",
   "title.lucky_block_island.lbi": "[LBI] Île du ciel des blocs chanceux",
-  "title.lucky_block_island.error.subtitle": "La validation des paramètres de dimension a échoué, veuillez charger le pack de données lors de la création du monde",
   "title.lucky_block_island.error.actionbar": "La validation des paramètres de dimension a échoué, veuillez charger le pack de données lors de la création du monde !"
 }

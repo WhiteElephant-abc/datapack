@@ -8,7 +8,6 @@
   "tick.kill.dfl.add": "tambahkan",
   "tick.kill.dfl.tag": "tag",
   "redstone.kill.item.dfl.entity.clear": "Telah membersihkan",
-  "redstone.kill.item.dfl.entity.item": "item",
   "redstone.show.entity.dfl.entity.entity": "Jumlah entitas: ",
   "redstone.show.entity.dfl.entity.other.entity": "Jumlah entitas non-pemain: ",
   "redstone.show.entity.dfl.entity.item": "Jumlah item: ",
@@ -49,6 +48,5 @@
   "dialog.stone_disappearance.advanced_end.min": "Batas Bawah End",
   "dialog.stone_disappearance.advanced_end.max": "Batas Atas End",
   "title.lucky_block_island.lbi": "[LBI] Pulau Blok Keberuntungan",
-  "title.lucky_block_island.error.subtitle": "Validasi pengaturan dimensi gagal, harap muat paket data saat membuat dunia\nValidasi pengaturan dimensi gagal!",
   "title.lucky_block_island.error.actionbar": "Validasi pengaturan dimensi gagal, harap muat paket data saat membuat dunia!\nHarap muat paket data saat membuat dunia!"
 }

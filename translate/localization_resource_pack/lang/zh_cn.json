@@ -55,6 +55,5 @@
   "dialog.stone_disappearance.advanced_end.min": "末地下限",
   "dialog.stone_disappearance.advanced_end.max": "末地上限",
   "title.lucky_block_island.lbi": "[LBI]幸运方块空岛",
-  "title.lucky_block_island.error.subtitle": "维度设置验证失败，请在创建世界时加载数据包\n维度设置验证失败！",
   "title.lucky_block_island.error.actionbar": "维度设置验证失败，请在创建世界时加载数据包！\n请在创建世界时加载数据包！"
 }
