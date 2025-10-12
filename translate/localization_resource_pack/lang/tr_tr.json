@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "ekle",
   "tick.kill.dfl.tag": "etiket",
   "redstone.kill.item.dfl.entity.clear": "temizlendi",
-  "redstone.kill.item.dfl.entity.item": "eşya",
   "redstone.show.entity.dfl.entity.entity": "varlık sayısı:",
   "redstone.show.entity.dfl.entity.other.entity": "oyuncu olmayan varlık sayısı:",
   "redstone.show.entity.dfl.entity.item": "eşya sayısı:",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "yanlış ayarlar hatalara neden olabilir!",
   "dialog.stone_disappearance.advanced.common.label": "genel",
   "dialog.stone_disappearance.advanced.common.tooltip": "bu ayarlar tüm boyutlarda geçerli olur",
-  "dialog.stone_disappearance.advanced.overworld.label": "ana dünya"
+  "dialog.stone_disappearance.advanced.overworld.label": "ana dünya",
+  "test.lrp.added.key1": "Test Yeni Eklenen Anahtar 1",
+  "test.lrp.added.key2": "Test Yeni Eklenen Anahtar 2"
 }

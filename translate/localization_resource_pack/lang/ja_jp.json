@@ -8,7 +8,6 @@
   "tick.kill.dfl.add": "追加",
   "tick.kill.dfl.tag": "タグ",
   "redstone.kill.item.dfl.entity.clear": "クリアしました",
-  "redstone.kill.item.dfl.entity.item": "個のドロップアイテム",
   "redstone.show.entity.dfl.entity.entity": "エンティティ数：",
   "redstone.show.entity.dfl.entity.other.entity": "非プレイヤーエンティティ数：",
   "redstone.show.entity.dfl.entity.item": "ドロップアイテム数：",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced_end.max": "エンド上限",
   "title.lucky_block_island.lbi": "[LBI]ラッキーブロック空島",
   "title.lucky_block_island.error.subtitle": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックをロードしてください\nディメンション設定の検証に失敗しました！",
-  "title.lucky_block_island.error.actionbar": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックをロードしてください！\nワールド作成時にデータパックをロードしてください！"
+  "title.lucky_block_island.error.actionbar": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックをロードしてください！\nワールド作成時にデータパックをロードしてください！",
+  "test.lrp.added.key1": "テスト追加キー1",
+  "test.lrp.added.key2": "テスト追加キー2"
 }

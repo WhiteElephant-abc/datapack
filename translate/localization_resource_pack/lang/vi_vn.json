@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "Thêm",
   "tick.kill.dfl.tag": "Nhãn",
   "redstone.kill.item.dfl.entity.clear": "Đã xóa",
-  "redstone.kill.item.dfl.entity.item": "vật phẩm rơi",
   "redstone.show.entity.dfl.entity.entity": "Số lượng thực thể：",
   "redstone.show.entity.dfl.entity.other.entity": "Số lượng thực thể không phải người chơi：",
   "redstone.show.entity.dfl.entity.item": "Số lượng vật phẩm rơi：",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "Cài đặt không chính xác có thể gây lỗi!",
   "dialog.stone_disappearance.advanced.common.label": "Chung",
   "dialog.stone_disappearance.advanced.common.tooltip": "Những cài đặt này sẽ có hiệu lực trong tất cả các thế giới",
-  "dialog.stone_disappearance.advanced.overworld.label": "Thế giới chính"
+  "dialog.stone_disappearance.advanced.overworld.label": "Thế giới chính",
+  "test.lrp.added.key1": "Khóa thử nghiệm thêm 1",
+  "test.lrp.added.key2": "Khóa thử nghiệm thêm 2"
 }

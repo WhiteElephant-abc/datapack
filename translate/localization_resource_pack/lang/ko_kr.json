@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "추가",
   "tick.kill.dfl.tag": "태그",
   "redstone.kill.item.dfl.entity.clear": "제거했습니다",
-  "redstone.kill.item.dfl.entity.item": "개의 드롭 아이템",
   "redstone.show.entity.dfl.entity.entity": "엔티티 수:",
   "redstone.show.entity.dfl.entity.other.entity": "비플레이어 엔티티 수:",
   "redstone.show.entity.dfl.entity.item": "드롭 아이템 수:",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "잘못된 설정은 오류를 일으킬 수 있습니다!",
   "dialog.stone_disappearance.advanced.common.label": "일반",
   "dialog.stone_disappearance.advanced.common.tooltip": "이 설정은 모든 차원에서 적용됩니다",
-  "dialog.stone_disappearance.advanced.overworld.label": "오버월드"
+  "dialog.stone_disappearance.advanced.overworld.label": "오버월드",
+  "test.lrp.added.key1": "테스트 새로운 키1",
+  "test.lrp.added.key2": "테스트 새로운 키2"
 }

@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "Dodaj",
   "tick.kill.dfl.tag": "Etykieta",
   "redstone.kill.item.dfl.entity.clear": "Wyczyszczono",
-  "redstone.kill.item.dfl.entity.item": "przedmiotów upuszczonych",
   "redstone.show.entity.dfl.entity.entity": "Liczba jednostek:",
   "redstone.show.entity.dfl.entity.other.entity": "Liczba jednostek niebędących graczami:",
   "redstone.show.entity.dfl.entity.item": "Liczba upuszczonych przedmiotów:",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "Nieprawidłowe ustawienia mogą powodować błędy!",
   "dialog.stone_disappearance.advanced.common.label": "Ogólne",
   "dialog.stone_disappearance.advanced.common.tooltip": "Te ustawienia będą obowiązywać we wszystkich wymiarach",
-  "dialog.stone_disappearance.advanced.overworld.label": "Świat główny"
+  "dialog.stone_disappearance.advanced.overworld.label": "Świat główny",
+  "test.lrp.added.key1": "Dodany klucz testowy 1",
+  "test.lrp.added.key2": "Dodany klucz testowy 2"
 }

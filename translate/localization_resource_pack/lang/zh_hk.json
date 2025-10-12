@@ -8,7 +8,6 @@
   "tick.kill.dfl.add": "添加",
   "tick.kill.dfl.tag": "標籤",
   "redstone.kill.item.dfl.entity.clear": "清除了",
-  "redstone.kill.item.dfl.entity.item": "個掉落物",
   "redstone.show.entity.dfl.entity.entity": "實體數量：",
   "redstone.show.entity.dfl.entity.other.entity": "非玩家實體數量：",
   "redstone.show.entity.dfl.entity.item": "掉落物數量：",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced_end.max": "終界上限",
   "title.lucky_block_island.lbi": "[LBI]幸運方塊空島",
   "title.lucky_block_island.error.subtitle": "維度設定驗證失敗，請在創建世界時加載數據包\n維度設定驗證失敗！",
-  "title.lucky_block_island.error.actionbar": "維度設定驗證失敗，請在創建世界時加載數據包！\n請在創建世界時加載數據包"
+  "title.lucky_block_island.error.actionbar": "維度設定驗證失敗，請在創建世界時加載數據包！\n請在創建世界時加載數據包",
+  "test.lrp.added.key1": "測試新增鍵1",
+  "test.lrp.added.key2": "測試新增鍵2"
 }

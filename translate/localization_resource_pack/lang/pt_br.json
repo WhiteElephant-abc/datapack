@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "adicionar",
   "tick.kill.dfl.tag": "tag",
   "redstone.kill.item.dfl.entity.clear": "limpou",
-  "redstone.kill.item.dfl.entity.item": "itens dropados",
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
   "redstone.show.entity.dfl.entity.other.entity": "Número de entidades não jogador:",
   "redstone.show.entity.dfl.entity.item": "Número de itens dropados:",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "Configurações incorretas podem causar erros!",
   "dialog.stone_disappearance.advanced.common.label": "Geral",
   "dialog.stone_disappearance.advanced.common.tooltip": "Essas configurações afetarão todas as dimensões",
-  "dialog.stone_disappearance.advanced.overworld.label": "Mundo Superior"
+  "dialog.stone_disappearance.advanced.overworld.label": "Mundo Superior",
+  "test.lrp.added.key1": "Chave de Teste Adicionada 1",
+  "test.lrp.added.key2": "Chave de Teste Adicionada 2"
 }

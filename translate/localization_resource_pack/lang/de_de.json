@@ -30,7 +30,6 @@
   "tick.kill.dfl.add": "hinzufügen",
   "tick.kill.dfl.tag": "Tag",
   "redstone.kill.item.dfl.entity.clear": "Bereinigt",
-  "redstone.kill.item.dfl.entity.item": "Gegenstände",
   "redstone.show.entity.dfl.entity.entity": "Anzahl der Entitäten:",
   "redstone.show.entity.dfl.entity.other.entity": "Anzahl der Nicht-Spieler-Entitäten:",
   "redstone.show.entity.dfl.entity.item": "Anzahl der Gegenstände:",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced.warning": "Falsche Einstellungen können Fehler verursachen!",
   "dialog.stone_disappearance.advanced.common.label": "Allgemein",
   "dialog.stone_disappearance.advanced.common.tooltip": "Diese Einstellungen gelten in allen Dimensionen",
-  "dialog.stone_disappearance.advanced.overworld.label": "Oberwelt"
+  "dialog.stone_disappearance.advanced.overworld.label": "Oberwelt",
+  "test.lrp.added.key1": "Test hinzugefügter Schlüssel 1",
+  "test.lrp.added.key2": "Test hinzugefügter Schlüssel 2"
 }
