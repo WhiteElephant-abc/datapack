@@ -184,6 +184,8 @@ class DeepSeekTranslator:
     def __init__(self, api_key: str, non_thinking_mode: bool = False):
         self.api_key = api_key
         self.non_thinking_mode = non_thinking_mode
+        # 调试模式：在每次请求前记录详细日志（与错误日志格式一致）
+        self.debug_mode = os.getenv('TRANSLATION_DEBUG', 'false').lower() == 'true'
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}"
@@ -369,6 +371,43 @@ class DeepSeekTranslator:
             log_progress(f"    [尝试{attempt}/5] [{namespace}] {len(texts)}个文本 -> {target_lang_name} -> 失败: {error_summary}", "warning")
             flush_logs()  # 确保错误日志被及时写入
 
+    def log_translation_attempt(self, attempt: int, system_prompt: str, user_prompt: str,
+                                texts: Dict[str, str], namespace: str = "unknown",
+                                target_lang_name: str = "unknown", model: str = "unknown",
+                                temperature: float = 1.3) -> None:
+        """在调试模式下记录每次请求的详细信息，格式与失败日志一致"""
+        log_dir = os.path.join(os.path.dirname(__file__), "logs")
+        os.makedirs(log_dir, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
+        log_file = os.path.join(log_dir, f"translation_attempt_{timestamp}_attempt_{attempt}.log")
+
+        with open(log_file, 'w', encoding='utf-8') as f:
+            f.write(f"翻译请求日志 - 尝试次数: {attempt}\n")
+            f.write(f"时间: {datetime.now().isoformat()}\n")
+            f.write(f"命名空间: {namespace}\n")
+            f.write(f"目标语言: {target_lang_name}\n")
+            f.write(f"模型: {model}\n")
+            f.write(f"温度: {temperature}\n")
+            f.write(f"文本数量: {len(texts)}\n")
+            f.write("=" * 80 + "\n\n")
+
+            f.write("原始文本:\n")
+            f.write(json.dumps(texts, ensure_ascii=False, indent=2))
+            f.write("\n\n" + "=" * 80 + "\n\n")
+
+            f.write("系统提示词:\n")
+            f.write(system_prompt)
+            f.write("\n\n" + "=" * 80 + "\n\n")
+
+            f.write("用户提示词:\n")
+            f.write(user_prompt)
+            f.write("\n\n" + "=" * 80 + "\n\n")
+
+            f.write("API响应:\n")
+            f.write("(调试模式) 未请求或未记录响应\n")
+            f.write("\n\n" + "=" * 80 + "\n")
+
     def prepare_texts_for_translation(self, texts: Dict[str, any]) -> Dict[str, str]:
         """准备合并后的文本进行翻译，处理列表值
 
@@ -436,6 +475,19 @@ class DeepSeekTranslator:
 {source_text}
 
 请直接返回翻译后的JSON，不要添加任何解释文字。"""
+
+                # 调试模式：记录请求详情（与失败日志格式一致）
+                if self.debug_mode:
+                    self.log_translation_attempt(
+                        attempt=attempt,
+                        system_prompt=system_prompt,
+                        user_prompt=user_prompt,
+                        texts=texts_to_translate,
+                        namespace=namespace,
+                        target_lang_name=target_lang_name,
+                        model=("deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"),
+                        temperature=temperature
+                    )
 
                 # 根据模式选择模型
                 model = "deepseek-chat" if self.non_thinking_mode else "deepseek-reasoner"
@@ -892,12 +944,12 @@ class DeepSeekTranslator:
         return batches
 
 def get_git_changes() -> List[FileChanges]:
-    """获取Git变更，检测源翻译文件的变化"""
+    """使用 Git 差异收集源目录下所有本地化文件的新增/修改（按命名空间聚合）。删除键不解析。"""
     try:
-        # 获取最新提交的变更文件列表
-        result = subprocess.run([
-            'git', 'diff', '--name-only', 'HEAD~1', 'HEAD'
-        ], capture_output=True, text=True, cwd='.')
+        result = subprocess.run(
+            ['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
+            capture_output=True, text=True, cwd='.'
+        )
 
         if result.returncode != 0:
             log_progress("无法获取Git差异，使用全量翻译模式", "warning")
@@ -906,33 +958,49 @@ def get_git_changes() -> List[FileChanges]:
         changed_files = result.stdout.strip().split('\n') if result.stdout.strip() else []
         log_progress(f"检测到 {len(changed_files)} 个变更文件")
 
-        file_changes = []
+        # 按命名空间聚合变更键（仅新增/修改）
+        aggregated: Dict[str, Dict[str, Dict[str, KeyChange]]] = {}
 
         for file_path in changed_files:
-            # 只处理源翻译文件 (en_us.json)
-            if not file_path.endswith('/lang/en_us.json'):
+            # 仅处理源目录 assets 下的语言文件
+            if '/assets/' not in file_path or '/lang/' not in file_path or not file_path.endswith('.json'):
                 continue
 
-            # 提取命名空间
             parts = file_path.split('/')
-            if len(parts) < 4 or 'assets' not in parts:
+            if 'assets' not in parts:
                 continue
-
             assets_index = parts.index('assets')
             if assets_index + 1 >= len(parts):
                 continue
-
             namespace = parts[assets_index + 1]
 
-            # 获取文件的具体变更
             changes = get_file_key_changes(file_path)
-            if changes:
+            if not changes:
+                continue
+
+            if namespace not in aggregated:
+                aggregated[namespace] = {
+                    'added': {},
+                    'modified': {}
+                }
+
+            for kc in changes['added']:
+                aggregated[namespace]['added'][kc.key] = kc
+            for kc in changes['modified']:
+                aggregated[namespace]['modified'][kc.key] = kc
+
+        # 转换为 FileChanges 列表
+        file_changes: List[FileChanges] = []
+        for ns, buckets in aggregated.items():
+            added = list(buckets['added'].values())
+            modified = list(buckets['modified'].values())
+            if added or modified:
                 file_changes.append(FileChanges(
-                    namespace=namespace,
-                    file_path=file_path,
-                    added_keys=changes['added'],
-                    deleted_keys=changes['deleted'],
-                    modified_keys=changes['modified']
+                    namespace=ns,
+                    file_path=f"virtual:{ns}",
+                    added_keys=added,
+                    deleted_keys=[],
+                    modified_keys=modified
                 ))
 
         return file_changes
@@ -1415,6 +1483,53 @@ def create_virtual_changes_for_missing_files(missing_files: List[Tuple[str, str]
 
     return virtual_changes
 
+def create_virtual_changes_for_missing_keys() -> List[FileChanges]:
+    """为已有翻译文件中的缺失键创建虚拟变更，只扫描缺失键，忽略输出目录的修改"""
+    virtual_changes: List[FileChanges] = []
+
+    # 遍历所有命名空间
+    for namespace in get_namespace_list():
+        # 使用合并后的参考翻译获取完整键集合
+        source_dict = get_merged_reference_translations(namespace)
+        if not source_dict:
+            continue
+
+        source_keys = list(source_dict.keys())
+
+        # 遍历所有目标语言
+        for lang_code, _ in get_all_target_languages().items():
+            translate_file = Path(TRANSLATE_DIR) / namespace / "lang" / f"{lang_code}.json"
+            if not translate_file.exists():
+                # 文件缺失的场景由 create_virtual_changes_for_missing_files 处理
+                continue
+
+            existing_translations = load_namespace_translations(namespace, lang_code)
+            existing_keys = set(existing_translations.keys())
+
+            # 仅扫描缺失键（忽略输出目录的修改）
+            missing_keys = [k for k in source_keys if k not in existing_keys]
+            if not missing_keys:
+                continue
+
+            added_keys: List[KeyChange] = []
+            for key in missing_keys:
+                value = source_dict.get(key)
+                if isinstance(value, list):
+                    value = value[0] if value else ""
+                added_keys.append(KeyChange(key=key, old_value=None, new_value=value, operation=ChangeType.ADDED.value))
+
+            virtual_changes.append(FileChanges(
+                namespace=namespace,
+                file_path=f"{namespace}/{lang_code}.json",
+                added_keys=added_keys,
+                deleted_keys=[],
+                modified_keys=[]
+            ))
+
+            log_progress(f"为命名空间 {namespace} -> {lang_code} 创建缺失键补全任务：{len(added_keys)} 个键")
+
+    return virtual_changes
+
 def delete_keys_from_translations(namespace: str, keys_to_delete: List[str]) -> bool:
     """从所有翻译文件中删除指定的键"""
     success = True
@@ -1527,89 +1642,69 @@ def run_full_translation(translator):
     continue_full_translation(translator, progress_tracker, namespaces)
 
 def run_smart_translation(translator):
-    """运行智能差异翻译"""
-    # 检测Git变更
+    """运行智能差异翻译（一次性并发；基于Git差异收集键名）"""
+    # 使用 Git 收集每个源目录语言文件的键级差异，随后在合并源文本上处理
     file_changes = get_git_changes()
 
     # 检查输出文件缺失情况
     missing_translations = check_missing_translation_files()
 
-    if not file_changes and not missing_translations:
-        log_progress("未检测到源翻译文件变更，且所有翻译文件完整，跳过翻译")
-        # 即使跳过翻译，也执行一次清理，移除多余键
-        perform_cleanup_extra_keys()
-        return
-
-    # 无论是否存在源文件变更，只要存在缺失翻译文件，都补充虚拟变更以触发翻译补全
     if missing_translations:
         virtual_changes = create_virtual_changes_for_missing_files(missing_translations)
         file_changes.extend(virtual_changes)
         log_progress(f"为 {len(missing_translations)} 个缺失文件创建补全翻译任务")
 
-    # 此处统计的是总的变更任务数（包含真实与虚拟变更）
+    # 已有翻译文件的缺失键补全任务
+    missing_key_changes = create_virtual_changes_for_missing_keys()
+    if missing_key_changes:
+        file_changes.extend(missing_key_changes)
+        log_progress(f"为已有翻译文件创建缺失键补全任务：{len(missing_key_changes)} 个变更")
+
+    if not file_changes:
+        log_progress("未检测到差异或缺失，跳过翻译")
+        perform_cleanup_extra_keys()
+        return
+
     log_progress(f"检测到 {len(file_changes)} 个变更任务")
 
-    # 处理每个有变更的命名空间
+    # 注意：删除键在后续清理过程中处理，这里忽略删除键
+
+    # 收集所有翻译任务（一次性并发）
+    all_translation_tasks = []
     for changes in file_changes:
-        log_section(f"处理命名空间: {changes.namespace}")
-
-        # 首先处理删除的键
-        if changes.deleted_keys:
-            deleted_key_names = [change.key for change in changes.deleted_keys]
-            log_progress(f"删除 {len(deleted_key_names)} 个键: {', '.join(deleted_key_names[:5])}{'...' if len(deleted_key_names) > 5 else ''}")
-            delete_keys_from_translations(changes.namespace, deleted_key_names)
-
-        # 处理添加和修改的键（视为添加）
-        added_and_modified = changes.added_keys + changes.modified_keys
-        if not added_and_modified:
-            log_progress("没有需要翻译的新增或修改内容")
-            continue
-
         # 使用合并后的参考翻译
         source_dict = get_merged_reference_translations(changes.namespace)
         if not source_dict:
             log_progress(f"无法加载命名空间 {changes.namespace} 的合并参考翻译", "error")
             continue
 
-        log_progress(f"✓ 加载合并后的源翻译，包含 {len(source_dict)} 个键值对")
+        # 目标键集合：新增 + 修改
+        keys_to_translate = [c.key for c in (changes.added_keys + changes.modified_keys)]
+        if not keys_to_translate:
+            continue
 
-        # 获取需要翻译的键
-        keys_to_translate = [change.key for change in added_and_modified]
-        log_progress(f"需要翻译 {len(keys_to_translate)} 个键")
-
-        # 获取翻译上下文（差异翻译步骤：如果少于10条则添加上下文补充到10条）
+        # 上下文策略：若少于10条则补齐上下文到10条；否则仅目标键
         if len(keys_to_translate) < 10:
             context_dict = get_context_for_keys(source_dict, keys_to_translate, max_context=10, force_context=False)
             log_progress(f"差异翻译上下文补充：{len(keys_to_translate)} 个目标键 + {len(context_dict) - len(keys_to_translate)} 个上下文键 = {len(context_dict)} 个键值对")
         else:
-            # 目标键数量已经足够，直接使用目标键
-            context_dict = {key: source_dict[key] for key in keys_to_translate if key in source_dict}
+            context_dict = {k: source_dict[k] for k in keys_to_translate if k in source_dict}
             log_progress(f"差异翻译：{len(context_dict)} 个键值对（无需添加上下文）")
 
-        # 获取目标语言列表
+        # 目标语言列表：默认所有语言；若为缺失文件的虚拟变更，则限制到该语言
         target_languages = get_all_target_languages().copy()
-
-        # 如果是虚拟变更（处理缺失文件），只翻译特定的语言
-        if "/" in changes.file_path and changes.file_path.endswith(".json"):
-            # 从文件路径中提取语言代码
+        if "/" in changes.file_path and changes.file_path.endswith('.json'):
             file_name = Path(changes.file_path).name
-            if file_name.endswith(".json"):
-                target_lang_code = file_name[:-5]  # 移除 .json 后缀
-                if target_lang_code in target_languages:
-                    # 只翻译这个特定的语言
-                    target_languages = {target_lang_code: target_languages[target_lang_code]}
-                    log_progress(f"  虚拟变更：只翻译缺失的语言 {target_languages[target_lang_code]} ({target_lang_code})")
-                else:
-                    target_languages = {}
-                    log_progress(f"  未知的语言代码: {target_lang_code}，跳过翻译")
-
-        # 收集所有翻译任务
-        all_translation_tasks = []
+            target_lang_code = file_name[:-5]
+            if target_lang_code in target_languages:
+                target_languages = {target_lang_code: target_languages[target_lang_code]}
+                log_progress(f"  虚拟变更：只翻译缺失的语言 {target_languages[target_lang_code]} ({target_lang_code})")
+            else:
+                target_languages = {}
+                log_progress(f"  未知的语言代码: {target_lang_code}，跳过翻译")
 
         for lang_code, lang_name in target_languages.items():
-            # 加载现有翻译
             existing_translations = load_namespace_translations(changes.namespace, lang_code)
-
             all_translation_tasks.append({
                 'namespace': changes.namespace,
                 'lang_code': lang_code,
@@ -1619,68 +1714,50 @@ def run_smart_translation(translator):
                 'existing_translations': existing_translations
             })
 
-        if not all_translation_tasks:
-            continue
+    if not all_translation_tasks:
+        log_progress("没有需要执行的翻译任务")
+        perform_cleanup_extra_keys()
+        return
 
-        log_progress(f"准备 {len(all_translation_tasks)} 个翻译任务")
+    log_progress(f"准备 {len(all_translation_tasks)} 个翻译任务（全局并发）")
 
-        # 准备所有翻译请求
-        all_requests = []
+    # 统一准备与并发请求
+    all_requests = []
+    for task in all_translation_tasks:
+        prepared_context = translator.prepare_texts_for_translation(task['context_dict'])
+        target_languages_list = [(task['lang_code'], task['lang_name'])]
+        requests = translator.prepare_translation_requests(prepared_context, target_languages_list, batch_size=40, silent=True)
+        for request in requests:
+            request.namespace = task['namespace']
+            request.keys_to_translate = task['keys_to_translate']
+            request.existing_translations = task['existing_translations']
+            all_requests.append(request)
 
-        for task in all_translation_tasks:
-            prepared_context = translator.prepare_texts_for_translation(task['context_dict'])
-            target_languages_list = [(task['lang_code'], task['lang_name'])]
+    log_progress(f"开始并发翻译 {len(all_requests)} 个请求...")
+    results_by_namespace_and_language = translator.execute_requests_concurrently(all_requests)
 
-            # 创建翻译请求
-            requests = translator.prepare_translation_requests(prepared_context, target_languages_list, batch_size=40, silent=True)
+    # 保存结果
+    saved_count = 0
+    for task in all_translation_tasks:
+        ns = task['namespace']
+        lang = task['lang_code']
+        keys = task['keys_to_translate']
+        existing = task['existing_translations']
+        if ns in results_by_namespace_and_language and lang in results_by_namespace_and_language[ns]:
+            translated = results_by_namespace_and_language[ns][lang]
+            target_translations = {k: translated[k] for k in keys if k in translated}
+            final = existing.copy()
+            final.update(target_translations)
+            if save_namespace_translations(ns, lang, final):
+                saved_count += 1
+                log_progress(f"✓ {ns} -> {lang}: {len(target_translations)} 个新翻译")
+            else:
+                log_progress(f"✗ 保存失败: {ns} -> {lang}", "error")
 
-            # 为每个请求添加任务信息
-            for request in requests:
-                request.namespace = task['namespace']
-                request.keys_to_translate = task['keys_to_translate']
-                request.existing_translations = task['existing_translations']
-                all_requests.append(request)
-
-        # 一次性并发执行所有请求
-        log_progress(f"开始并发翻译 {len(all_requests)} 个请求...")
-        # 修复：并发结果应按 命名空间 -> 语言 分组
-        results_by_namespace_and_language = translator.execute_requests_concurrently(all_requests)
-
-        # 保存翻译结果（按 命名空间 -> 语言 分组）
-        saved_count = 0
-        for task in all_translation_tasks:
-            namespace = task['namespace']
-            lang_code = task['lang_code']
-            keys_to_translate = task['keys_to_translate']
-            existing_translations = task['existing_translations']
-
-            if (namespace in results_by_namespace_and_language and
-                lang_code in results_by_namespace_and_language[namespace]):
-                translated_context = results_by_namespace_and_language[namespace][lang_code]
-
-                # 只保存目标键的翻译（不包括上下文）
-                target_translations = {key: translated_context[key]
-                                       for key in keys_to_translate
-                                       if key in translated_context}
-
-                # 合并翻译结果
-                final_translations = existing_translations.copy()
-                final_translations.update(target_translations)
-
-                # 保存翻译结果
-                if save_namespace_translations(namespace, lang_code, final_translations):
-                    saved_count += 1
-                    log_progress(f"✓ {namespace} -> {lang_code}: {len(target_translations)} 个新翻译")
-                else:
-                    log_progress(f"✗ 保存失败: {namespace} -> {lang_code}", "error")
-
-        log_progress(f"✓ 成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
-
-        log_section_end()
+    log_progress(f"✓ 成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
 
     log_section("智能翻译完成")
     log_progress("🎉 所有变更已处理完成！")
-    # 处理完变更后执行一次清理，确保无多余键
     perform_cleanup_extra_keys()
     log_section_end()
 

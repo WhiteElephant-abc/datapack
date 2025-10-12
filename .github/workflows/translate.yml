@@ -15,7 +15,12 @@ on:
         default: 'false'
         type: boolean
       non_thinking_mode:
-        description: 'Use non-thinking mode for faster translation (testing only)'
+        description: 'Use non-thinking mode'
+        required: false
+        default: 'false'
+        type: boolean
+      translation_debug:
+        description: 'Enable per-request debug logs'
         required: false
         default: 'false'
         type: boolean
@@ -54,6 +59,7 @@ jobs:
         DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         FORCE_TRANSLATE: ${{ github.event.inputs.force_translate || 'false' }}
         NON_THINKING_MODE: ${{ github.event.inputs.non_thinking_mode || 'false' }}
+        TRANSLATION_DEBUG: ${{ github.event.inputs.translation_debug || 'false' }}
       run: |
         python .github/scripts/translate.py
 
