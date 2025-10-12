@@ -24,6 +24,17 @@
 - **命令格式**：保持游戏命令格式不变
 - **翻译参考**：如果遇到列表格式，则应当参考列表中的所有条目进行翻译。**重要提示：最终输出必须是一个包含{{target_language}}语言的单一字符串，而不是一个JSON数组或列表。**
 
+### 4. 特殊要求
+
+**如果遇到**以下两个键值对，将`subtitle`作为上半句，`actionbar`作为下半句，以保证渲染的正确性。但是，如果目标语言文本较短，可以直接根据源文本翻译。
+
+```json
+{
+  "title.lucky_block_island.error.subtitle": "Dimension settings validation failed!",
+  "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!"
+}
+```
+
 ## 待翻译内容
 
 ```json
