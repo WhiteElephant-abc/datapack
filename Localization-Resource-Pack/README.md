@@ -1,5 +1,7 @@
 # Localization-Resource-Pack
 
+**The English description is below.**
+
 ## 简介
 
 本资源包主要为我的数据包提供本地化，基于 DeepSeek-V3.2-Exp 进行全自动智能翻译，拥有一系列的翻译质量保证机制，如分段机制、上下文补充机制、JSON 验证机制等，目前支持 19 种语言。
