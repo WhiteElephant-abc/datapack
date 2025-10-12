@@ -1,7 +1,7 @@
 {
   "banner.white.elephant.enabled": "%s datapakket succesvol geladen",
   "banner.white.elephant.author": "Auteur: %s",
-  "banner.white.elephant.license": "Dit datapakket gebruikt de %s licentie als open source",
+  "banner.white.elephant.license": "Dit datapakket gebruikt de %s open source licentie",
   "banner.white.elephant.official": "Officiële website van het datapakket",
   "no.resource.pack.white.elephant.a": "--------------------",
   "no.resource.pack.white.elephant.nothing": "",
@@ -15,7 +15,7 @@
   "dialog.white.elephant.options.admin_only": "Alleen beheerders kunnen instellingen wijzigen!",
   "dialog.white.elephant.common.cancel": "Annuleren",
   "dialog.white.elephant.common.save_and_exit": "Opslaan en afsluiten",
-  "dialog.white.elephant.common.cancel_tooltip": "Wijzigingen annuleren",
+  "dialog.white.elephant.common.cancel_tooltip": "Huidige wijzigingen annuleren",
   "dialog.white.elephant.common.save_tooltip": "Huidige instellingen opslaan",
-  "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen zijn de hier getoonde instellingen standaardwaarden"
+  "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen worden hier de standaardinstellingen weergegeven"
 }
