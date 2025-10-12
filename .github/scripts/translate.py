@@ -351,6 +351,8 @@ class DeepSeekTranslator:
         summary_file = os.path.join(log_dir, "error_summary.log")
         with open(summary_file, 'a', encoding='utf-8') as f:
             f.write(f"[{datetime.now().isoformat()}] 尝试 {attempt} 失败: {error[:100]}{'...' if len(error) > 100 else ''}\n")
+            f.write(f"  命名空间: {namespace}\n")
+            f.write(f"  目标语言: {target_lang_name}\n")
             f.write(f"  文件: {os.path.basename(log_file)}\n")
             f.write(f"  文本数量: {len(texts)}\n\n")
 
@@ -381,7 +383,7 @@ class DeepSeekTranslator:
 
         return prepared_texts
 
-    def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, namespace: str = "unknown") -> Dict[str, str]:
+    def translate_batch(self, texts: Dict[str, str], target_lang: str, target_lang_name: str, namespace: str = "unknown", attempt: int = 1, temperature: float = 1.3) -> Dict[str, str]:
         """
         翻译一批文本，单次执行（重试机制由上层函数处理）
         """
@@ -443,7 +445,7 @@ class DeepSeekTranslator:
                             "content": user_prompt
                         }
                     ],
-                    "temperature": 1.3,
+                    "temperature": temperature,
                     "stream": False
                 }
 
@@ -509,7 +511,7 @@ class DeepSeekTranslator:
         except Exception as e:
             # 记录失败详情到文件（不记录主日志，由上层函数统一管理主日志）
             self.log_translation_failure(
-                attempt=1,  # 这里总是1，因为重试由上层处理
+                attempt=attempt,  # 使用传入的实际尝试次数
                 system_prompt=system_prompt if 'system_prompt' in locals() else "未生成",
                 user_prompt=user_prompt if 'user_prompt' in locals() else "未生成",
                 api_response=translated_content if 'translated_content' in locals() else "无响应",
@@ -604,6 +606,7 @@ class DeepSeekTranslator:
     def execute_translation_request(self, request: 'DeepSeekTranslator.TranslationRequest') -> Tuple[int, str, str, Dict[str, str]]:
         """
         执行单个翻译请求，支持重试机制
+        区分API请求失败和模型输出验证失败，采用不同的重试策略
 
         Args:
             request: 翻译请求对象
@@ -611,42 +614,92 @@ class DeepSeekTranslator:
         Returns:
             (request_id, target_lang, target_lang_name, translation_result)
         """
-        max_retries = 5
+        max_individual_retries = 10  # 每种失败类型的最大重试次数
+        api_failure_count = 0  # API请求失败计数
+        validation_failure_count = 0  # 模型输出验证失败计数
+        total_attempts = 0  # 总尝试次数（仅用于日志记录）
 
-        for attempt in range(max_retries):
+        # 温度调整策略
+        def get_temperature_and_mode(validation_attempt: int):
+            if validation_attempt <= 5:
+                # 前5次：调整温度
+                temperatures = [1.3, 1.3, 1.2, 1.0, 0.7]
+                return temperatures[validation_attempt - 1], self.non_thinking_mode
+            else:
+                # 第6次开始：切换思考模式，重新开始温度循环
+                cycle_pos = (validation_attempt - 6) % 5
+                temperatures = [1.3, 1.3, 1.2, 1.0, 0.7]
+                return temperatures[cycle_pos], not self.non_thinking_mode
+
+        batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
+
+        while api_failure_count < max_individual_retries and validation_failure_count < max_individual_retries:
+            total_attempts += 1
+            
             try:
+                # 根据验证失败次数调整参数
+                if validation_failure_count > 0:
+                    temperature, thinking_mode = get_temperature_and_mode(validation_failure_count)
+                    # 临时切换模式和温度
+                    original_mode = self.non_thinking_mode
+                    self.non_thinking_mode = thinking_mode
+                else:
+                    temperature = 1.3
+                    original_mode = self.non_thinking_mode
+
                 # 执行翻译
-                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name, request.namespace)
+                result = self.translate_batch(request.texts, request.target_lang, request.target_lang_name, 
+                                            request.namespace, total_attempts, temperature)
+
+                # 恢复原始模式
+                if validation_failure_count > 0:
+                    self.non_thinking_mode = original_mode
 
                 # 检查翻译结果是否为空
                 if not result:
-                    if attempt < max_retries - 1:
-                        batch_info = f"批次{request.batch_id}/{request.total_batches}" if request.total_batches > 1 else ""
-                        log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info} -> {request.target_lang_name} -> 翻译结果为空，重试中...", "warning")
-                        time.sleep(1)  # 固定等待1秒
+                    validation_failure_count += 1
+                    if validation_failure_count < max_individual_retries:
+                        log_progress(f"    [总尝试{total_attempts}|API失败{api_failure_count}/{max_individual_retries}|验证失败{validation_failure_count}/{max_individual_retries}] [{request.namespace}] {batch_info}-> {request.target_lang_name} -> 翻译结果为空，重试中... (等待1秒)", "warning")
+                        time.sleep(1)  # 验证失败等待1秒
                         continue
                     else:
-                        batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
-                        log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空（已重试{max_retries}次）", "error")
+                        log_progress(f"    [总尝试{total_attempts}|API失败{api_failure_count}/{max_individual_retries}|验证失败{validation_failure_count}/{max_individual_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: 翻译结果为空 (达到验证失败上限)", "error")
                         return (request.request_id, request.target_lang, request.target_lang_name, {})
 
-                batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
-                log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{f'（第{attempt + 1}次尝试）' if attempt > 0 else ''}")
+                # 成功
+                attempt_info = f"（API失败{api_failure_count}次，验证失败{validation_failure_count}次）" if total_attempts > 1 else ""
+                log_progress(f"    [总尝试{total_attempts}|API失败{api_failure_count}|验证失败{validation_failure_count}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 成功{attempt_info}")
                 return (request.request_id, request.target_lang, request.target_lang_name, result)
 
             except Exception as e:
-                if attempt < max_retries - 1:
+                error_str = str(e)
+                
+                # 判断错误类型
+                if "翻译验证失败" in error_str:
+                    # 模型输出验证失败
+                    validation_failure_count += 1
+                    failure_type = "验证失败"
+                    wait_time = 1  # 验证失败等待1秒
+                else:
+                    # API请求失败（网络超时、连接错误等）
+                    api_failure_count += 1
+                    failure_type = "API失败"
+                    wait_time = 5  # API失败等待5秒
+
+                # 恢复原始模式
+                if validation_failure_count > 0:
+                    self.non_thinking_mode = original_mode
+
+                if api_failure_count < max_individual_retries and validation_failure_count < max_individual_retries:
                     # 记录失败并提示重试
-                    error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
-                    batch_info = f"批次{request.batch_id}/{request.total_batches}" if request.total_batches > 1 else ""
-                    log_progress(f"    [尝试{attempt + 1}/{max_retries}] [{request.namespace}] {batch_info} -> {request.target_lang_name} -> 失败: {error_summary}，重试中...", "warning")
-                    time.sleep(1)  # 固定等待1秒
+                    error_summary = error_str[:50] + ('...' if len(error_str) > 50 else '')
+                    log_progress(f"    [总尝试{total_attempts}|API失败{api_failure_count}/{max_individual_retries}|验证失败{validation_failure_count}/{max_individual_retries}] [{request.namespace}] {batch_info}-> {request.target_lang_name} -> {failure_type}: {error_summary}，{wait_time}秒后重试...", "warning")
+                    time.sleep(wait_time)
                     continue
                 else:
                     # 最后一次失败，记录最终失败状态
-                    error_summary = str(e)[:50] + ('...' if len(str(e)) > 50 else '')
-                    batch_info = f"批次{request.batch_id}/{request.total_batches} " if request.total_batches > 1 else ""
-                    log_progress(f"    [尝试{max_retries}/{max_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 失败: {error_summary}（已重试{max_retries}次）", "error")
+                    error_summary = error_str[:50] + ('...' if len(error_str) > 50 else '')
+                    log_progress(f"    [总尝试{total_attempts}|API失败{api_failure_count}/{max_individual_retries}|验证失败{validation_failure_count}/{max_individual_retries}] [{request.namespace}] {batch_info}{len(request.texts)}个文本 -> {request.target_lang_name} -> 最终失败: {error_summary} (达到重试上限)", "error")
                     return (request.request_id, request.target_lang, request.target_lang_name, {})
 
     def execute_requests_concurrently(self, requests: List['DeepSeekTranslator.TranslationRequest'],
