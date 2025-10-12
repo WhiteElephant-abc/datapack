@@ -61,8 +61,15 @@ def _merge_json_impl(ctx):
 
     # 为每个文件组创建合并后的输出文件
     for group_key, files in file_groups.items():
-        # 按路径排序，确保合并顺序一致
-        files = sorted(files, key = lambda f: f.path)
+        # 排序规则：translate 在前，assets 在后；保证 assets 的键覆盖 translate
+        # 说明：JsonMerger 按输入顺序深度合并，后面的文件覆盖前面的相同键
+        files = sorted(
+            files,
+            key = lambda f: (
+                0 if "translate/" in _path_relative_to_package(f) else 1,
+                _path_relative_to_package(f),
+            ),
+        )
 
         # 智能选择目标路径：优先使用assets目录中的路径结构
         target_path = None

@@ -1529,13 +1529,14 @@ def run_smart_translation(translator):
         perform_cleanup_extra_keys()
         return
 
-    if not file_changes and missing_translations:
-        log_progress("未检测到源文件变更，但发现缺失的翻译文件，将补充翻译")
-        # 为缺失的翻译文件创建虚拟变更，但只包含实际存在的键
+    # 无论是否存在源文件变更，只要存在缺失翻译文件，都补充虚拟变更以触发翻译补全
+    if missing_translations:
         virtual_changes = create_virtual_changes_for_missing_files(missing_translations)
         file_changes.extend(virtual_changes)
+        log_progress(f"为 {len(missing_translations)} 个缺失文件创建补全翻译任务")
 
-    log_progress(f"检测到 {len(file_changes)} 个命名空间有变更")
+    # 此处统计的是总的变更任务数（包含真实与虚拟变更）
+    log_progress(f"检测到 {len(file_changes)} 个变更任务")
 
     # 处理每个有变更的命名空间
     for changes in file_changes:
@@ -1631,33 +1632,36 @@ def run_smart_translation(translator):
 
         # 一次性并发执行所有请求
         log_progress(f"开始并发翻译 {len(all_requests)} 个请求...")
-        results_by_language = translator.execute_requests_concurrently(all_requests)
+        # 修复：并发结果应按 命名空间 -> 语言 分组
+        results_by_namespace_and_language = translator.execute_requests_concurrently(all_requests)
 
-        # 保存翻译结果
+        # 保存翻译结果（按 命名空间 -> 语言 分组）
         saved_count = 0
         for task in all_translation_tasks:
+            namespace = task['namespace']
             lang_code = task['lang_code']
             keys_to_translate = task['keys_to_translate']
             existing_translations = task['existing_translations']
 
-            if lang_code in results_by_language:
-                translated_context = results_by_language[lang_code]
+            if (namespace in results_by_namespace_and_language and
+                lang_code in results_by_namespace_and_language[namespace]):
+                translated_context = results_by_namespace_and_language[namespace][lang_code]
 
                 # 只保存目标键的翻译（不包括上下文）
                 target_translations = {key: translated_context[key]
-                                     for key in keys_to_translate
-                                     if key in translated_context}
+                                       for key in keys_to_translate
+                                       if key in translated_context}
 
                 # 合并翻译结果
                 final_translations = existing_translations.copy()
                 final_translations.update(target_translations)
 
                 # 保存翻译结果
-                if save_namespace_translations(changes.namespace, lang_code, final_translations):
+                if save_namespace_translations(namespace, lang_code, final_translations):
                     saved_count += 1
-                    log_progress(f"✓ {lang_code}: {len(target_translations)} 个新翻译")
+                    log_progress(f"✓ {namespace} -> {lang_code}: {len(target_translations)} 个新翻译")
                 else:
-                    log_progress(f"✗ 保存失败: {lang_code}", "error")
+                    log_progress(f"✗ 保存失败: {namespace} -> {lang_code}", "error")
 
         log_progress(f"✓ 成功保存 {saved_count}/{len(all_translation_tasks)} 个翻译文件")
 
