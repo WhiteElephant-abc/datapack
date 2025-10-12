@@ -20,12 +20,11 @@ git_tag_name = "%s_v%s" % (pack_name, pack_version)
 merge_json(
     name = "merged_translations",
     srcs = glob(
-               ["assets/**/*.json"],
-               allow_empty = True,
-           ) +
-           [
-               "//:translate_files",
-           ],
+        ["assets/**/*.json"],
+        allow_empty = True,
+    ) + [
+        "//:translate_files",
+    ],
 )
 
 pkg_files(
