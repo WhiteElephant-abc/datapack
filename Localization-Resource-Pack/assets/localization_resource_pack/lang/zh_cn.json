@@ -8,7 +8,6 @@
   "tick.kill.dfl.add": "添加",
   "tick.kill.dfl.tag": "标签",
   "redstone.kill.item.dfl.entity.clear": "清除了",
-  "redstone.kill.item.dfl.entity.item": "个掉落物",
   "redstone.show.entity.dfl.entity.entity": "实体数量：",
   "redstone.show.entity.dfl.entity.other.entity": "非玩家实体数量：",
   "redstone.show.entity.dfl.entity.item": "掉落物数量：",
@@ -24,7 +23,7 @@
   "dialog.stone_disappearance.performance.clear_distance": "单位为区块，清除区块的最远距离",
   "dialog.stone_disappearance.performance.wait_ticks": "每次清除后等待的tick数",
   "dialog.stone_disappearance.performance.fill_falling_block": "将可下落的方块替换为玻璃",
-  "dialog.stone_disappearance.advanced.title": "石头消失高级设置",
+  "dialog.stone_disappearance.advanced.title": "石头消失高级设置（改）",
   "dialog.stone_disappearance.advanced.warning": "不正确的设置可能导致错误！",
   "dialog.stone_disappearance.advanced.common.label": "通用",
   "dialog.stone_disappearance.advanced.common.tooltip": "这些设置会在所有维度生效",
@@ -50,5 +49,7 @@
   "dialog.stone_disappearance.advanced_end.max": "末地上限",
   "title.lucky_block_island.lbi": "[LBI]幸运方块空岛",
   "title.lucky_block_island.error.subtitle": "维度设置验证失败，请在创建世界时加载数据包",
-  "title.lucky_block_island.error.actionbar": "维度设置验证失败，请在创建世界时加载数据包！"
+  "title.lucky_block_island.error.actionbar": "维度设置验证失败，请在创建世界时加载数据包！",
+  "test.lrp.added.key1": "测试新增键1",
+  "test.lrp.added.key2": "测试新增键2"
 }
