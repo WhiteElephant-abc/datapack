@@ -1,8 +1,4 @@
 {
-  "start.dfl.enable": "Загрузка успешна",
-  "start.dfl.license.a": "Этот пакет данных использует",
-  "start.dfl.license.b": "лицензию с открытым исходным кодом",
-  "start.dfl.official": "Официальный сайт пакета данных",
   "tick.ban.dfl.ban": "Вы были мягко забанены на этом сервере",
   "tick.ban.dfl.from": "Через пакет данных",
   "tick.show.entity.dfl.entity.num": "Количество сущностей:",
@@ -16,8 +12,6 @@
   "redstone.show.entity.dfl.entity.entity": "Количество сущностей:",
   "redstone.show.entity.dfl.entity.other.entity": "Количество неигровых сущностей:",
   "redstone.show.entity.dfl.entity.item": "Количество предметов:",
-  "redstone.lucky.block.island.kill.entity": "[Сообщение пакета данных] Сущности очищены",
-  "dialog.stone_disappearance.options.title": "Настройки исчезновения камня",
   "dialog.sd.options.title": "Настройки исчезновения камня",
   "dialog.stone_disappearance.options.performance.label": "Настройки производительности",
   "dialog.stone_disappearance.options.performance.tooltip": "Настройте некоторые параметры, которые повлияют на производительность",

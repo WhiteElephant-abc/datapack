@@ -1,8 +1,4 @@
 {
-  "start.dfl.enable": "Chargement réussi",
-  "start.dfl.license.a": "Ce pack de données utilise",
-  "start.dfl.license.b": "licence open source",
-  "start.dfl.official": "Site officiel du pack de données",
   "tick.ban.dfl.ban": "Vous avez été banni temporairement de ce serveur",
   "tick.ban.dfl.from": "via le pack de données",
   "tick.show.entity.dfl.entity.num": "Nombre d'entités :",
@@ -16,8 +12,6 @@
   "redstone.show.entity.dfl.entity.entity": "Nombre d'entités :",
   "redstone.show.entity.dfl.entity.other.entity": "Nombre d'entités non-joueurs :",
   "redstone.show.entity.dfl.entity.item": "Nombre d'items :",
-  "redstone.lucky.block.island.kill.entity": "[Message du pack] Entités nettoyées",
-  "dialog.stone_disappearance.options.title": "Paramètres de disparition de la pierre",
   "dialog.sd.options.title": "Paramètres de disparition de la pierre",
   "dialog.stone_disappearance.options.performance.label": "Paramètres de performance",
   "dialog.stone_disappearance.options.performance.tooltip": "Configurer les paramètres qui affecteront les performances",

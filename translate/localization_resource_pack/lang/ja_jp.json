@@ -1,8 +1,4 @@
 {
-  "start.dfl.enable": "ロード成功",
-  "start.dfl.license.a": "このデータパックは",
-  "start.dfl.license.b": "オープンソースライセンス",
-  "start.dfl.official": "データパック公式サイト",
   "tick.ban.dfl.ban": "あなたはこのサーバーからソフトバンされています",
   "tick.ban.dfl.from": "データパックを通じて",
   "tick.show.entity.dfl.entity.num": "エンティティ数：",
@@ -16,8 +12,6 @@
   "redstone.show.entity.dfl.entity.entity": "エンティティ数：",
   "redstone.show.entity.dfl.entity.other.entity": "非プレイヤーエンティティ数：",
   "redstone.show.entity.dfl.entity.item": "ドロップアイテム数：",
-  "redstone.lucky.block.island.kill.entity": "[データパックメッセージ] エンティティをクリアしました",
-  "dialog.stone_disappearance.options.title": "石の消失設定",
   "dialog.sd.options.title": "石の消失設定",
   "dialog.stone_disappearance.options.performance.label": "パフォーマンス設定",
   "dialog.stone_disappearance.options.performance.tooltip": "パフォーマンスに影響する設定を構成します",

@@ -1,8 +1,4 @@
 {
-  "start.dfl.enable": "Berhasil dimuat",
-  "start.dfl.license.a": "Paket data ini menggunakan",
-  "start.dfl.license.b": "protokol sumber terbuka",
-  "start.dfl.official": "Situs web resmi paket data",
   "tick.ban.dfl.ban": "Anda telah dilarang sementara dari server ini",
   "tick.ban.dfl.from": "melalui paket data",
   "tick.show.entity.dfl.entity.num": "Jumlah entitas: ",
@@ -16,8 +12,6 @@
   "redstone.show.entity.dfl.entity.entity": "Jumlah entitas: ",
   "redstone.show.entity.dfl.entity.other.entity": "Jumlah entitas non-pemain: ",
   "redstone.show.entity.dfl.entity.item": "Jumlah item: ",
-  "redstone.lucky.block.island.kill.entity": "[Pesan paket data] Entitas telah dibersihkan",
-  "dialog.stone_disappearance.options.title": "Pengaturan penghilangan batu",
   "dialog.sd.options.title": "Pengaturan penghilangan batu",
   "dialog.stone_disappearance.options.performance.label": "Pengaturan kinerja",
   "dialog.stone_disappearance.options.performance.tooltip": "Konfigurasikan beberapa pengaturan yang akan mempengaruhi kinerja",
