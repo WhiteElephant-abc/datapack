@@ -397,8 +397,8 @@ class DeepSeekTranslator:
         if not texts:
             return {}
 
-        # 过滤掉特殊键（如__core_keys__），只翻译实际的文本内容
-        texts_to_translate = {k: v for k, v in texts.items() if not k.startswith('__')}
+        # 精准过滤标记键：仅排除 '__core_keys__'，其他键正常参与翻译
+        texts_to_translate = {k: v for k, v in texts.items() if k != '__core_keys__'}
 
         if not texts_to_translate:
             return {}
@@ -1170,103 +1170,114 @@ def find_existing_translations(lang_code: str) -> Dict[str, str]:
 
     return existing_translations
 
-def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], max_context: int = 10, force_context: bool = False) -> Dict[str, str]:
-    """为目标键获取上下文键值对
+def get_context_for_keys(source_dict: Dict[str, str], target_keys: List[str], max_context: int = 10, force_context: bool = False) -> Dict[str, any]:
+    """为目标键获取上下文键值对，并统一使用核心键标记
+
+    两步模型对齐：
+    - 第一步（本函数）：在“源语言文件合并后”的字典上工作，若目标数不足上限则按从上到下的分块迭代补前后文；
+      另外，若合并后总键数 < max_context，则直接将整个文件纳入请求范围。
+    - 第二步：当最终数量超过每批上限，由 split_texts_with_context_guarantee 在分批时添加边界上下文。
+
+    统一标记：
+    - 始终添加 `__core_keys__` 标记，列出需要写回的核心键，与第二步保持一致。
 
     Args:
-        source_dict: 源字典
-        target_keys: 目标键列表
-        max_context: 最大上下文数量
-        force_context: 是否强制添加上下文（分段翻译模式）
+        source_dict: 合并后的源字典（必须在合并后传入）
+        target_keys: 目标键列表（按源顺序）
+        max_context: 第一步的上下文上限（通常为 10）
+        force_context: 强制上下文模式；在此模式下直接将整个文件纳入范围
     """
-    # 差异翻译逻辑：
-    # - 如果目标键数量 >= max_context 且不是强制上下文模式，直接返回目标键
-    # - 如果目标键数量 < max_context，添加上下文补充到 max_context
-    # 分段翻译逻辑：
-    # - 强制添加上下文，不受目标键数量限制
-    if not force_context and len(target_keys) >= max_context:
-        # 差异翻译：目标键数量已经足够，直接返回目标键
-        return {key: source_dict[key] for key in target_keys if key in source_dict}
-
     source_keys = list(source_dict.keys())
-    target_set = set(target_keys)
-    context_dict = {}
+    all_keys_count = len(source_keys)
 
-    # 添加目标键
-    for key in target_keys:
-        if key in source_dict:
-            context_dict[key] = source_dict[key]
+    # 强制模式：直接将整个文件纳入范围，并添加统一标记
+    if force_context:
+        result: Dict[str, any] = dict(source_dict)
+        result['__core_keys__'] = list(target_keys)
+        return result
 
-    # 如果目标键数量已经达到上下文限制，直接返回
-    if len(context_dict) >= max_context:
-        return context_dict
+    # 特殊判断：如果源文件合并后总键数 < max_context（如 < 10），直接纳入整个文件并添加标记
+    if all_keys_count <= max_context:
+        result: Dict[str, any] = dict(source_dict)
+        result['__core_keys__'] = list(target_keys)
+        return result
 
-    # 计算需要添加的上下文数量
-    needed_context = max_context - len(context_dict)
+    # 若目标键已达/超上限，非强制模式直接返回目标键，并添加统一标记
+    if len(target_keys) >= max_context:
+        result: Dict[str, any] = {k: source_dict[k] for k in target_keys if k in source_dict}
+        result['__core_keys__'] = list(target_keys)
+        return result
 
-    # 为每个目标键段落添加上下文
-    segments = []
-    current_segment = []
+    # 以下为“分块迭代前后扩展”补上下文（仅在非强制且目标不足上限时）
+    index_map = {k: i for i, k in enumerate(source_keys)}
+    valid_target_indices = [index_map[k] for k in target_keys if k in index_map]
+    selected_indices: Set[int] = set(valid_target_indices)
 
-    # 将连续的目标键分组为段落
-    for i, key in enumerate(source_keys):
-        if key in target_set:
-            current_segment.append(i)
-        else:
-            if current_segment:
-                segments.append(current_segment)
-                current_segment = []
+    # 组块：按连续索引将目标键聚为段落
+    segments: List[Tuple[int, int]] = []
+    if valid_target_indices:
+        valid_target_indices.sort()
+        s = valid_target_indices[0]
+        e = s
+        for idx in valid_target_indices[1:]:
+            if idx == e + 1:
+                e = idx
+            else:
+                segments.append((s, e))
+                s, e = idx, idx
+        segments.append((s, e))
 
-    if current_segment:
-        segments.append(current_segment)
+    left_ptrs = [s - 1 for (s, _e) in segments]
+    right_ptrs = [e + 1 for (_s, e) in segments]
 
-    # 为每个段落添加前后上下文
-    context_indices = set()
-    context_per_segment = max(1, needed_context // (len(segments) * 2)) if segments else 0
-
-    for segment in segments:
-        start_idx = segment[0]
-        end_idx = segment[-1]
-
-        # 添加段落前的上下文
-        for i in range(max(0, start_idx - context_per_segment), start_idx):
-            context_indices.add(i)
-
-        # 添加段落后的上下文
-        for i in range(end_idx + 1, min(len(source_keys), end_idx + 1 + context_per_segment)):
-            context_indices.add(i)
-
-    # 如果还需要更多上下文，继续扩展
-    remaining_needed = needed_context - len(context_indices)
-    if remaining_needed > 0:
-        for segment in segments:
-            if remaining_needed <= 0:
+    def add_one_before_each_segment() -> bool:
+        did_add = False
+        for idx, (_s, _e) in enumerate(segments):
+            if len(selected_indices) >= max_context:
                 break
-            start_idx = segment[0]
-            end_idx = segment[-1]
+            lp = left_ptrs[idx]
+            while lp >= 0 and lp in selected_indices:
+                lp -= 1
+            if lp >= 0 and len(selected_indices) < max_context:
+                selected_indices.add(lp)
+                left_ptrs[idx] = lp - 1
+                did_add = True
+        return did_add
 
-            # 继续向前扩展
-            for i in range(max(0, start_idx - context_per_segment - 1), max(0, start_idx - context_per_segment)):
-                if remaining_needed <= 0:
-                    break
-                context_indices.add(i)
-                remaining_needed -= 1
+    def add_one_after_each_segment() -> bool:
+        did_add = False
+        for idx, (_s, _e) in enumerate(segments):
+            if len(selected_indices) >= max_context:
+                break
+            rp = right_ptrs[idx]
+            while rp < len(source_keys) and rp in selected_indices:
+                rp += 1
+            if rp < len(source_keys) and len(selected_indices) < max_context:
+                selected_indices.add(rp)
+                right_ptrs[idx] = rp + 1
+                did_add = True
+        return did_add
 
-            # 继续向后扩展
-            for i in range(min(len(source_keys), end_idx + 1 + context_per_segment),
-                          min(len(source_keys), end_idx + 1 + context_per_segment + 1)):
-                if remaining_needed <= 0:
-                    break
-                context_indices.add(i)
-                remaining_needed -= 1
+    while len(selected_indices) < max_context and segments:
+        added_before = add_one_before_each_segment()
+        if len(selected_indices) >= max_context:
+            break
+        added_after = add_one_after_each_segment()
+        if not added_before and not added_after:
+            break
 
-    # 添加上下文键到结果中
-    for idx in sorted(context_indices):
-        key = source_keys[idx]
-        if key not in context_dict and len(context_dict) < max_context:
-            context_dict[key] = source_dict[key]
+    # 产出结果并追加统一标记
+    result: Dict[str, any] = {}
+    count = 0
+    for i in sorted(selected_indices):
+        key = source_keys[i]
+        result[key] = source_dict[key]
+        count += 1
+        if count >= max_context:
+            break
 
-    return context_dict
+    result['__core_keys__'] = list(target_keys)
+    return result
 
 def check_missing_translation_files() -> Dict[str, List[str]]:
     """检查缺失的翻译文件
