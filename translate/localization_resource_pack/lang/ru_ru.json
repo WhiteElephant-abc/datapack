@@ -8,6 +8,7 @@
   "tick.kill.dfl.add": "Добавить",
   "tick.kill.dfl.tag": "метку",
   "redstone.kill.item.dfl.entity.clear": "Очищено",
+  "redstone.kill.item.dfl.entity.item": "предметов",
   "redstone.show.entity.dfl.entity.entity": "Количество сущностей:",
   "redstone.show.entity.dfl.entity.other.entity": "Количество неигровых сущностей:",
   "redstone.show.entity.dfl.entity.item": "Количество предметов:",
@@ -48,5 +49,6 @@
   "dialog.stone_disappearance.advanced_end.min": "Нижний предел Энда",
   "dialog.stone_disappearance.advanced_end.max": "Верхний предел Энда",
   "title.lucky_block_island.lbi": "[LBI] Остров Удачного Блока",
+  "title.lucky_block_island.error.subtitle": "Проверка настроек измерения не удалась!\nПожалуйста, загрузите датапак при создании мира",
   "title.lucky_block_island.error.actionbar": "Проверка настроек измерения не удалась!\nПожалуйста, загрузите датапак при создании мира!"
 }

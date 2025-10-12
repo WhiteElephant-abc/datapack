@@ -8,6 +8,7 @@
   "tick.kill.dfl.add": "añadir",
   "tick.kill.dfl.tag": "etiqueta",
   "redstone.kill.item.dfl.entity.clear": "Eliminados",
+  "redstone.kill.item.dfl.entity.item": "objetos caídos",
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
   "redstone.show.entity.dfl.entity.other.entity": "Número de entidades no jugador:",
   "redstone.show.entity.dfl.entity.item": "Número de objetos caídos:",
@@ -48,5 +49,6 @@
   "dialog.stone_disappearance.advanced_end.min": "Límite inferior del End",
   "dialog.stone_disappearance.advanced_end.max": "Límite superior del End",
   "title.lucky_block_island.lbi": "[LBI] Isla de Bloques de la Suerte",
+  "title.lucky_block_island.error.subtitle": "La validación de la configuración de dimensiones falló, por favor carga el paquete de datos al crear el mundo\n¡La validación de la configuración de dimensiones falló!",
   "title.lucky_block_island.error.actionbar": "¡La validación de la configuración de dimensiones falló, por favor carga el paquete de datos al crear el mundo!\n¡Por favor carga el paquete de datos al crear el mundo!"
 }
