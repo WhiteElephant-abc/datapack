@@ -4,9 +4,6 @@ on:
   push:
     paths:
       - 'Localization-Resource-Pack/assets/**'
-  pull_request:
-    paths:
-      - 'Localization-Resource-Pack/assets/**'
   workflow_dispatch:
     inputs:
       force_translate:
