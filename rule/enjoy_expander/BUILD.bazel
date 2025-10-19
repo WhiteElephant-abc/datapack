@@ -1,9 +1,0 @@
-load("@rules_java//java:defs.bzl", "java_binary")
-
-java_binary(
-    name = "enjoy_expander",
-    srcs = ["EnjoyExpander.java"],
-    main_class = "EnjoyExpander",
-    visibility = ["//visibility:public"],
-    deps = ["@maven//:com_jfinal_enjoy"],
-)

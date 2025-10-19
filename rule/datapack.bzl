@@ -13,7 +13,7 @@
 主要提供 datapack 宏，用于定义完整的数据包构建流程。
 """
 
-load("@//rule:expand_enjoy.bzl", "expand_enjoy")
+
 load("@//rule:process_json.bzl", "process_json")
 load("@//rule:process_mcfunction.bzl", "process_mcfunction")
 load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
@@ -303,8 +303,8 @@ def datapack_functions(pack_id):
     """
     return {
         "functions_include": ["data/%s/function/**/*.mcfunction" % pack_id],
-        "functions_exclude": ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
-        "functions_expand_pattern": ["data/%s/function/**/*.enjoy.mcfunction" % pack_id],
+        "functions_exclude": [],
+        "functions_expand_pattern": [],
     }
 
 def standard_localization_dependency():
@@ -323,7 +323,6 @@ def _datapack_impl(
         name,
         visibility,
         pack_id,
-        functions_expand,
         functions,
         function_tags,
         deps,
@@ -333,18 +332,13 @@ def _datapack_impl(
     # 默认使用版本列表中的最新版本
     if not minecraft_version:
         minecraft_version = _ALL_MINECRAFT_VERSIONS[-1]
-    expand_enjoy(
-        name = name + "_pack_functions_expanded",
-        visibility = visibility,
-        srcs = functions_expand,
-        include_files = ["//template:templates"],
-    )
+
 
     process_mcfunction(
         name = name + "_pack_function",
         visibility = visibility,
         pack_id = pack_id,
-        srcs = functions + [":%s_pack_functions_expanded" % name],
+        srcs = functions,
         deps = deps,
     )
 
@@ -436,7 +430,6 @@ def _datapack_impl(
 datapack = macro(
     attrs = {
         "pack_id": attr.string(configurable = False, mandatory = True),
-        "functions_expand": attr.label_list(default = []),
         "functions": attr.label_list(default = []),
         "function_tags": attr.label_list(default = []),
         "namespace_json": attr.label_list(default = []),
@@ -588,7 +581,6 @@ def complete_datapack_config(
             include = func_config["functions_include"],
             exclude = func_config["functions_exclude"],
         ),
-        functions_expand = native.glob(func_config["functions_expand_pattern"]),
         namespace_json = native.glob(["data/%s/**/*.json" % pack_id], allow_empty = True),
         minecraft_json = native.glob(["data/minecraft/**/*.json"], allow_empty = True),
         function_tags = native.glob(["data/minecraft/tags/function/*.json"], allow_empty = True),
