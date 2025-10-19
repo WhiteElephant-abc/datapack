@@ -17,5 +17,6 @@
   "dialog.white.elephant.common.save_and_exit": "Speichern und Beenden",
   "dialog.white.elephant.common.cancel_tooltip": "Aktuelle Änderungen verwerfen",
   "dialog.white.elephant.common.save_tooltip": "Aktuelle Einstellungen speichern",
-  "dialog.white.elephant.common.technical_limitation": "Aufgrund technischer Einschränkungen werden hier die Standardeinstellungen angezeigt"
+  "dialog.white.elephant.common.technical_limitation": "Aufgrund technischer Einschränkungen werden hier die Standardeinstellungen angezeigt",
+  "banner.white.elephant.version": ""
 }
