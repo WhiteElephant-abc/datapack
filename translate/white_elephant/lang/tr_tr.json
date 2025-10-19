@@ -17,6 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Kaydet ve çık",
   "dialog.white.elephant.common.cancel_tooltip": "Mevcut değişiklikleri iptal et",
   "dialog.white.elephant.common.save_tooltip": "Mevcut ayarları kaydet",
-  "dialog.white.elephant.common.technical_limitation": "Teknik sınırlamalar nedeniyle, burada gösterilen ayarlar varsayılan değerlerdir",
-  "banner.white.elephant.version": "Sürüm numarası: %s"
+  "dialog.white.elephant.common.technical_limitation": "Teknik sınırlamalar nedeniyle, burada gösterilen ayarlar varsayılan değerlerdir"
 }

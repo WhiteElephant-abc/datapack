@@ -17,6 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Guardar y salir",
   "dialog.white.elephant.common.cancel_tooltip": "Descartar cambios actuales",
   "dialog.white.elephant.common.save_tooltip": "Guardar configuración actual",
-  "dialog.white.elephant.common.technical_limitation": "Debido a limitaciones técnicas, la configuración mostrada aquí son valores predeterminados",
-  "banner.white.elephant.version": "Número de versión: %s"
+  "dialog.white.elephant.common.technical_limitation": "Debido a limitaciones técnicas, la configuración mostrada aquí son valores predeterminados"
 }

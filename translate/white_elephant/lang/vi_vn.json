@@ -17,6 +17,5 @@
   "dialog.white.elephant.common.save_and_exit": "Lưu và thoát",
   "dialog.white.elephant.common.cancel_tooltip": "Bỏ qua các thay đổi hiện tại",
   "dialog.white.elephant.common.save_tooltip": "Lưu cài đặt hiện tại",
-  "dialog.white.elephant.common.technical_limitation": "Do hạn chế kỹ thuật, các cài đặt hiển thị ở đây đều là giá trị mặc định",
-  "banner.white.elephant.version": "Phiên bản: %s"
+  "dialog.white.elephant.common.technical_limitation": "Do hạn chế kỹ thuật, các cài đặt hiển thị ở đây đều là giá trị mặc định"
 }
