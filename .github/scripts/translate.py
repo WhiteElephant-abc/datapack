@@ -1073,15 +1073,50 @@ def get_file_key_changes(file_path: str) -> Optional[Dict[str, List[KeyChange]]]
                 operation=ChangeType.DELETED.value
             ))
 
-        # 修改的键
+        # 修改的键（值变化）
         for key in old_keys & new_keys:
-            if old_data[key] != new_data[key]:
+            if old_data.get(key) != new_data.get(key):
                 modified_keys.append(KeyChange(
                     key=key,
-                    old_value=old_data[key],
-                    new_value=new_data[key],
+                    old_value=old_data.get(key),
+                    new_value=new_data.get(key),
                     operation=ChangeType.MODIFIED.value
                 ))
+
+        # 键名重命名检测：将“删除+新增且值相同”的情况归类为修改
+        # 仅在唯一匹配时判定为重命名，避免误匹配
+        if added_keys and deleted_keys:
+            # 构建值到删除项的索引（仅字符串值）
+            deleted_index: Dict[str, KeyChange] = {}
+            deleted_value_counts: Dict[str, int] = {}
+            for d in deleted_keys:
+                if isinstance(d.old_value, str):
+                    deleted_index[d.old_value] = d
+                    deleted_value_counts[d.old_value] = deleted_value_counts.get(d.old_value, 0) + 1
+
+            added_remaining: List[KeyChange] = []
+            used_deleted: set = set()
+
+            for a in added_keys:
+                if isinstance(a.new_value, str) and a.new_value in deleted_index and deleted_value_counts.get(a.new_value, 0) == 1:
+                    d = deleted_index[a.new_value]
+                    if d.key not in used_deleted:
+                        # 记录为修改（键名重命名）
+                        modified_keys.append(KeyChange(
+                            key=a.key,
+                            old_value=d.old_value,
+                            new_value=a.new_value,
+                            operation=ChangeType.MODIFIED.value
+                        ))
+                        used_deleted.add(d.key)
+                        log_progress(f"检测到键重命名: {d.key} -> {a.key}")
+                        continue
+                added_remaining.append(a)
+
+            # 过滤掉已配对的删除项
+            deleted_remaining = [d for d in deleted_keys if d.key not in used_deleted]
+            added_keys = added_remaining
+            deleted_keys = deleted_remaining
 
         return {
             'added': added_keys,
@@ -1709,8 +1744,8 @@ def run_smart_translation(translator):
             log_progress(f"无法加载命名空间 {changes.namespace} 的合并参考翻译", "error")
             continue
 
-        # 目标键集合：新增 + 修改
-        keys_to_translate = [c.key for c in (changes.added_keys + changes.modified_keys)]
+        # 目标键集合：新增 + 修改（去重保持顺序）
+        keys_to_translate = list(dict.fromkeys([c.key for c in (changes.added_keys + changes.modified_keys)]))
         if not keys_to_translate:
             continue
 
