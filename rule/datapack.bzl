@@ -345,6 +345,7 @@ def _datapack_impl(
         visibility = visibility,
         pack_id = pack_id,
         srcs = functions + [":%s_pack_functions_expanded" % name],
+        deps = deps,
     )
 
     process_json(

@@ -16,6 +16,7 @@ public class McfunctionProcessor extends Worker {
     private Map<String, List<String>> functionCache = new HashMap<>();
     private String currentPackId;
     private Path dataPackRoot;
+    private List<Path> dependencyPaths = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         new McfunctionProcessor().run();
@@ -25,12 +26,21 @@ public class McfunctionProcessor extends Worker {
     protected int handleRequest(WorkRequest request, PrintWriter out) {
         var args = request.arguments();
         if (args.size() < 2) {
-            out.println("Usage: McfunctionProcessor <input_file> <output_file>");
+            out.println("Usage: McfunctionProcessor <input_file> <output_file> [dependency_files...]");
             return 1;
         }
 
         var inputFile = args.get(0);
         var outputFile = args.get(1);
+
+        // 解析依赖文件路径
+        for (int i = 2; i < args.size(); i++) {
+            Path depFilePath = Paths.get(args.get(i));
+            Path depDataPackRoot = findDataPackRoot(depFilePath);
+            if (depDataPackRoot != null) {
+                dependencyPaths.add(depDataPackRoot);
+            }
+        }
 
         try {
             processFile(inputFile, outputFile);
@@ -94,6 +104,18 @@ public class McfunctionProcessor extends Worker {
         if (currentPackId == null) {
             currentPackId = "minecraft";
         }
+    }
+
+    private Path findDataPackRoot(Path filePath) {
+        Path current = filePath.getParent();
+        while (current != null) {
+            Path dataDir = current.resolve("data");
+            if (Files.exists(dataDir) && Files.isDirectory(dataDir)) {
+                return current;
+            }
+            current = current.getParent();
+        }
+        return null;
     }
 
     private List<String> processLines(List<String> rawLines) {
@@ -295,43 +317,10 @@ public class McfunctionProcessor extends Worker {
             searchPaths.add(dataPackRoot);
         }
 
-        // 2. 查找项目根目录下的所有数据包目录
-        Path projectRoot = findProjectRoot();
-        if (projectRoot != null) {
-            try {
-                // 搜索项目根目录下所有包含data目录的子目录
-                // 优先查找包含BUILD.bazel文件且定义了pack_id的目录（真正的数据包）
-                Files.walk(projectRoot, 3)
-                     .filter(Files::isDirectory)
-                     .filter(path -> Files.exists(path.resolve("data")))
-                     .filter(path -> !path.equals(dataPackRoot)) // 避免重复添加当前数据包
-                     .sorted((a, b) -> {
-                         // 优先排序：有BUILD.bazel文件的目录排在前面
-                         boolean aHasBuild = Files.exists(a.resolve("BUILD.bazel"));
-                         boolean bHasBuild = Files.exists(b.resolve("BUILD.bazel"));
-                         if (aHasBuild && !bHasBuild) return -1;
-                         if (!aHasBuild && bHasBuild) return 1;
-                         return a.toString().compareTo(b.toString());
-                     })
-                     .forEach(searchPaths::add);
-            } catch (IOException e) {
-                // 忽略搜索错误，继续使用已有路径
-            }
-        }
-
-        // 3. 如果没有找到项目根目录，尝试向上搜索兄弟目录
-        if (dataPackRoot != null && projectRoot == null) {
-            Path parent = dataPackRoot.getParent();
-            if (parent != null) {
-                try {
-                    Files.list(parent)
-                         .filter(Files::isDirectory)
-                         .filter(path -> Files.exists(path.resolve("data")))
-                         .filter(path -> !path.equals(dataPackRoot))
-                         .forEach(searchPaths::add);
-                } catch (IOException e) {
-                    // 忽略搜索错误
-                }
+        // 2. 添加所有依赖数据包目录
+        for (Path depPath : dependencyPaths) {
+            if (Files.exists(depPath.resolve("data")) && !depPath.equals(dataPackRoot)) {
+                searchPaths.add(depPath);
             }
         }
 

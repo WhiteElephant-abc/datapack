@@ -52,10 +52,12 @@ def _process_mcfunction_impl(ctx):
         args.add(src)
         args.add(output_file)
 
+        args.add_all(ctx.files.deps)
+
         args.use_param_file("@%s", use_always = True)
 
         ctx.actions.run(
-            inputs = [src],
+            inputs = [src] + ctx.files.deps,
             outputs = [output_file],
             executable = ctx.executable._mcfunction_processor,
             arguments = [args],
@@ -82,6 +84,10 @@ process_mcfunction = rule(
             allow_files = [".mcfunction"],
             mandatory = True,
             doc = "List of .mcfunction files to process",
+        ),
+        "deps": attr.label_list(
+            allow_files = True,
+            doc = "Dependencies that provide additional data pack files for cross-pack function calls",
         ),
         "_mcfunction_processor": attr.label(
             default = Label("//rule/mcfunction_processor"),
