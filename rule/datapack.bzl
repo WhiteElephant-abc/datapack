@@ -8,6 +8,7 @@
 - 开发服务器的启动配置
 - 通用的数据包配置模式
 - Modrinth 上传配置的简化
+- SemVer 版本号验证
 
 主要提供 datapack 宏，用于定义完整的数据包构建流程。
 """
@@ -19,6 +20,192 @@ load("@//rule:upload_modrinth.bzl", "modrinth_dependency", "upload_modrinth")
 load("@rules_java//java:defs.bzl", "java_binary")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+
+def _is_valid_semver(version):
+    """验证版本号是否符合语义化版本控制（SemVer）规范。
+    
+    根据 SemVer 2.0.0 规范验证版本号格式：
+    - 标准格式：X.Y.Z（主版本号.次版本号.修订号）
+    - 支持先行版本号：X.Y.Z-prerelease
+    - 支持版本编译信息：X.Y.Z+build 或 X.Y.Z-prerelease+build
+    
+    Args:
+        version: 要验证的版本号字符串
+        
+    Returns:
+        如果版本号有效则返回 True，否则返回 False
+    """
+    if not version or type(version) != "string":
+        return False
+    
+    # 移除可能的 "v" 前缀
+    if version.startswith("v"):
+        version = version[1:]
+    
+    # 分离版本编译信息（+号后的部分）
+    build_parts = version.split("+")
+    if len(build_parts) > 2:
+        return False
+    
+    core_and_prerelease = build_parts[0]
+    build_metadata = build_parts[1] if len(build_parts) == 2 else None
+    
+    # 验证版本编译信息格式
+    if build_metadata:
+        if not _is_valid_identifier_sequence(build_metadata):
+            return False
+    
+    # 分离先行版本号（-号后的部分）
+    prerelease_parts = core_and_prerelease.split("-")
+    if len(prerelease_parts) > 2:
+        return False
+    
+    version_core = prerelease_parts[0]
+    prerelease = prerelease_parts[1] if len(prerelease_parts) == 2 else None
+    
+    # 验证先行版本号格式
+    if prerelease:
+        if not _is_valid_prerelease(prerelease):
+            return False
+    
+    # 验证核心版本号格式 X.Y.Z
+    core_parts = version_core.split(".")
+    if len(core_parts) != 3:
+        return False
+    
+    for part in core_parts:
+        if not _is_valid_numeric_identifier(part):
+            return False
+    
+    return True
+
+def _is_valid_numeric_identifier(identifier):
+    """验证数字标识符是否有效。
+    
+    Args:
+        identifier: 要验证的标识符字符串
+        
+    Returns:
+        如果标识符有效则返回 True，否则返回 False
+    """
+    if not identifier:
+        return False
+    
+    # 检查是否只包含数字
+    for i in range(len(identifier)):
+        char = identifier[i]
+        if char < "0" or char > "9":
+            return False
+    
+    # 检查前导零：只有 "0" 本身是有效的，其他以 0 开头的多位数字无效
+    if len(identifier) > 1 and identifier[0] == "0":
+        return False
+    
+    return True
+
+def _is_valid_prerelease(prerelease):
+    """验证先行版本号是否有效。
+    
+    Args:
+        prerelease: 要验证的先行版本号字符串
+        
+    Returns:
+        如果先行版本号有效则返回 True，否则返回 False
+    """
+    if not prerelease:
+        return False
+    
+    # 先行版本号由点分隔的标识符组成
+    identifiers = prerelease.split(".")
+    if not identifiers:
+        return False
+    
+    for identifier in identifiers:
+        if not _is_valid_prerelease_identifier(identifier):
+            return False
+    
+    return True
+
+def _is_valid_prerelease_identifier(identifier):
+    """验证先行版本号标识符是否有效。
+    
+    Args:
+        identifier: 要验证的标识符字符串
+        
+    Returns:
+        如果标识符有效则返回 True，否则返回 False
+    """
+    if not identifier:
+        return False
+    
+    # 检查是否只包含允许的字符 [0-9A-Za-z-]
+    is_numeric = True
+    for i in range(len(identifier)):
+        char = identifier[i]
+        if not ((char >= "0" and char <= "9") or 
+                (char >= "A" and char <= "Z") or 
+                (char >= "a" and char <= "z") or 
+                char == "-"):
+            return False
+        if not (char >= "0" and char <= "9"):
+            is_numeric = False
+    
+    # 如果是纯数字标识符，检查前导零
+    if is_numeric and len(identifier) > 1 and identifier[0] == "0":
+        return False
+    
+    return True
+
+def _is_valid_identifier_sequence(sequence):
+    """验证标识符序列是否有效（用于版本编译信息）。
+    
+    Args:
+        sequence: 要验证的标识符序列字符串
+        
+    Returns:
+        如果序列有效则返回 True，否则返回 False
+    """
+    if not sequence:
+        return False
+    
+    identifiers = sequence.split(".")
+    if not identifiers:
+        return False
+    
+    for identifier in identifiers:
+        if not identifier:
+            return False
+        # 检查是否只包含允许的字符 [0-9A-Za-z-]
+        for i in range(len(identifier)):
+            char = identifier[i]
+            if not ((char >= "0" and char <= "9") or 
+                    (char >= "A" and char <= "Z") or 
+                    (char >= "a" and char <= "z") or 
+                    char == "-"):
+                return False
+    
+    return True
+
+def validate_semver(version, context = "版本号"):
+    """验证并确保版本号符合 SemVer 规范。
+    
+    如果版本号不符合规范，会调用 fail() 终止构建。
+    
+    Args:
+        version: 要验证的版本号字符串
+        context: 上下文描述，用于错误消息
+    """
+    if not _is_valid_semver(version):
+        fail("%s '%s' 不符合语义化版本控制（SemVer 2.0.0）规范。\n" % (context, version) +
+             "有效的版本号格式示例：\n" +
+             "  - 1.0.0\n" +
+             "  - 2.1.3\n" +
+             "  - 1.0.0-alpha\n" +
+             "  - 1.0.0-alpha.1\n" +
+             "  - 1.0.0-0.3.7\n" +
+             "  - 1.0.0+20130313144700\n" +
+             "  - 1.0.0-beta+exp.sha.5114f85\n" +
+             "请参考项目根目录的 SemVer.md 文档了解详细规范。")
 
 # 完整的 Minecraft 版本列表（按发布顺序排列）
 _ALL_MINECRAFT_VERSIONS = [
@@ -277,7 +464,7 @@ def datapack_modrinth_upload(
     Args:
         name: 上传目标的名称
         datapack_target: 数据包目标（如 ":my-datapack"）
-        pack_version: 数据包版本
+        pack_version: 数据包版本（必须符合 SemVer 规范）
         project_id: Modrinth 项目 ID
         file_name_template: 文件名模板，默认为 "{name}_v{version}_{game_range}.zip"
         version_name_template: 版本名模板，默认为 "{name}_v{version}_{game_range}"
@@ -287,6 +474,8 @@ def datapack_modrinth_upload(
         deps: 依赖列表，默认包含本地化资源包
         auto_tag: 是否在上传前自动创建并推送 Git 标签，默认为 True
     """
+    # 验证版本号是否符合 SemVer 规范
+    validate_semver(pack_version, "数据包版本号")
     if game_versions == None:
         game_versions = minecraft_versions_range("1.20")
 
@@ -354,7 +543,7 @@ def complete_datapack_config(
 
     Args:
         pack_id: 命名空间 ID
-        pack_version: 数据包版本
+        pack_version: 数据包版本（必须符合 SemVer 规范）
         target_name: 主要目标名称，默认为当前包名称
         game_versions: 支持的游戏版本列表
         modrinth_project_id: Modrinth 项目 ID
@@ -364,6 +553,9 @@ def complete_datapack_config(
         include_localization_dependency: 是否自动包含本地化资源包作为依赖
         **kwargs: 传递给 datapack 规则的其他参数
     """
+
+    # 验证版本号是否符合 SemVer 规范
+    validate_semver(pack_version, "数据包版本号")
 
     # 确定目标名称，默认使用当前包名称
     if target_name == None:
