@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "放棄當前更改",
   "dialog.white.elephant.common.save_tooltip": "儲存當前設定",
   "dialog.white.elephant.common.technical_limitation": "由於技術限制，此處顯示的設定均為預設值",
-  "banner.white.elephant.version": ""
+  "banner.white.elephant.version": "版本：%s"
 }

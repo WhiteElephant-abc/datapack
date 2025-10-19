@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "現在の変更を破棄",
   "dialog.white.elephant.common.save_tooltip": "現在の設定を保存",
   "dialog.white.elephant.common.technical_limitation": "技術的な制限により、ここに表示されている設定はすべてデフォルト値です",
-  "banner.white.elephant.version": ""
+  "banner.white.elephant.version": "バージョン：%s"
 }

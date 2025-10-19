@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "Discard current changes",
   "dialog.white.elephant.common.save_tooltip": "Save current settings",
   "dialog.white.elephant.common.technical_limitation": "Due to technical limitations, the settings displayed here are default values",
-  "banner.white.elephant.version": ""
+  "banner.white.elephant.version": "Version: %s"
 }

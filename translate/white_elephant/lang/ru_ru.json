@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "Отменить текущие изменения",
   "dialog.white.elephant.common.save_tooltip": "Сохранить текущие настройки",
   "dialog.white.elephant.common.technical_limitation": "Из-за технических ограничений настройки, отображаемые здесь, являются значениями по умолчанию",
-  "banner.white.elephant.version": ""
+  "banner.white.elephant.version": "Версия: %s"
 }
