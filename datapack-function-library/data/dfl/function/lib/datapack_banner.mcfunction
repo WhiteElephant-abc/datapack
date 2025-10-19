@@ -8,15 +8,6 @@ $tellraw @a [\
         "color":"green",\
         "bold":true\
     }]
-tellraw @a [\
-    "| ",\
-    {\
-        "translate":"banner.white.elephant.version",\
-        "fallback":"版本：%s",\
-        "with":[{"text":"{{version}}"}],\
-        "color":"gray",\
-        "bold":true\
-    }]
 $tellraw @a [\
     "| ",\
     {\

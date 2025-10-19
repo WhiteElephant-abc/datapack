@@ -1,7 +1,6 @@
 {
     "banner.white.elephant.enabled": "%s 数据包加载成功",
     "banner.white.elephant.author": "作者：%s",
-    "banner.white.elephant.version": "版本号：%s",
     "banner.white.elephant.license": "本数据包使用 %s 协议开源",
     "banner.white.elephant.official": "数据包官网",
     "no.resource.pack.white.elephant.a": "--------------------",
