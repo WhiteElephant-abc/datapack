@@ -1,7 +1,9 @@
-- 重命名 dfl:tick/relax 为 dfl:tick/mith
-- 现在 dfl:tick/mith 函数除死亡不掉落外，均仅对执行者生效
+- 现在 dfl:dfl_enable 函数会使用 dfl_scoreboard 记分板而不是 dfl_enable
+- 更新了 README
+- 现在数据包版本号使用 SemVer 标准，并重置为 1.0.0
 
 ---
 
-- Renamed dfl:tick/relax to dfl:tick/mith
-- The dfl:tick/mith function now only affects the executor, except for keep inventory on death
+- Now the `dfl:dfl_enable` function uses the `dfl_scoreboard` scoreboard instead of `dfl_enable`
+- Updated README
+- The data pack version now uses the SemVer standard and has been reset to 1.0.0
