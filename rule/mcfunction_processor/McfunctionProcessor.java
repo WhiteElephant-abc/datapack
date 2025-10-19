@@ -317,7 +317,13 @@ public class McfunctionProcessor extends Worker {
             searchPaths.add(dataPackRoot);
         }
 
-        // 2. 添加所有依赖数据包目录
+        // 2. 项目根目录（包含多个数据包）
+        Path projectRoot = findProjectRoot();
+        if (projectRoot != null && !projectRoot.equals(dataPackRoot)) {
+            searchPaths.add(projectRoot);
+        }
+
+        // 3. 添加所有依赖数据包目录
         for (Path depPath : dependencyPaths) {
             if (Files.exists(depPath.resolve("data")) && !depPath.equals(dataPackRoot)) {
                 searchPaths.add(depPath);
