@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "Batalkan perubahan saat ini",
   "dialog.white.elephant.common.save_tooltip": "Simpan pengaturan saat ini",
   "dialog.white.elephant.common.technical_limitation": "Karena keterbatasan teknis, pengaturan yang ditampilkan di sini adalah nilai default",
-  "banner.white.elephant.version": "Versi: %s"
+  "banner.white.elephant.version": "Nomor versi: %s"
 }

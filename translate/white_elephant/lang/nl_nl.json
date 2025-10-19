@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "Huidige wijzigingen negeren",
   "dialog.white.elephant.common.save_tooltip": "Huidige instellingen opslaan",
   "dialog.white.elephant.common.technical_limitation": "Vanwege technische beperkingen zijn de hier getoonde instellingen standaardwaarden",
-  "banner.white.elephant.version": "Versie: %s"
+  "banner.white.elephant.version": "Versienummer: %s"
 }

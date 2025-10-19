@@ -18,5 +18,5 @@
   "dialog.white.elephant.common.cancel_tooltip": "Mevcut değişiklikleri iptal et",
   "dialog.white.elephant.common.save_tooltip": "Mevcut ayarları kaydet",
   "dialog.white.elephant.common.technical_limitation": "Teknik sınırlamalar nedeniyle, burada gösterilen ayarlar varsayılan değerlerdir",
-  "banner.white.elephant.version": "Sürüm: %s"
+  "banner.white.elephant.version": "Sürüm numarası: %s"
 }
