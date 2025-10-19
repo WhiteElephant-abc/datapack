@@ -18,14 +18,14 @@ _本数据包遵循开源协议 [GNU LESSER GENERAL PUBLIC LICENSE](https://www.
 
 ```mcfunction
 #在数据包加载时执行：
-scoreboard objectives add dfl_enable dummy
-scoreboard players set @e dfl_enable 0
+scoreboard objectives add dfl_scoreboard dummy
+scoreboard players set dfl_enable dfl_scoreboard 0
 #如果未加载：
 function dfl:dfl_enable
-execute unless score @n dfl_enable matches 1
+execute unless score dfl_enable dfl_scoreboard matches 1
 #如果加载：
 function dfl:dfl_enable
-execute if score @n dfl_enable matches 1
+execute if score dfl_enable dfl_scoreboard matches 1
 ```
 
 **注意：有些函数的用法下附有“前置函数”，这些函数执行前必须执行一次前置函数。**

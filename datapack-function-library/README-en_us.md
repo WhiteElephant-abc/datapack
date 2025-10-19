@@ -16,14 +16,14 @@
 
 ```mcfunction
 #Execute when the datapack is loaded:
-scoreboard objectives add dfl_enable dummy
-scoreboard players set @e dfl_enable 0
+scoreboard objectives add dfl_scoreboard dummy
+scoreboard players set dfl_enable dfl_scoreboard 0
 #If not loaded:
 function dfl:dfl_enable
-execute unless score @n dfl_enable matches 1
+execute unless score dfl_enable dfl_scoreboard matches 1
 #If loaded:
 function dfl:dfl_enable
-execute if score @n dfl_enable matches 1
+execute if score dfl_enable dfl_scoreboard matches 1
 ```
 
 **Note: Some functions have "prerequisite functions" attached to their usage. These functions must be executed once before executing them.**
