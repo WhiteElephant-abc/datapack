@@ -1,6 +1,10 @@
-#include("banner.enjoy.mcfunction")
-#@datapack_banner(  "Lucky Block Island",  "white_elephant_",  "https://modrinth.com/user/white_elephant",  "GNU GPL",  "https://www.gnu.org/licenses/gpl-3.0.txt",  "https://github.com/WhiteElephant-abc/datapack")
-#include("l10n.enjoy.mcfunction")
+function dfl:lib/datapack_banner {\
+    name:"Lucky Block Island",\
+    author:"white_elephant_",\
+    author_url:"https://modrinth.com/user/white_elephant",\
+    license_name:"GNU GPL",\
+    license_url:"https://www.gnu.org/licenses/gpl-3.0.txt",\
+    offical_url:"https://github.com/WhiteElephant-abc/datapack"}
 
 execute unless biome 0 10 0 minecraft:the_void run \
     title @a title \
