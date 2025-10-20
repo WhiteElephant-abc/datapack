@@ -9,17 +9,17 @@ on:
       force_translate:
         description: 'Force translate all languages'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       non_thinking_mode:
         description: 'Use non-thinking mode'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       translation_debug:
         description: 'Enable per-request debug logs'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
