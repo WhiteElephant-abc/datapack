@@ -1,3 +1,6 @@
+## 使用三种煤冶炼物品
+## TODO 可变燃料
+
 $function dfl:lib/things_count {name:"$(input)"}
 function dfl:lib/things_count {name:"coal_block"}
 $execute \
