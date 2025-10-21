@@ -1,5 +1,6 @@
 ## 数据包加载成功提示消息
 
+# 调用函数
 function dfl:lib/datapack_banner {\
     name:"datapack function library",\
     author:"white_elephant_",\
