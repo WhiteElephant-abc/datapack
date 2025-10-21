@@ -17,7 +17,7 @@
   "dialog.stone_disappearance.advanced_overworld.title": "Erweiterte Einstellungen für Steinverschwinden: Oberwelt-Einstellungen",
   "tick.ban.dfl.ban": "Du wurdest von diesem Server soft gebannt.",
   "tick.ban.dfl.from": "Durch Datenpaket",
-  "tick.show.entity.dfl.entity.num": "Anzahl der Entitäten:",
+  "tick.show.entity.dfl.entity.num": "Anzahl der Entitäten: %s",
   "tick.kill.dfl.too.many": "Zu viele Entitäten, wurden entfernt.",
   "tick.kill.dfl.entity.num": "Entitäten",
   "tick.kill.dfl.need.tag": "Um zu verhindern, dass Entitäten entfernt werden, kannst du dem Entity einen Tag hinzufügen.",

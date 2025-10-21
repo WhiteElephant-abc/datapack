@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "Zostałeś zbanowany na tym serwerze",
   "tick.ban.dfl.from": "Przez pakiet danych",
-  "tick.show.entity.dfl.entity.num": "Liczba bytów:",
+  "tick.show.entity.dfl.entity.num": "Liczba jednostek: %s",
   "tick.kill.dfl.too.many": "Zbyt wiele bytów, zostały wyczyszczone",
   "tick.kill.dfl.entity.num": "bytów",
   "tick.kill.dfl.need.tag": "Aby zapobiec usunięciu bytów, możesz dodać im",

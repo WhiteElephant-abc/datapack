@@ -17,7 +17,7 @@
   "dialog.stone_disappearance.advanced_overworld.title": "Pengaturan Lanjutan Batu Menghilang: Pengaturan Dunia Atas",
   "tick.ban.dfl.ban": "Anda telah diban sementara dari server ini",
   "tick.ban.dfl.from": "Melalui paket data",
-  "tick.show.entity.dfl.entity.num": "Jumlah entitas:",
+  "tick.show.entity.dfl.entity.num": "Jumlah entitas: %s",
   "tick.kill.dfl.too.many": "Terlalu banyak entitas, telah dibersihkan",
   "tick.kill.dfl.entity.num": "entitas",
   "tick.kill.dfl.need.tag": "Untuk mencegah entitas dibersihkan, Anda dapat menambahkan tag ke entitas",
