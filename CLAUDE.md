@@ -106,9 +106,49 @@ bazelisk build //...
 - `minecraft_versions_range("1.20.3")` - 从 1.20.3 到最新版本
 - `minecraft_versions_range("1.20.3", "1.21.5")` - 指定范围
 
+## 本地化系统
+
+### 本地化架构
+
+项目采用自动翻译和手动维护相结合的本地化方案：
+
+- **本地化资源包**：`Localization-Resource-Pack/` - 包含资源包和本地化源文件
+  - `assets/` - 资源包资产文件
+  - `languages.json` - 支持的语言配置
+  - `system_prompt.md` - 翻译系统提示
+  - `user_prompt.md` - 翻译用户提示
+
+- **翻译工作目录**：`translate/` - 自动翻译输出目录
+  - 由 `.github/scripts/translate.py` 和 GitHub Action 写入
+  - 构建时通过 `rule/merge_json.bzl` 合并到资源包
+
+### 翻译工作流
+
+- **自动翻译触发**：当 `Localization-Resource-Pack/assets/**` 发生变更时，GitHub Action `/.github/workflows/translate.yml` 自动触发
+- **翻译脚本**：`.github/scripts/translate.py` 驱动自动翻译
+  - 源文件：`Localization-Resource-Pack/assets/` 中的所有本地化文件
+  - 输出：`translate/` 目录
+  - 环境变量：`DEEPSEEK_API_KEY`（必需）、`FORCE_TRANSLATE`、`NON_THINKING_MODE`、`TRANSLATION_DEBUG`
+
+### JSON 合并策略
+
+- **优先级规则**：`assets/` 的手工翻译优先于 `translate/` 的自动翻译
+- **合并逻辑**：`rule/merge_json.bzl` 确保 `translate/` 的文件先合并，`assets/` 的键覆盖 `translate/`
+- **维护原则**：手工维护的高质量翻译在 `assets/` 中优先保留
+
+### 添加新语言支持
+
+1. 编辑 `Localization-Resource-Pack/languages.json` 添加语言代码和名称
+2. 自动翻译会在 CI 中触发生成对应语言文件
+3. 构建系统自动处理合并到最终资源包
+
 ## 注意事项
 
 - 所有数据包都使用 GPL 许可证
 - 项目包含本地化资源包依赖
 - 构建系统会自动处理 JSON 文件压缩和函数文件扩展
 - 开发服务器配置为 4GB 内存，可在 `datapack.bzl` 中调整
+- **本地化注意事项**：
+  - 不必手动更新 `translate/` 的机器翻译
+  - `assets/` 的条目优先于 `translate/` 的自动翻译
+  - 涉及 Modrinth 上传、密钥存储或公共发布的变更必须由项目维护者审核
