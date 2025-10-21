@@ -1,4 +1,4 @@
-## TODO
+## 实体过多时清除非玩家实体
 
 scoreboard objectives add dfl_scoreboard dummy "DFL"
 execute store result score entitynum dfl_scoreboard if entity @e[type=!minecraft:player,tag=!need]

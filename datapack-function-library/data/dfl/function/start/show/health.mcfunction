@@ -1,3 +1,3 @@
-## TODO
+## 显示玩家血量
 scoreboard objectives add health health
 scoreboard objectives setdisplay below_name health

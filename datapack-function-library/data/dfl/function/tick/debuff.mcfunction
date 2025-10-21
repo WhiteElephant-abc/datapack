@@ -1,4 +1,4 @@
-## TODO
+## 一键给予负面 Buff
 effect give @s slowness
 effect give @s mining_fatigue
 effect give @s nausea

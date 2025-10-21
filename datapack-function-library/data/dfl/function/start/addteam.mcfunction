@@ -1,4 +1,5 @@
-## TODO
+## 快速新建队伍，禁用友伤和碰撞
+
 $team add $(team_blue)
 $team add $(team_red)
 

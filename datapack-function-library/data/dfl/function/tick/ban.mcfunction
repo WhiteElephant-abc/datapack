@@ -1,4 +1,4 @@
-## TODO
+## 软封禁玩家，不断传送并给予负面效果
 tp 0.0 0.0 0.0
 gamemode adventure
 title @s times 0 70 20

@@ -1,4 +1,4 @@
-## 清除物品并给予经验
+## 物品转化为经验
 
 # 物品计数
 $function dfl:lib/things_count {name:"$(name)"}

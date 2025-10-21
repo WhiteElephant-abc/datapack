@@ -1,4 +1,4 @@
-## TODO
+## 清除指定物品并执行多次命令
 $function dfl:lib/things_count {name:"$(name)"}
 
 $execute if score @s dfl_$(name)_num matches 1.. run $(run)

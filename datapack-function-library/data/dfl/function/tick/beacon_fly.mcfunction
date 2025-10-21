@@ -1,4 +1,4 @@
-## TODO
+## 信标鞘翅起飞，根据信标下方方块类型传送玩家
 
 #四级
 execute as @a[gamemode=!spectator] at @s if block ~ ~-1 ~ minecraft:beacon \

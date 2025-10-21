@@ -1,3 +1,4 @@
+## 数据包加载时执行的初始化函数
 function dfl:lib/datapack_banner {\
     name:"datapack function library",\
     author:"white_elephant_",\

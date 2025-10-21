@@ -1,4 +1,4 @@
-## TODO
+## 生成 UID - 为玩家分配唯一ID
 scoreboard objectives add dfl_scoreboard dummy "DFL"
 scoreboard objectives add dfl_playerid dummy
 execute as @a unless score @s dfl_playerid matches 1.. run scoreboard players set @s dfl_playerid 0

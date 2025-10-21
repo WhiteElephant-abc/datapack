@@ -1,4 +1,4 @@
-## TPA 系统
+## TPA 系统 - 玩家传送
 
 # 初始化
 scoreboard objectives add tpa trigger
