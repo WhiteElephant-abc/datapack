@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "Bạn đã bị cấm mềm từ máy chủ này",
   "tick.ban.dfl.from": "Thông qua gói dữ liệu",
-  "tick.show.entity.dfl.entity.num": "Số lượng thực thể：",
+  "tick.show.entity.dfl.entity.num": "Số lượng thực thể: %s",
   "tick.kill.dfl.too.many": "Quá nhiều thực thể, đã được dọn dẹp",
   "tick.kill.dfl.entity.num": "thực thể",
   "tick.kill.dfl.need.tag": "Để ngăn thực thể bị xóa, bạn có thể thêm nhãn cho thực thể",

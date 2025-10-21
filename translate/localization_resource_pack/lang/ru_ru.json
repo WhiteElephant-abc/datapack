@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "Вы были мягко забанены на этом сервере",
   "tick.ban.dfl.from": "Через пакет данных",
-  "tick.show.entity.dfl.entity.num": "Количество сущностей：",
+  "tick.show.entity.dfl.entity.num": "Количество сущностей: %s",
   "tick.kill.dfl.too.many": "Слишком много сущностей, очищено",
   "tick.kill.dfl.entity.num": "сущностей",
   "tick.kill.dfl.need.tag": "Чтобы предотвратить удаление сущностей, можно добавить метку",

@@ -17,7 +17,7 @@
   "dialog.stone_disappearance.advanced_overworld.title": "Configuración avanzada de desaparición de piedra: Configuración de la Superficie",
   "tick.ban.dfl.ban": "Has sido baneado temporalmente de este servidor",
   "tick.ban.dfl.from": "A través del paquete de datos",
-  "tick.show.entity.dfl.entity.num": "Número de entidades:",
+  "tick.show.entity.dfl.entity.num": "Cantidad de entidades: %s",
   "tick.kill.dfl.too.many": "Demasiadas entidades, han sido eliminadas",
   "tick.kill.dfl.entity.num": "entidades",
   "tick.kill.dfl.need.tag": "Para evitar que las entidades sean eliminadas, puedes agregar una etiqueta a las entidades",

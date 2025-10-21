@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "您已被此伺服器軟性封鎖",
   "tick.ban.dfl.from": "透過資料包",
-  "tick.show.entity.dfl.entity.num": "實體數量：",
+  "tick.show.entity.dfl.entity.num": "實體數量：%s",
   "tick.kill.dfl.too.many": "實體過多，已清除",
   "tick.kill.dfl.entity.num": "個實體",
   "tick.kill.dfl.need.tag": "想要防止實體被清除，可以為實體",
