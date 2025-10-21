@@ -1,3 +1,5 @@
+## TODO
+
 scoreboard objectives add dfl_scoreboard dummy "DFL"
 execute store result score entitynum dfl_scoreboard if entity @e[type=!minecraft:player,tag=!need]
 $execute if score entitynum dfl_scoreboard matches $(num).. run tellraw @a [{"text":"[DFL] ","color":"gray","italic":true},{"type":"translatable","translate":"tick.kill.dfl.too.many","fallback":"实体过多，已清除","color":"gray","italic":true},{"text":" "},{"score":{"name":"entitynum","objective":"dfl_scoreboard"},"color":"red"},{"text":" "},{"type":"translatable","translate":"tick.kill.dfl.entity.num","fallback":"个实体","color":"gray","italic":true}]
