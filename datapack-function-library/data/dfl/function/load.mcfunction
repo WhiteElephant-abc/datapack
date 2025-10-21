@@ -1,4 +1,5 @@
-## 数据包加载时执行的初始化函数
+## 数据包加载成功提示消息
+
 function dfl:lib/datapack_banner {\
     name:"datapack function library",\
     author:"white_elephant_",\
