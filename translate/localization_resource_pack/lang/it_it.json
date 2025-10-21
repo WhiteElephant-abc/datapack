@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "Sei stato bannato temporaneamente da questo server",
   "tick.ban.dfl.from": "Tramite datapack",
-  "tick.show.entity.dfl.entity.num": "Numero di entità: %s",
+  "tick.show.entity.dfl.entity.num": "Numero di entità:",
   "tick.kill.dfl.too.many": "Troppe entità, eliminate",
   "tick.kill.dfl.entity.num": "entità",
   "tick.kill.dfl.need.tag": "Per prevenire l'eliminazione delle entità, puoi aggiungere",

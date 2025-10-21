@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "Bu sunucudan geçici olarak yasaklandınız",
   "tick.ban.dfl.from": "Veri paketi aracılığıyla",
-  "tick.show.entity.dfl.entity.num": "Varlık sayısı: %s",
+  "tick.show.entity.dfl.entity.num": "Varlık sayısı:",
   "tick.kill.dfl.too.many": "Çok fazla varlık, temizlendi",
   "tick.kill.dfl.entity.num": "varlık",
   "tick.kill.dfl.need.tag": "Varlıkların temizlenmesini önlemek için varlıklara",

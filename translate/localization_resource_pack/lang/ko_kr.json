@@ -17,7 +17,7 @@
   "dialog.stone_disappearance.advanced_overworld.title": "돌 사라짐 고급 설정: 오버월드 설정",
   "tick.ban.dfl.ban": "이 서버에서 임시 차단되었습니다",
   "tick.ban.dfl.from": "데이터 팩을 통해",
-  "tick.show.entity.dfl.entity.num": "엔티티 개수: %s",
+  "tick.show.entity.dfl.entity.num": "개체 수:",
   "tick.kill.dfl.too.many": "개체가 너무 많아 제거되었습니다",
   "tick.kill.dfl.entity.num": "개의 개체",
   "tick.kill.dfl.need.tag": "개체가 제거되는 것을 방지하려면 개체에",

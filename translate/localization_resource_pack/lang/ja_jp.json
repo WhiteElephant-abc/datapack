@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "あなたはこのサーバーからソフトバンされました",
   "tick.ban.dfl.from": "データパックにより",
-  "tick.show.entity.dfl.entity.num": "エンティティ数：%s",
+  "tick.show.entity.dfl.entity.num": "エンティティ数：",
   "tick.kill.dfl.too.many": "エンティティが多すぎるため、クリアしました",
   "tick.kill.dfl.entity.num": "個のエンティティ",
   "tick.kill.dfl.need.tag": "エンティティがクリアされるのを防ぐには、エンティティに",
