@@ -17,7 +17,7 @@
   "dialog.stone_disappearance.advanced_overworld.title": "Geavanceerde instellingen voor steenverdwijning: Overworld-instellingen",
   "tick.ban.dfl.ban": "Je bent tijdelijk verbannen van deze server",
   "tick.ban.dfl.from": "via datapakket",
-  "tick.show.entity.dfl.entity.num": "Aantal entiteiten:",
+  "tick.show.entity.dfl.entity.num": "Aantal entiteiten: %s",
   "tick.kill.dfl.too.many": "Te veel entiteiten, opgeruimd",
   "tick.kill.dfl.entity.num": "entiteiten",
   "tick.kill.dfl.need.tag": "Om te voorkomen dat entiteiten worden opgeruimd, kun je ze een tag geven",

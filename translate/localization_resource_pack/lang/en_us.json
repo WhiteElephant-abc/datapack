@@ -1,7 +1,7 @@
 {
   "tick.ban.dfl.ban": "You have been soft-banned from this server",
   "tick.ban.dfl.from": "Via datapack",
-  "tick.show.entity.dfl.entity.num": "Entity count:",
+  "tick.show.entity.dfl.entity.num": "Entity count: %s",
   "tick.kill.dfl.too.many": "Too many entities, cleared",
   "tick.kill.dfl.entity.num": "entities",
   "tick.kill.dfl.need.tag": "To prevent entities from being cleared, you can add",
