@@ -1635,8 +1635,8 @@ def needs_translation(namespace: str, lang_code: str, source_dict: Dict[str, str
     if force_translate:
         return True
 
-    # 检查已有翻译是否完整
-    existing_translations = load_namespace_translations(namespace, lang_code)
+    # 检查已有翻译是否完整（仅检查translate目录）
+    existing_translations = load_namespace_translations_from_translate(namespace, lang_code)
 
     # 如果没有任何翻译，需要翻译
     if not existing_translations:
@@ -1770,7 +1770,7 @@ def run_smart_translation(translator):
                 log_progress(f"  未知的语言代码: {target_lang_code}，跳过翻译")
 
         for lang_code, lang_name in target_languages.items():
-            existing_translations = load_namespace_translations(changes.namespace, lang_code)
+            existing_translations = load_namespace_translations_from_translate(changes.namespace, lang_code)
             all_translation_tasks.append({
                 'namespace': changes.namespace,
                 'lang_code': lang_code,
@@ -1905,8 +1905,8 @@ def continue_full_translation(translator, progress_tracker, namespaces):
             if not needs_translation(namespace, lang_code, source_dict):
                 continue
 
-            # 加载已有翻译
-            existing_translate = load_namespace_translations(namespace, lang_code)
+            # 加载已有翻译（仅从translate目录）
+            existing_translate = load_namespace_translations_from_translate(namespace, lang_code)
 
             # 确定需要翻译的内容
             if force_translate:
