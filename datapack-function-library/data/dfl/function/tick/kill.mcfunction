@@ -1,6 +1,5 @@
 ## 实体过多时清除非玩家实体
 
-# TODO
 # 创建计分板目标，用于统计实体数量
 scoreboard objectives add dfl_scoreboard dummy "DFL"
 # 统计非玩家且无need标签的实体数量
