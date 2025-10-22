@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Вы были мягко забанены на этом сервере",
   "tick.ban.dfl.from": "Через пакет данных",
   "tick.show.entity.dfl.entity.num": "Количество сущностей: %s",
-  "tick.kill.dfl.too.many": "Слишком много сущностей, очищено",
-  "tick.kill.dfl.entity.num": "сущностей",
-  "tick.kill.dfl.need.tag": "Чтобы предотвратить удаление сущностей, можно добавить метку",
-  "tick.kill.dfl.add": "Добавить",
-  "tick.kill.dfl.tag": "Метка",
   "redstone.kill.item.dfl.entity.clear": "Очищено",
   "redstone.kill.item.dfl.entity.item": "предметов",
   "redstone.show.entity.dfl.entity.entity": "Количество сущностей：",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "Максимум края",
   "title.lucky_block_island.lbi": "[LBI] Остров счастливых блоков",
   "title.lucky_block_island.error.subtitle": "Проверка настроек измерения не удалась! Пожалуйста, загрузите пакет данных при создании мира",
-  "title.lucky_block_island.error.actionbar": "Проверка настроек измерения не удалась! Пожалуйста, загрузите пакет данных при создании мира!"
+  "title.lucky_block_island.error.actionbar": "Проверка настроек измерения не удалась! Пожалуйста, загрузите пакет данных при создании мира!",
+  "tick.kill.dfl.entity.clear.notification": "Слишком много сущностей, очищено %s сущностей",
+  "tick.kill.dfl.protection.hint": "Чтобы предотвратить удаление сущностей, вы можете добавить тег '%s' к сущностям"
 }

@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "You have been soft-banned from this server",
   "tick.ban.dfl.from": "Via datapack",
   "tick.show.entity.dfl.entity.num": "Entity count: %s",
-  "tick.kill.dfl.too.many": "Too many entities, cleared",
-  "tick.kill.dfl.entity.num": "entities",
-  "tick.kill.dfl.need.tag": "To prevent entities from being cleared, you can add",
-  "tick.kill.dfl.add": "Add",
-  "tick.kill.dfl.tag": "tag",
   "redstone.kill.item.dfl.entity.clear": "Cleared",
   "redstone.kill.item.dfl.entity.item": "items",
   "redstone.show.entity.dfl.entity.entity": "Entity count:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "End maximum",
   "title.lucky_block_island.lbi": "[LBI] Lucky Block Island",
   "title.lucky_block_island.error.subtitle": "Dimension settings validation failed!",
-  "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!"
+  "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!",
+  "tick.kill.dfl.entity.clear.notification": "Too many entities, cleared %s entities",
+  "tick.kill.dfl.protection.hint": "To prevent entities from being cleared, add the '%s' tag to entities"
 }

@@ -18,11 +18,6 @@
   "tick.ban.dfl.ban": "Je bent tijdelijk verbannen van deze server",
   "tick.ban.dfl.from": "via datapakket",
   "tick.show.entity.dfl.entity.num": "Aantal entiteiten: %s",
-  "tick.kill.dfl.too.many": "Te veel entiteiten, opgeruimd",
-  "tick.kill.dfl.entity.num": "entiteiten",
-  "tick.kill.dfl.need.tag": "Om te voorkomen dat entiteiten worden opgeruimd, kun je ze een tag geven",
-  "tick.kill.dfl.add": "Toevoegen",
-  "tick.kill.dfl.tag": "Tag",
   "redstone.kill.item.dfl.entity.clear": "Opgeruimd",
   "redstone.kill.item.dfl.entity.item": "items",
   "redstone.show.entity.dfl.entity.entity": "Aantal entiteiten:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced.nether.tooltip": "Deze instellingen zijn alleen van toepassing in de Nether",
   "dialog.stone_disappearance.advanced.end.label": "End",
   "dialog.stone_disappearance.advanced.end.tooltip": "Deze instellingen zijn alleen van toepassing in de End",
-  "dialog.stone_disappearance.advanced_common.title": "Geavanceerde instellingen voor steenverdwijning: Algemene instellingen"
+  "dialog.stone_disappearance.advanced_common.title": "Geavanceerde instellingen voor steenverdwijning: Algemene instellingen",
+  "tick.kill.dfl.entity.clear.notification": "Te veel entiteiten, %s entiteiten zijn opgeruimd",
+  "tick.kill.dfl.protection.hint": "Om te voorkomen dat entiteiten worden opgeruimd, voeg de '%s' tag toe aan de entiteit"
 }

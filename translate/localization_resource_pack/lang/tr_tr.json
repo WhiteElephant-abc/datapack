@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Bu sunucudan geçici olarak yasaklandınız",
   "tick.ban.dfl.from": "Veri paketi aracılığıyla",
   "tick.show.entity.dfl.entity.num": "Varlık sayısı: %s",
-  "tick.kill.dfl.too.many": "Çok fazla varlık, temizlendi",
-  "tick.kill.dfl.entity.num": "varlık",
-  "tick.kill.dfl.need.tag": "Varlıkların temizlenmesini önlemek için varlıklara",
-  "tick.kill.dfl.add": "ekle",
-  "tick.kill.dfl.tag": "etiket",
   "redstone.kill.item.dfl.entity.clear": "Temizlendi",
   "redstone.kill.item.dfl.entity.item": "eşya",
   "redstone.show.entity.dfl.entity.entity": "Varlık sayısı:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "End üst sınırı",
   "title.lucky_block_island.lbi": "[LBI] Şans Bloğu Gökyüzü Adası",
   "title.lucky_block_island.error.subtitle": "Boyut ayarları doğrulaması başarısız oldu, lütfen dünya oluştururken veri paketini yükleyin",
-  "title.lucky_block_island.error.actionbar": "Boyut ayarları doğrulaması başarısız oldu, lütfen dünya oluştururken veri paketini yükleyin!"
+  "title.lucky_block_island.error.actionbar": "Boyut ayarları doğrulaması başarısız oldu, lütfen dünya oluştururken veri paketini yükleyin!",
+  "tick.kill.dfl.entity.clear.notification": "Çok fazla varlık, %s varlık temizlendi",
+  "tick.kill.dfl.protection.hint": "Varlıkların temizlenmesini önlemek için varlıklara '%s' etiketi ekleyebilirsiniz"
 }

@@ -18,11 +18,6 @@
   "tick.ban.dfl.ban": "이 서버에서 임시 차단되었습니다",
   "tick.ban.dfl.from": "데이터 팩을 통해",
   "tick.show.entity.dfl.entity.num": "엔티티 수: %s",
-  "tick.kill.dfl.too.many": "개체가 너무 많아 제거되었습니다",
-  "tick.kill.dfl.entity.num": "개의 개체",
-  "tick.kill.dfl.need.tag": "개체가 제거되는 것을 방지하려면 개체에",
-  "tick.kill.dfl.add": "추가",
-  "tick.kill.dfl.tag": "태그",
   "redstone.kill.item.dfl.entity.clear": "제거했습니다",
   "redstone.kill.item.dfl.entity.item": "개의 드롭 아이템",
   "redstone.show.entity.dfl.entity.entity": "개체 수:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced.nether.tooltip": "이 설정들은 네더에서만 적용됩니다",
   "dialog.stone_disappearance.advanced.end.label": "엔드",
   "dialog.stone_disappearance.advanced.end.tooltip": "이 설정들은 엔드에서만 적용됩니다",
-  "dialog.stone_disappearance.advanced_common.title": "돌 사라짐 고급 설정: 일반 설정"
+  "dialog.stone_disappearance.advanced_common.title": "돌 사라짐 고급 설정: 일반 설정",
+  "tick.kill.dfl.entity.clear.notification": "엔티티가 너무 많아, %s개의 엔티티를 제거했습니다",
+  "tick.kill.dfl.protection.hint": "엔티티가 제거되는 것을 방지하려면 엔티티에 '%s' 태그를 추가하세요"
 }

@@ -18,11 +18,6 @@
   "tick.ban.dfl.ban": "Anda telah diban sementara dari server ini",
   "tick.ban.dfl.from": "Melalui paket data",
   "tick.show.entity.dfl.entity.num": "Jumlah entitas: %s",
-  "tick.kill.dfl.too.many": "Terlalu banyak entitas, telah dibersihkan",
-  "tick.kill.dfl.entity.num": "entitas",
-  "tick.kill.dfl.need.tag": "Untuk mencegah entitas dibersihkan, Anda dapat menambahkan tag ke entitas",
-  "tick.kill.dfl.add": "Tambahkan",
-  "tick.kill.dfl.tag": "Tag",
   "redstone.kill.item.dfl.entity.clear": "Telah membersihkan",
   "redstone.kill.item.dfl.entity.item": "item",
   "redstone.show.entity.dfl.entity.entity": "Jumlah entitas:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced.nether.tooltip": "Pengaturan ini hanya berlaku di Neraka",
   "dialog.stone_disappearance.advanced.end.label": "End",
   "dialog.stone_disappearance.advanced.end.tooltip": "Pengaturan ini hanya berlaku di End",
-  "dialog.stone_disappearance.advanced_common.title": "Pengaturan Lanjutan Batu Menghilang: Pengaturan Umum"
+  "dialog.stone_disappearance.advanced_common.title": "Pengaturan Lanjutan Batu Menghilang: Pengaturan Umum",
+  "tick.kill.dfl.entity.clear.notification": "Entitas terlalu banyak, telah membersihkan %s entitas",
+  "tick.kill.dfl.protection.hint": "Untuk mencegah entitas dibersihkan, tambahkan tag '%s' pada entitas"
 }

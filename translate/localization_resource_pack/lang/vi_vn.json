@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Bạn đã bị cấm mềm từ máy chủ này",
   "tick.ban.dfl.from": "Thông qua gói dữ liệu",
   "tick.show.entity.dfl.entity.num": "Số lượng thực thể: %s",
-  "tick.kill.dfl.too.many": "Quá nhiều thực thể, đã được dọn dẹp",
-  "tick.kill.dfl.entity.num": "thực thể",
-  "tick.kill.dfl.need.tag": "Để ngăn thực thể bị xóa, bạn có thể thêm nhãn cho thực thể",
-  "tick.kill.dfl.add": "Thêm",
-  "tick.kill.dfl.tag": "Nhãn",
   "redstone.kill.item.dfl.entity.clear": "Đã dọn dẹp",
   "redstone.kill.item.dfl.entity.item": "vật phẩm rơi",
   "redstone.show.entity.dfl.entity.entity": "Số lượng thực thể：",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "Giới hạn trên vùng đất kết thúc",
   "title.lucky_block_island.lbi": "[LBI] Đảo trời khối may mắn",
   "title.lucky_block_island.error.subtitle": "Xác thực cài đặt chiều không gian thất bại, vui lòng tải gói dữ liệu khi tạo thế giới",
-  "title.lucky_block_island.error.actionbar": "Xác thực cài đặt chiều không gian thất bại, vui lòng tải gói dữ liệu khi tạo thế giới!"
+  "title.lucky_block_island.error.actionbar": "Xác thực cài đặt chiều không gian thất bại, vui lòng tải gói dữ liệu khi tạo thế giới!",
+  "tick.kill.dfl.entity.clear.notification": "Quá nhiều thực thể, đã xóa %s thực thể",
+  "tick.kill.dfl.protection.hint": "Muốn ngăn chặn thực thể bị xóa, có thể thêm nhãn '%s' cho thực thể"
 }
