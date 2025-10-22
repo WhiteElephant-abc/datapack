@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Vous avez été banni temporairement de ce serveur",
   "tick.ban.dfl.from": "via le pack de données",
   "tick.show.entity.dfl.entity.num": "Nombre d'entités : %s",
-  "tick.kill.dfl.too.many": "Trop d'entités, elles ont été supprimées",
-  "tick.kill.dfl.entity.num": " entités",
-  "tick.kill.dfl.need.tag": "Pour empêcher les entités d'être supprimées, vous pouvez leur ajouter",
-  "tick.kill.dfl.add": "ajouter",
-  "tick.kill.dfl.tag": "étiquette",
   "redstone.kill.item.dfl.entity.clear": "a supprimé",
   "redstone.kill.item.dfl.entity.item": " objets tombés",
   "redstone.show.entity.dfl.entity.entity": "Nombre d'entités :",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "Maximum de l'End",
   "title.lucky_block_island.lbi": "[LBI] Île aux blocs chanceux",
   "title.lucky_block_island.error.subtitle": "La validation des paramètres de dimension a échoué. Veuillez charger le pack de données lors de la création du monde.",
-  "title.lucky_block_island.error.actionbar": "La validation des paramètres de dimension a échoué ! Veuillez charger le pack de données lors de la création du monde !"
+  "title.lucky_block_island.error.actionbar": "La validation des paramètres de dimension a échoué ! Veuillez charger le pack de données lors de la création du monde !",
+  "tick.kill.dfl.entity.clear.notification": "Trop d'entités, %s entités ont été supprimées",
+  "tick.kill.dfl.protection.hint": "Pour empêcher la suppression des entités, vous pouvez ajouter le tag '%s' aux entités"
 }

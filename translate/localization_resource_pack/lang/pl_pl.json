@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Zostałeś zbanowany na tym serwerze",
   "tick.ban.dfl.from": "Przez pakiet danych",
   "tick.show.entity.dfl.entity.num": "Liczba jednostek: %s",
-  "tick.kill.dfl.too.many": "Zbyt wiele bytów, zostały wyczyszczone",
-  "tick.kill.dfl.entity.num": "bytów",
-  "tick.kill.dfl.need.tag": "Aby zapobiec usunięciu bytów, możesz dodać im",
-  "tick.kill.dfl.add": "Dodaj",
-  "tick.kill.dfl.tag": "tag",
   "redstone.kill.item.dfl.entity.clear": "Wyczyścił",
   "redstone.kill.item.dfl.entity.item": "przedmiotów",
   "redstone.show.entity.dfl.entity.entity": "Liczba bytów:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "Górna granica Kresu",
   "title.lucky_block_island.lbi": "[LBI] Szczęśliwy Blok Skyblock",
   "title.lucky_block_island.error.subtitle": "Weryfikacja ustawień wymiaru nie powiodła się!",
-  "title.lucky_block_island.error.actionbar": "Proszę załadować pakiet danych podczas tworzenia świata!"
+  "title.lucky_block_island.error.actionbar": "Proszę załadować pakiet danych podczas tworzenia świata!",
+  "tick.kill.dfl.entity.clear.notification": "Zbyt wiele encji, usunięto %s encji",
+  "tick.kill.dfl.protection.hint": "Aby zapobiec usuwaniu encji, możesz dodać tag '%s' do encji"
 }

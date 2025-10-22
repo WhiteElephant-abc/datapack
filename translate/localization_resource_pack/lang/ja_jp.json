@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "あなたはこのサーバーからソフトバンされました",
   "tick.ban.dfl.from": "データパックにより",
   "tick.show.entity.dfl.entity.num": "エンティティ数：%s",
-  "tick.kill.dfl.too.many": "エンティティが多すぎるため、クリアしました",
-  "tick.kill.dfl.entity.num": "個のエンティティ",
-  "tick.kill.dfl.need.tag": "エンティティがクリアされるのを防ぐには、エンティティに",
-  "tick.kill.dfl.add": "追加",
-  "tick.kill.dfl.tag": "タグ",
   "redstone.kill.item.dfl.entity.clear": "クリアしました",
   "redstone.kill.item.dfl.entity.item": "個のドロップアイテム",
   "redstone.show.entity.dfl.entity.entity": "エンティティ数：",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "エンド上限",
   "title.lucky_block_island.lbi": "[LBI]ラッキーブロック スカイブロック",
   "title.lucky_block_island.error.subtitle": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックを読み込んでください。",
-  "title.lucky_block_island.error.actionbar": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックを読み込んでください！"
+  "title.lucky_block_island.error.actionbar": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックを読み込んでください！",
+  "tick.kill.dfl.entity.clear.notification": "エンティティが多すぎます、%s 個のエンティティをクリアしました",
+  "tick.kill.dfl.protection.hint": "エンティティがクリアされるのを防ぐには、エンティティに '%s' タグを追加してください"
 }

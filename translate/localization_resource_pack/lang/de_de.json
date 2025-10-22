@@ -18,11 +18,6 @@
   "tick.ban.dfl.ban": "Du wurdest von diesem Server soft gebannt.",
   "tick.ban.dfl.from": "Durch Datenpaket",
   "tick.show.entity.dfl.entity.num": "Anzahl der Entitäten: %s",
-  "tick.kill.dfl.too.many": "Zu viele Entitäten, wurden entfernt.",
-  "tick.kill.dfl.entity.num": "Entitäten",
-  "tick.kill.dfl.need.tag": "Um zu verhindern, dass Entitäten entfernt werden, kannst du dem Entity einen Tag hinzufügen.",
-  "tick.kill.dfl.add": "Hinzufügen",
-  "tick.kill.dfl.tag": "Tag",
   "redstone.kill.item.dfl.entity.clear": "Entfernt",
   "redstone.kill.item.dfl.entity.item": "Gegenstände",
   "redstone.show.entity.dfl.entity.entity": "Anzahl der Entitäten:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced.nether.tooltip": "Diese Einstellungen gelten nur im Nether.",
   "dialog.stone_disappearance.advanced.end.label": "End",
   "dialog.stone_disappearance.advanced.end.tooltip": "Diese Einstellungen gelten nur im End.",
-  "dialog.stone_disappearance.advanced_common.title": "Erweiterte Einstellungen für Steinverschwinden: Allgemeine Einstellungen"
+  "dialog.stone_disappearance.advanced_common.title": "Erweiterte Einstellungen für Steinverschwinden: Allgemeine Einstellungen",
+  "tick.kill.dfl.entity.clear.notification": "Zu viele Entitäten, %s Entitäten wurden entfernt",
+  "tick.kill.dfl.protection.hint": "Um zu verhindern, dass Entitäten entfernt werden, kannst du den '%s'-Tag hinzufügen"
 }

@@ -2,11 +2,6 @@
   "tick.ban.dfl.ban": "Has sido baneado suavemente de este servidor",
   "tick.ban.dfl.from": "A través del paquete de datos",
   "tick.show.entity.dfl.entity.num": "Número de entidades: %s",
-  "tick.kill.dfl.too.many": "Demasiadas entidades, han sido eliminadas",
-  "tick.kill.dfl.entity.num": " entidades",
-  "tick.kill.dfl.need.tag": "Para evitar que las entidades sean eliminadas, puedes agregarles",
-  "tick.kill.dfl.add": "agregar",
-  "tick.kill.dfl.tag": "etiqueta",
   "redstone.kill.item.dfl.entity.clear": "Eliminó",
   "redstone.kill.item.dfl.entity.item": " objetos caídos",
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced_end.max": "Límite superior del Fin",
   "title.lucky_block_island.lbi": "[LBI] Isla Flotante de Bloques de Suerte",
   "title.lucky_block_island.error.subtitle": "¡La validación de la configuración de la dimensión falló!",
-  "title.lucky_block_island.error.actionbar": "Por favor, carga el paquete de datos al crear el mundo."
+  "title.lucky_block_island.error.actionbar": "Por favor, carga el paquete de datos al crear el mundo.",
+  "tick.kill.dfl.entity.clear.notification": "Demasiadas entidades, se han eliminado %s entidades",
+  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes agregar la etiqueta '%s' a las entidades"
 }

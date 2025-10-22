@@ -18,11 +18,6 @@
   "tick.ban.dfl.ban": "Has sido baneado temporalmente de este servidor",
   "tick.ban.dfl.from": "A través del paquete de datos",
   "tick.show.entity.dfl.entity.num": "Número de entidades: %s",
-  "tick.kill.dfl.too.many": "Demasiadas entidades, han sido eliminadas",
-  "tick.kill.dfl.entity.num": "entidades",
-  "tick.kill.dfl.need.tag": "Para evitar que las entidades sean eliminadas, puedes agregar una etiqueta a las entidades",
-  "tick.kill.dfl.add": "Agregar",
-  "tick.kill.dfl.tag": "Etiqueta",
   "redstone.kill.item.dfl.entity.clear": "Eliminó",
   "redstone.kill.item.dfl.entity.item": "objetos caídos",
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
@@ -50,5 +45,7 @@
   "dialog.stone_disappearance.advanced.nether.tooltip": "Estas configuraciones solo se aplican en el Nether",
   "dialog.stone_disappearance.advanced.end.label": "End",
   "dialog.stone_disappearance.advanced.end.tooltip": "Estas configuraciones solo se aplican en el End",
-  "dialog.stone_disappearance.advanced_common.title": "Configuración avanzada de desaparición de piedra: Configuración general"
+  "dialog.stone_disappearance.advanced_common.title": "Configuración avanzada de desaparición de piedra: Configuración general",
+  "tick.kill.dfl.entity.clear.notification": "Demasiadas entidades, se han eliminado %s entidades",
+  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes añadir la etiqueta '%s' a las entidades"
 }
