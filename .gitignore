@@ -7,4 +7,4 @@ bazel-*
 /.github/scripts/__pycache__
 translation.log
 .github/scripts/logs/
-.claude/
+.claude/settings.local.json
