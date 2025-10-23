@@ -1,13 +1,16 @@
 ## 快速新建队伍，禁用友伤和碰撞
 
+# 创建队伍
 $team add $(team_blue)
 $team add $(team_red)
 
+# 配置蓝队属性
 $team modify $(team_blue) color blue
 $team modify $(team_blue) friendlyFire false
 $team modify $(team_blue) collisionRule pushOwnTeam
 $team modify $(team_blue) prefix "$(prefix_blue)_"
 
+# 配置红队属性
 $team modify $(team_red) color red
 $team modify $(team_red) friendlyFire false
 $team modify $(team_red) collisionRule pushOwnTeam
