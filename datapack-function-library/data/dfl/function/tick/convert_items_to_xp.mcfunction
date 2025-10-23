@@ -12,4 +12,4 @@ $execute if score @s dfl_$(name)_num matches 1.. \
 # 递归调用
 $execute if score @s dfl_$(name)_num matches 0 \
     run return fail
-$function dfl:tick/things_to_xp {name:"$(name)",xp:"$(xp)"}
+$function dfl:tick/convert_items_to_xp {name:"$(name)",xp:"$(xp)"}

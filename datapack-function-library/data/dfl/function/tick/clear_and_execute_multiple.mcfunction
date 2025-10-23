@@ -17,4 +17,4 @@ $execute if score @s dfl_$(name)_num matches 0 \
     run return fail
 
 # 递归调用自身，继续处理剩余物品
-$function dfl:tick/clear_run_b {name:"$(name)",run:"$(run)"}
+$function dfl:tick/clear_and_execute_multiple {name:"$(name)",run:"$(run)"}
