@@ -1,11 +1,11 @@
-- 大规模函数重命名，将多个函数名称标准化为更具描述性的英文名称
-- 重命名的函数包括：things_count → count_items、fill_outline → create_glass_box、clear → force_death_drops、player_id → generate_player_id、daytime → get_day_time、entity → get_entity_count、entity_density → get_entity_density、day → get_game_day、gametime → get_game_time、item → get_item_count、players → get_player_count、other_entity → non_player_entities、spawn → spawn_dummies、kill_item → clear_items、show_entity → display_entity_info、addteam → create_teams、nodamage → disable_special_damage、setworldspawn → set_world_spawn、health → display_health_below_name、health_list → display_health_in_tab、level → display_level_in_tab、death → enable_death_scoreboard、debuff → apply_debuffs、clear_run_b → clear_and_execute_multiple、clear_run_a → clear_and_execute_single、things_to_xp → convert_items_to_xp、slime → create_rescue_platform、team → disable_friendly_fire、show_entity → display_entity_count、kill_better → kill_by_density、kill → kill_excess_entities、kill_tnt → kill_tnt_by_density、keep_have_things → maintain_item_count、ban → soft_ban_player、tpa → teleport_request、suicide → trigger_suicide
-- 改进函数命名规范，使函数功能更加清晰易懂
-- 保持函数功能不变，仅优化命名以提高代码可读性
+- 修正函数名称引用，确保与 v2.0.0 的重命名保持一致
+- 更新的函数引用包括：things_count → count_items、clear_run_b → clear_and_execute_multiple、things_to_xp → convert_items_to_xp、keep_have_things → maintain_item_count
+- 修复了 5 个函数文件中的函数调用引用
+- 确保数据包内部函数调用的一致性
 
 ---
 
-- Large-scale function renaming, standardizing multiple function names to more descriptive English names
-- Renamed functions include: things_count → count_items、fill_outline → create_glass_box、clear → force_death_drops、player_id → generate_player_id、daytime → get_day_time、entity → get_entity_count、entity_density → get_entity_density、day → get_game_day、gametime → get_game_time、item → get_item_count、players → get_player_count、other_entity → non_player_entities、spawn → spawn_dummies、kill_item → clear_items、show_entity → display_entity_info、addteam → create_teams、nodamage → disable_special_damage、setworldspawn → set_world_spawn、health → display_health_below_name、health_list → display_health_in_tab、level → display_level_in_tab、death → enable_death_scoreboard、debuff → apply_debuffs、clear_run_b → clear_and_execute_multiple、clear_run_a → clear_and_execute_single、things_to_xp → convert_items_to_xp、slime → create_rescue_platform、team → disable_friendly_fire、show_entity → display_entity_count、kill_better → kill_by_density、kill → kill_excess_entities、kill_tnt → kill_tnt_by_density、keep_have_things → maintain_item_count、ban → soft_ban_player、tpa → teleport_request、suicide → trigger_suicide
-- Improved function naming conventions to make function purposes clearer and more understandable
-- Maintained function functionality unchanged, only optimized naming to improve code readability
+- Fixed function name references to ensure consistency with v2.0.0 renaming
+- Updated function references include: things_count → count_items、clear_run_b → clear_and_execute_multiple、things_to_xp → convert_items_to_xp、keep_have_things → maintain_item_count
+- Fixed function call references in 5 function files
+- Ensured consistency of internal function calls within the datapack
