@@ -2,7 +2,7 @@
 # 为所有持有指定物品的玩家执行一次命令并清除一个物品
 
 # 获取所有玩家持有指定物品的数量
-$function dfl:lib/things_count {name:"$(name)"}
+$function dfl:lib/count_items {name:"$(name)"}
 
 # 为持有该物品的每个玩家执行一次指定命令
 $execute as @a \

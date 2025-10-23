@@ -2,7 +2,7 @@
 # 递归函数，用于清除指定物品并执行相应次数的命令
 
 # 获取玩家持有指定物品的数量
-$function dfl:lib/things_count {name:"$(name)"}
+$function dfl:lib/count_items {name:"$(name)"}
 
 # 如果物品数量大于等于1，执行指定命令
 $execute if score @s dfl_$(name)_num matches 1.. \

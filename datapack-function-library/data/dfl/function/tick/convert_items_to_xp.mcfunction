@@ -1,7 +1,7 @@
 ## 物品转化为经验
 
 # 物品计数
-$function dfl:lib/things_count {name:"$(name)"}
+$function dfl:lib/count_items {name:"$(name)"}
 
 # 给予经验与清除物品
 $execute if score @s dfl_$(name)_num matches 1.. \

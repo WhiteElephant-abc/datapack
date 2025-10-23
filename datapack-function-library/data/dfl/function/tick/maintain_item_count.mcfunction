@@ -1,7 +1,7 @@
 ## 保持拥有指定数量的物品
 
 # 统计物品数量
-$function dfl:lib/things_count {name:"$(name)"}
+$function dfl:lib/count_items {name:"$(name)"}
 
 # 给予物品
 $execute unless score @s dfl_$(name)_num matches $(num).. \
@@ -16,4 +16,4 @@ $execute if score @s dfl_$(name)_num matches $(num) \
     run return fail
 
 # 递归调用
-$function dfl:tick/keep_have_things {name:"$(name)",num:"$(num)"}
+$function dfl:tick/maintain_item_count {name:"$(name)",num:"$(num)"}
