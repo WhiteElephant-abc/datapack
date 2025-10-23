@@ -42,7 +42,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 关闭特殊伤害
 
-函数用法：`/function dfl:start/nodamage`
+函数用法：`/function dfl:start/disable_special_damage`
 
 - 摔落伤害；
 - 火焰伤害；
@@ -51,7 +51,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 固定重生点为 0 0
 
-函数用法：`/function dfl:start/setworldspawn`
+函数用法：`/function dfl:start/set_world_spawn`
 
 - 将世界重生点设为 0 0 0；
 - 将重生点半径设为 0；
@@ -59,7 +59,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 开启死亡榜
 
-函数用法：`/function dfl:start/show/death`
+函数用法：`/function dfl:start/show/enable_death_scoreboard`
 
 - 创建名为 death 的记分项；
 - 会在屏幕右侧显示死亡次数；
@@ -68,7 +68,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示玩家血量
 
-函数用法：`/function dfl:start/show/health`
+函数用法：`/function dfl:start/show/display_health_below_name`
 
 - 创建名为 health 的记分项；
 - 会在玩家 ID 下方显示玩家血量；
@@ -77,7 +77,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示玩家经验等级
 
-函数用法：`/function dfl:start/show/level`
+函数用法：`/function dfl:start/show/display_level_in_tab`
 
 - 创建名为 level 的记分项；
 - 会在 Tab 栏（玩家列表栏）显示每名玩家的经验等级；
@@ -85,7 +85,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示玩家血条
 
-函数用法：`/function dfl:start/show/health_list`
+函数用法：`/function dfl:start/show/display_health_in_tab`
 
 - 创建名为 health 的记分项；
 - 会在 Tab 栏（玩家列表栏）显示每名玩家的血条。
@@ -95,7 +95,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 快速新建队伍
 
-函数用法：`/function dfl:start/addteam {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
+函数用法：`/function dfl:start/create_teams {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
 
 - 创建两个队伍，名称为 {team_blue} 和 {team_red}；
 - 颜色分别为 blue 和 red；
@@ -109,7 +109,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 软封禁玩家
 
-函数用法：`/function dfl:tick/ban`
+函数用法：`/function dfl:tick/soft_ban_player`
 
 - 注意：此函数执行者必须为要**被封禁**的玩家，可以使用 `/execute` 命令；
 - 通过不断 tp 玩家到 0 0 0，将模式设为冒险以及不断给予玩家负面 Buff 来实现软封禁；
@@ -130,7 +130,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 一键负面 Buff
 
-函数用法：`/function dfl:tick/debuff`
+函数用法：`/function dfl:tick/apply_debuffs`
 
 给予**函数执行者**以下 Debuff：
 
@@ -155,7 +155,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 实体过多清除实体
 
-函数用法：`/function dfl:tick/kill {num:"1000"}`
+函数用法：`/function dfl:tick/kill_excess_entities {num:"1000"}`
 
 - 在非玩家实体数大于 {num} 时清除所有非玩家实体；
 - 不会清理带有 need 标签的实体；
@@ -167,9 +167,9 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 实体密度过大清除实体
 
-函数用法：`/function dfl:tick/kill_better {num:"50"}`
+函数用法：`/function dfl:tick/kill_by_density {num:"50"}`
 
-前置函数：`/function dfl:lib/entity_density`
+前置函数：`/function dfl:lib/get_entity_density`
 
 - 令所有实体在附近 10 格内实体数大于 {num} 时清除这些实体；
 - 不会杀死玩家；
@@ -188,9 +188,9 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示实体数
 
-函数用法：`/function dfl:tick/show_entity`
+函数用法：`/function dfl:tick/display_entity_count`
 
-前置函数：`/function dfl:lib/entity`
+前置函数：`/function dfl:lib/get_entity_count`
 
 - 在玩家动作栏（快捷栏上方）显示实时实体数量。
 - 效果如下：
@@ -199,7 +199,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 关闭玩家友伤及碰撞
 
-函数用法：`/function dfl:tick/team`
+函数用法：`/function dfl:tick/disable_friendly_fire`
 
 - 添加名为 dfl 的队伍，并将所有玩家加入此队伍；
 - 注意：由于同一实体无法加入多个队伍，如果想要使用玩家组队功能请勿启用此函数；
@@ -209,14 +209,14 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### TNT 实体密度过大清除 TNT
 
-函数用法：`/function dfl:tick/kill_tnt {num:"200"}`
+函数用法：`/function dfl:tick/kill_tnt_by_density {num:"200"}`
 
 - TNT 附近五格内的 TNT 实体数大于 {num} 时清除这些 TNT 实体；
 - 创建名为 dfl_tntdensity 的记分项。
 
 ### 无权限玩家自杀
 
-函数用法：`/function dfl:tick/suicide`
+函数用法：`/function dfl:tick/trigger_suicide`
 
 - 创建名为 kill 的记分项；
 - 输入 `/trigger kill` 以自杀（此指令不需要任何权限）。
@@ -239,29 +239,29 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 清除单个物品并执行命令
 
-函数用法：`/function dfl:tick/clear_run_a {name:"stone",run:"tp ~ 100 ~"}`
+函数用法：`/function dfl:tick/clear_and_execute_single {name:"stone",run:"tp ~ 100 ~"}`
 
 - 清除所有玩家的一个 {name} 并执行 {run}；
 - 注意：参数 run 中的命令首尾不能有多余的空格，命令前不能有斜杠。
 
 ### 清除指定物品并执行多次命令
 
-函数用法：`/function dfl:tick/clear_run_b {name:"sand",run:"give @s anvil"}`
+函数用法：`/function dfl:tick/clear_and_execute_multiple {name:"sand",run:"give @s anvil"}`
 
 - 清除函数执行者的所有 {name} 并执行对应次数的 {run}**（在同一 tick 之内）**；
 - 注意：参数 run 中的命令首尾不能有多余的空格，命令前不能有斜杠。
 
 ### 保持拥有某物品
 
-函数用法：`/function dfl:tick/keep_have_things {name:"slime_block",num:"64"}`
+函数用法：`/function dfl:tick/maintain_item_count {name:"slime_block",num:"64"}`
 
 - 让命令执行者刚好拥有指定数量的物品。
 
 ### 自救平台
 
-函数用法：`/function dfl:tick/slime`
+函数用法：`/function dfl:tick/create_rescue_platform`
 
-前置函数：`/function dfl:lib/gametime`
+前置函数：`/function dfl:lib/get_game_time`
 
 - 创建名为 dfl_slime_marker_temp 的记分项，用于储存史莱姆平台生成时的时间；
 - 在拥有 dfl_slime 标签的玩家脚下生成一个 3*3 的史莱姆平台并移除标签，史莱姆平台只能覆盖掉空气方块；
@@ -271,15 +271,15 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 物品转化为经验
 
-函数用法：`/function dfl:tick/things_to_xp {name:"tnt",xp:"1"}`
+函数用法：`/function dfl:tick/convert_items_to_xp {name:"tnt",xp:"1"}`
 
 - 将函数执行者身上的每个 {name} 转化为 {xp} 点经验值。
 
 ### tpa
 
-函数用法：`/function dfl:tick/tpa`
+函数用法：`/function dfl:tick/teleport_request`
 
-前置函数：`/function dfl:lib/player_id`
+前置函数：`/function dfl:lib/generate_player_id`
 
 - 创建名为 tpa 和 tpa_enable 的记分项；
 - 输入 `/trigger tpa set <玩家在 dfl_playerid 记分项中的 id，可以通过 Tab 查看>` 以传送到对应玩家；
@@ -301,7 +301,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 清理掉落物
 
-函数用法：`/function dfl:redstone/kill_item`
+函数用法：`/function dfl:redstone/clear_items`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 清除所有掉落物并通过 `/tellraw` 输出清除的掉落物数量；
@@ -312,15 +312,15 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示实体数量信息
 
-函数用法：`/function dfl:redstone/show_entity`
+函数用法：`/function dfl:redstone/display_entity_info`
 
 前置函数：
 
-`/function dfl:lib/entity`
+`/function dfl:lib/get_entity_count`
 
-`/function dfl:lib/item`
+`/function dfl:lib/get_item_count`
 
-`/function dfl:lib/other_entity`
+`/function dfl:lib/non_player_entities`
 
 此函数效果如下：
 
@@ -332,7 +332,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 强制死亡掉落
 
-函数用法：`/function dfl:lib/clear`
+函数用法：`/function dfl:lib/force_death_drops`
 
 1. 关闭死亡不掉落。
 2. 杀死函数执行者。
@@ -340,35 +340,35 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 获取实体数
 
-函数用法：`/function dfl:lib/entity`
+函数用法：`/function dfl:lib/get_entity_count`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将实体数量写入 entity 的 dfl_scoreboard 记分项。
 
 ### 获取实体密度
 
-函数用法：`/function dfl:lib/entity_density`
+函数用法：`/function dfl:lib/get_entity_density`
 
 - 创建名为 dfl_density 的记分项；
 - 将所有实体附近 10 格内的实体数写入此实体的记分项。
 
 ### 获取掉落物数
 
-函数用法：`/function dfl:lib/item`
+函数用法：`/function dfl:lib/get_item_count`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将掉落物数量写入 item 的 dfl_scoreboard 记分项。
 
 ### 获取非玩家实体数
 
-函数用法：`/function dfl:lib/other_entity`
+函数用法：`/function dfl:lib/non_player_entities`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将非玩家实体数量写入 other_entity 的 dfl_scoreboard 记分项。
 
 ### 获取游戏天数
 
-函数用法：`/function dfl:lib/day`
+函数用法：`/function dfl:lib/get_game_day`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将游戏天数写入 day 的 dfl_scoreboard 记分项；
@@ -376,7 +376,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 获取当日时间
 
-函数用法：`/function dfl:lib/daytime`
+函数用法：`/function dfl:lib/get_day_time`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将当日时间写入 daytime 的 dfl_scoreboard 记分项；
@@ -384,13 +384,13 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 用玻璃包围玩家
 
-函数用法：`/function dfl:lib/fill_outline`
+函数用法：`/function dfl:lib/create_glass_box`
 
 - 在命令执行者处生成 5*5 的空心玻璃立方体。
 
 ### 获取游戏时间
 
-函数用法：`/function dfl:lib/gametime`
+函数用法：`/function dfl:lib/get_game_time`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将游戏时间写入 gametime 的 dfl_scoreboard 记分项；
@@ -398,7 +398,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 获取玩家数
 
-函数用法：`/function dfl:lib/players`
+函数用法：`/function dfl:lib/get_player_count`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 将玩家数量写入 players 的 dfl_scoreboard 记分项。
@@ -411,7 +411,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 生成 UID
 
-函数用法：`/function dfl:lib/player_id`
+函数用法：`/function dfl:lib/generate_player_id`
 
 - 创建名为 dfl_playerid 和 dfl_scoreboard 的记分项；
 - 在 playerid_temp 的 dfl_scoreboard 记分项中储存 UID 使用进度；
@@ -421,14 +421,14 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 检测物品数量
 
-函数用法：`/function dfl:lib/things_count {name:"stone"}`
+函数用法：`/function dfl:lib/count_items {name:"stone"}`
 
 - 创建名为 dfl\_{name}\_num 的记分项；
 - 将所有玩家的 {name} 数量写入各自的此记分项。
 
 ### 批量生成假人
 
-函数用法：`/function dfl:lib/spawn`
+函数用法：`/function dfl:lib/spawn_dummies`
 
 - 以玩家为坐标基准生成 100 个 Carpet 假人。
 

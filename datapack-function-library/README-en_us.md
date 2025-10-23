@@ -42,7 +42,7 @@ If you encounter any problems, please click [here](https://github.com/WhiteEleph
 
 ### Disable Special Damage
 
-Function usage: `/function dfl:start/nodamage`
+Function usage: `/function dfl:start/disable_special_damage`
 
 - Fall damage;
 - Fire damage;
@@ -51,7 +51,7 @@ Function usage: `/function dfl:start/nodamage`
 
 ### Fix the respawn point to 0 0
 
-Function usage: `/function dfl:start/setworldspawn`
+Function usage: `/function dfl:start/set_world_spawn`
 
 - Set the world respawn point to 0 0 0;
 - Set the respawn point radius to 0;
@@ -59,7 +59,7 @@ Function usage: `/function dfl:start/setworldspawn`
 
 ### Enable death leaderboard
 
-Function usage: `/function dfl:start/show/death`
+Function usage: `/function dfl:start/show/enable_death_scoreboard`
 
 - Create a scoreboard item named death;
 - The number of deaths will be displayed on the right side of the screen;
@@ -68,7 +68,7 @@ Function usage: `/function dfl:start/show/death`
 
 ### Display player health
 
-Function usage: `/function dfl:start/show/health`
+Function usage: `/function dfl:start/show/display_health_below_name`
 
 - Create a scoreboard item named health;
 - The player's health will be displayed below the player's ID;
@@ -77,7 +77,7 @@ Function usage: `/function dfl:start/show/health`
 
 ### Display player experience level
 
-Function usage: `/function dfl:start/show/level`
+Function usage: `/function dfl:start/show/display_level_in_tab`
 
 - Create a scoreboard item named level;
 - The experience level of each player will be displayed in the Tab bar (player list bar);
@@ -85,7 +85,7 @@ Function usage: `/function dfl:start/show/level`
 
 ### Display player health bar
 
-Function usage: `/function dfl:start/show/health_list`
+Function usage: `/function dfl:start/show/display_health_in_tab`
 
 - Create a scoreboard item named health;
 - The health bar of each player will be displayed in the Tab bar (player list bar).
@@ -95,7 +95,7 @@ Function usage: `/function dfl:start/show/health_list`
 
 ### Quickly create a new team
 
-Function usage: `/function dfl:start/addteam {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
+Function usage: `/function dfl:start/create_teams {team_blue:"blue",team_red:"red",prefix_blue:"blue",prefix_red:"red"}`
 
 - Create two teams named {team_blue} and {team_red};
 - The colors are blue and red respectively;
@@ -109,7 +109,7 @@ Function usage: `/function dfl:start/addteam {team_blue:"blue",team_red:"red",pr
 
 ### Soft ban player
 
-Function usage: `/function dfl:tick/ban`
+Function usage: `/function dfl:tick/soft_ban_player`
 
 - Note: The executor of this function must be the player to be **banned**, you can use the `/execute` command;
 - Realize a soft ban by continuously tp the player to 0 0 0, setting the mode to adventure, and continuously giving the player negative buffs;
@@ -130,7 +130,7 @@ Function usage: `/function dfl:tick/beacon_fly`
 
 ### One-click negative Buff
 
-Function usage: `/function dfl:tick/debuff`
+Function usage: `/function dfl:tick/apply_debuffs`
 
 Give the **function executor** the following Debuffs:
 
@@ -155,7 +155,7 @@ Function usage: `/function dfl:tick/iron_block_elevator`
 
 ### Clear entities if there are too many
 
-Function usage: `/function dfl:tick/kill {num:"1000"}`
+Function usage: `/function dfl:tick/kill_excess_entities {num:"1000"}`
 
 - Clear all non-player entities when the number of non-player entities is greater than {num};
 - Will not clear entities with the need tag;
@@ -167,9 +167,9 @@ Function usage: `/function dfl:tick/kill {num:"1000"}`
 
 ### Clear entities if the entity density is too high
 
-Function usage: `/function dfl:tick/kill_better {num:"50"}`
+Function usage: `/function dfl:tick/kill_by_density {num:"50"}`
 
-Prerequisite function: `/function dfl:lib/entity_density`
+Prerequisite function: `/function dfl:lib/get_entity_density`
 
 - Make all entities clear these entities when the number of entities within 10 blocks is greater than {num};
 - Will not kill players;
@@ -188,9 +188,9 @@ Function usage: `/function dfl:tick/mith`
 
 ### Display the number of entities
 
-Function usage: `/function dfl:tick/show_entity`
+Function usage: `/function dfl:tick/display_entity_count`
 
-Prerequisite function: `/function dfl:lib/entity`
+Prerequisite function: `/function dfl:lib/get_entity_count`
 
 - Display the real-time number of entities in the player's action bar (above the shortcut bar).
 - The effect is as follows:
@@ -199,7 +199,7 @@ Prerequisite function: `/function dfl:lib/entity`
 
 ### Disable player friendly fire and collision
 
-Function usage: `/function dfl:tick/team`
+Function usage: `/function dfl:tick/disable_friendly_fire`
 
 - Add a team named dfl and add all players to this team;
 - Note: Since the same entity cannot join multiple teams, please do not enable this function if you want to use the player team function;
@@ -209,14 +209,14 @@ Function usage: `/function dfl:tick/team`
 
 ### Clear TNT if the TNT entity density is too high
 
-Function usage: `/function dfl:tick/kill_tnt {num:"200"}`
+Function usage: `/function dfl:tick/kill_tnt_by_density {num:"200"}`
 
 - Clear these TNT entities when the number of TNT entities within five blocks of the TNT is greater than {num};
 - Create a scoreboard item named dfl_tntdensity.
 
 ### Suicide for players without permission
 
-Function usage: `/function dfl:tick/suicide`
+Function usage: `/function dfl:tick/trigger_suicide`
 
 - Create a scoreboard item named kill;
 - Enter `/trigger kill` to commit suicide (this command does not require any permission).
@@ -239,29 +239,29 @@ Function usage: `/function dfl:tick/always_sunny`
 
 ### Clear a single item and execute a command
 
-Function usage: `/function dfl:tick/clear_run_a {name:"stone",run:"tp ~ 100 ~"}`
+Function usage: `/function dfl:tick/clear_and_execute_single {name:"stone",run:"tp ~ 100 ~"}`
 
 - Clear one {name} from all players and execute {run};
 - Note: There should be no extra spaces at the beginning and end of the command in the run parameter, and there should be no slash before the command.
 
 ### Clear specified items and execute commands multiple times
 
-Function usage: `/function dfl:tick/clear_run_b {name:"sand",run:"give @s anvil"}`
+Function usage: `/function dfl:tick/clear_and_execute_multiple {name:"sand",run:"give @s anvil"}`
 
 - Clear all {name} of the function executor and execute the corresponding number of {run} **(within the same tick)**;
 - Note: There should be no extra spaces at the beginning and end of the command in the run parameter, and there should be no slash before the command.
 
 ### Keep having an item
 
-Function usage: `/function dfl:tick/keep_have_things {name:"slime_block",num:"64"}`
+Function usage: `/function dfl:tick/maintain_item_count {name:"slime_block",num:"64"}`
 
 - Let the command executor have exactly the specified number of items.
 
 ### Self-rescue platform
 
-Function usage: `/function dfl:tick/slime`
+Function usage: `/function dfl:tick/create_rescue_platform`
 
-Prerequisite function: `/function dfl:lib/gametime`
+Prerequisite function: `/function dfl:lib/get_game_time`
 
 - Create a scoreboard item named dfl_slime_marker_temp to store the time when the slime platform is generated;
 - Generate a 3*3 slime platform under the player with the dfl_slime tag and remove the tag. The slime platform can only cover air blocks;
@@ -279,7 +279,7 @@ Function usage: `/function dfl:tick/things_to_xp {name:"tnt",xp:"1"}`
 
 Function usage: `/function dfl:tick/tpa`
 
-Prerequisite function: `/function dfl:lib/player_id`
+Prerequisite function: `/function dfl:lib/generate_player_id`
 
 - Create scoreboard items named tpa and tpa_enable;
 - Enter `/trigger tpa set <player's id in the dfl_playerid scoreboard, which can be viewed through Tab>` to teleport to the corresponding player;
@@ -301,7 +301,7 @@ Function usage: `/function auto_smelt:smelt {input:"raw_iron",output:"iron_ingot
 
 ### Clean up dropped items
 
-Function usage: `/function dfl:redstone/kill_item`
+Function usage: `/function dfl:redstone/clear_items`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Clear all dropped items and output the number of cleared dropped items through `/tellraw`;
@@ -312,15 +312,15 @@ Function usage: `/function dfl:redstone/kill_item`
 
 ### Display entity quantity information
 
-Function usage: `/function dfl:redstone/show_entity`
+Function usage: `/function dfl:redstone/display_entity_info`
 
 Prerequisite functions:
 
-`/function dfl:lib/entity`
+`/function dfl:lib/get_entity_count`
 
-`/function dfl:lib/item`
+`/function dfl:lib/get_item_count`
 
-`/function dfl:lib/other_entity`
+`/function dfl:lib/non_player_entities`
 
 The effect of this function is as follows:
 
@@ -332,7 +332,7 @@ The effect of this function is as follows:
 
 ### Force death drop
 
-Function usage: `/function dfl:lib/clear`
+Function usage: `/function dfl:lib/force_death_drops`
 
 1. Turn off keep inventory on death.
 2. Kill the function executor.
@@ -340,35 +340,35 @@ Function usage: `/function dfl:lib/clear`
 
 ### Get the number of entities
 
-Function usage: `/function dfl:lib/entity`
+Function usage: `/function dfl:lib/get_entity_count`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the number of entities to the dfl_scoreboard scoreboard item of entity.
 
 ### Get entity density
 
-Function usage: `/function dfl:lib/entity_density`
+Function usage: `/function dfl:lib/get_entity_density`
 
 - Create a scoreboard item named dfl_density;
 - Write the number of entities within 10 blocks of all entities to the scoreboard item of this entity.
 
 ### Get the number of dropped items
 
-Function usage: `/function dfl:lib/item`
+Function usage: `/function dfl:lib/get_item_count`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the number of dropped items to the dfl_scoreboard scoreboard item of item.
 
 ### Get the number of non-player entities
 
-Function usage: `/function dfl:lib/other_entity`
+Function usage: `/function dfl:lib/non_player_entities`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the number of non-player entities to the dfl_scoreboard scoreboard item of other_entity.
 
 ### Get the number of game days
 
-Function usage: `/function dfl:lib/day`
+Function usage: `/function dfl:lib/get_game_day`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the number of game days to the dfl_scoreboard scoreboard item of day;
@@ -376,7 +376,7 @@ Function usage: `/function dfl:lib/day`
 
 ### Get the time of day
 
-Function usage: `/function dfl:lib/daytime`
+Function usage: `/function dfl:lib/get_day_time`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the time of day to the dfl_scoreboard scoreboard item of daytime;
@@ -384,13 +384,13 @@ Function usage: `/function dfl:lib/daytime`
 
 ### Surround the player with glass
 
-Function usage: `/function dfl:lib/fill_outline`
+Function usage: `/function dfl:lib/create_glass_box`
 
 - Generate a 5*5 hollow glass cube at the command executor.
 
 ### Get game time
 
-Function usage: `/function dfl:lib/gametime`
+Function usage: `/function dfl:lib/get_game_time`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the game time to the dfl_scoreboard scoreboard item of gametime;
@@ -398,7 +398,7 @@ Function usage: `/function dfl:lib/gametime`
 
 ### Get the number of players
 
-Function usage: `/function dfl:lib/players`
+Function usage: `/function dfl:lib/get_player_count`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Write the number of players to the dfl_scoreboard scoreboard item of players.
@@ -411,7 +411,7 @@ Function usage: `/function dfl:lib/change_max_health {num:"100"}`
 
 ### Generate UID
 
-Function usage: `/function dfl:lib/player_id`
+Function usage: `/function dfl:lib/generate_player_id`
 
 - Create scoreboard items named dfl_playerid and dfl_scoreboard;
 - Store the UID usage progress in the dfl_scoreboard scoreboard item of playerid_temp;
@@ -421,14 +421,14 @@ Function usage: `/function dfl:lib/player_id`
 
 ### Detect the number of items
 
-Function usage: `/function dfl:lib/things_count {name:"stone"}`
+Function usage: `/function dfl:lib/count_items {name:"stone"}`
 
 - Create a scoreboard item named dfl\_{name}\_num;
 - Write the number of {name} of all players to their respective scoreboard items.
 
 ### Batch generate dummies
 
-Function usage: `/function dfl:lib/spawn`
+Function usage: `/function dfl:lib/spawn_dummies`
 
 - Generate 100 Carpet dummies based on the player's coordinates.
 

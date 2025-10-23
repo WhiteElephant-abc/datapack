@@ -1,9 +1,11 @@
-- 重构自动冶炼函数，使用子函数提高代码可读性和可维护性
-- 为所有函数文件添加详细注释和格式化，提升代码质量
-- 优化函数结构，改进代码组织
+- 大规模函数重命名，将多个函数名称标准化为更具描述性的英文名称
+- 重命名的函数包括：things_count → count_items、fill_outline → create_glass_box、clear → force_death_drops、player_id → generate_player_id、daytime → get_day_time、entity → get_entity_count、entity_density → get_entity_density、day → get_game_day、gametime → get_game_time、item → get_item_count、players → get_player_count、other_entity → non_player_entities、spawn → spawn_dummies、kill_item → clear_items、show_entity → display_entity_info、addteam → create_teams、nodamage → disable_special_damage、setworldspawn → set_world_spawn、health → display_health_below_name、health_list → display_health_in_tab、level → display_level_in_tab、death → enable_death_scoreboard、debuff → apply_debuffs、clear_run_b → clear_and_execute_multiple、clear_run_a → clear_and_execute_single、things_to_xp → convert_items_to_xp、slime → create_rescue_platform、team → disable_friendly_fire、show_entity → display_entity_count、kill_better → kill_by_density、kill → kill_excess_entities、kill_tnt → kill_tnt_by_density、keep_have_things → maintain_item_count、ban → soft_ban_player、tpa → teleport_request、suicide → trigger_suicide
+- 改进函数命名规范，使函数功能更加清晰易懂
+- 保持函数功能不变，仅优化命名以提高代码可读性
 
 ---
 
-- Refactored auto smelting function using sub-functions for improved code readability and maintainability
-- Added detailed comments and formatting to all function files, enhancing code quality
-- Optimized function structure and improved code organization
+- Large-scale function renaming, standardizing multiple function names to more descriptive English names
+- Renamed functions include: things_count → count_items、fill_outline → create_glass_box、clear → force_death_drops、player_id → generate_player_id、daytime → get_day_time、entity → get_entity_count、entity_density → get_entity_density、day → get_game_day、gametime → get_game_time、item → get_item_count、players → get_player_count、other_entity → non_player_entities、spawn → spawn_dummies、kill_item → clear_items、show_entity → display_entity_info、addteam → create_teams、nodamage → disable_special_damage、setworldspawn → set_world_spawn、health → display_health_below_name、health_list → display_health_in_tab、level → display_level_in_tab、death → enable_death_scoreboard、debuff → apply_debuffs、clear_run_b → clear_and_execute_multiple、clear_run_a → clear_and_execute_single、things_to_xp → convert_items_to_xp、slime → create_rescue_platform、team → disable_friendly_fire、show_entity → display_entity_count、kill_better → kill_by_density、kill → kill_excess_entities、kill_tnt → kill_tnt_by_density、keep_have_things → maintain_item_count、ban → soft_ban_player、tpa → teleport_request、suicide → trigger_suicide
+- Improved function naming conventions to make function purposes clearer and more understandable
+- Maintained function functionality unchanged, only optimized naming to improve code readability
