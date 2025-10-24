@@ -10,9 +10,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 主要构建命令
 
-- `bazelisk build //[数据包目录]` - 构建指定的数据包
-- `bazelisk build //[数据包目录]:server` - 构建并启动开发服务器
-- `bazelisk run //[数据包目录]:upload_modrinth` - 上传数据包到 Modrinth
+- `bazelisk build [数据包目录]` - 构建指定的数据包
+- `bazelisk run [数据包目录]:server` - 构建并启动开发服务器
 
 ### 常用构建目标
 
@@ -20,18 +19,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `:datapack` - 构建数据包 ZIP 文件
 - `:server` - 启动开发服务器别名
-- `:upload_modrinth` - 上传到 Modrinth（如果配置了项目 ID）
 
 ### 示例构建命令
 
 ```bash
 # 构建石头消失数据包
-bazelisk build //stone-disappearance:stone-disappearance
+bazelisk build stone-disappearance
 
 # 启动自动幸运方块开发服务器
-bazelisk run //auto-lucky-block:server
+bazelisk run auto-lucky-block:server
 
 # 构建所有数据包
+bazelisk build ...
+```
+
+### Bazel 命令语法说明
+
+在 bash 环境中，使用 Bazel 构建命令时**不需要**在目标前添加 `//` 前缀：
+
+- ✅ 正确：`bazelisk build datapack-function-library`
+- ❌ 错误：`bazelisk build //datapack-function-library`
+
+这是因为在 Windows bash 环境中，`//` 前缀会被错误解析为路径分隔符，导致构建失败。所有构建目标都应该直接使用目录名称，无需 `//` 前缀。
+
+在标准的 shell 环境中，可以使用带 `//` 前缀的语法：
+
+```shell
+# 标准 shell 环境中的语法
+bazelisk build //stone-disappearance:stone-disappearance
 bazelisk build //...
 ```
 
@@ -73,7 +88,7 @@ bazelisk build //...
 1. 在根目录创建新的数据包目录
 2. 创建 `BUILD.bazel` 文件，使用 `complete_datapack_config()` 宏
 3. 按照标准结构组织数据文件
-4. 设置正确的 `pack_id` 和版本号
+4. 设置正确的 `pack_id`、`modrinth_project_id` 和版本号
 
 ### 版本管理
 
