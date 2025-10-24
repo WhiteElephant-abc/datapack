@@ -1,5 +1,7 @@
-- 修复 kill_by_density 函数语法错误
+- 重构：将 Redstone 分类重命名为 Timer
+- 更新：函数路径从 dfl:redstone/ 改为 dfl:timer/
 
 ---
 
-- Fixed kill_by_density function syntax error
+- Refactor: Renamed Redstone category to Timer
+- Update: Function paths changed from dfl:redstone/ to dfl:timer/
