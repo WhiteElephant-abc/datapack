@@ -295,13 +295,13 @@ execute if score dfl_enable dfl_scoreboard matches 1
 - 如果背包中同时拥有三种支持的燃料，会同时消耗这些燃料；
 - 消耗煤炭块后可以同时烧炼 9 个物品，并扣除 9 点经验。
 
-## Redstone
+## Timer
 
 <span style="color:red;"><b>此分类中的函数建议每间隔一段时间后执行。（可以使用 [/schedule](https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/schedule "跳转到wiki查看此命令用法") 命令）</b></span>
 
 ### 清理掉落物
 
-函数用法：`/function dfl:redstone/clear_items`
+函数用法：`/function dfl:timer/clear_items`
 
 - 创建名为 dfl_scoreboard 的记分项；
 - 清除所有掉落物并通过 `/tellraw` 输出清除的掉落物数量；
@@ -312,7 +312,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 显示实体数量信息
 
-函数用法：`/function dfl:redstone/display_entity_info`
+函数用法：`/function dfl:timer/display_entity_info`
 
 前置函数：
 

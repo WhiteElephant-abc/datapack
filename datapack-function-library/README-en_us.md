@@ -295,13 +295,13 @@ Function usage: `/function auto_smelt:smelt {input:"raw_iron",output:"iron_ingot
 - If the backpack has three supported fuels at the same time, these fuels will be consumed at the same time;
 - After consuming a coal block, 9 items can be smelted at the same time, and 9 experience points will be deducted.
 
-## Redstone
+## Timer
 
 <span style="color:red;"><b>Functions in this category are recommended to be executed after a period of time. (You can use the [/schedule](https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/schedule "Go to the wiki to see the usage of this command") command)</b></span>
 
 ### Clean up dropped items
 
-Function usage: `/function dfl:redstone/clear_items`
+Function usage: `/function dfl:timer/clear_items`
 
 - Create a scoreboard item named dfl_scoreboard;
 - Clear all dropped items and output the number of cleared dropped items through `/tellraw`;
@@ -312,7 +312,7 @@ Function usage: `/function dfl:redstone/clear_items`
 
 ### Display entity quantity information
 
-Function usage: `/function dfl:redstone/display_entity_info`
+Function usage: `/function dfl:timer/display_entity_info`
 
 Prerequisite functions:
 
