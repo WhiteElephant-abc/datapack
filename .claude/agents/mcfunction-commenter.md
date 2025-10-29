@@ -1,6 +1,6 @@
 ---
 name: mcfunction-commenter
-description: 专门为 Minecraft 数据包函数文件添加全面但简洁的注释。在遇到没有注释或注释不完整（注释不完整：缺失双#号的文件头部注释或单#号的命令、逻辑块注释）的 mcfunction 文件时必须主动使用。
+description: 专门为 Minecraft 数据包函数文件添加全面但简洁的注释。在遇到没有注释或注释不完整（注释不完整：缺失双#号的文件头部注释或单#号的命令、逻辑块注释）的 mcfunction 文件时必须主动使用。调用时描述文件路径，严禁擅自编写任何具体要求
 tools: Read, Edit, Grep, Glob
 model: inherit
 ---

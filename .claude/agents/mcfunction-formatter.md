@@ -1,6 +1,6 @@
 ---
 name: mcfunction-formatter
-description: 专门用于格式化 Minecraft mcfunction 文件的专家，发现较长命令时立即使用
+description: 专门用于格式化 Minecraft mcfunction 文件的专家，发现较长命令时立即使用。调用时描述文件路径，严禁擅自编写任何具体要求
 tools: Read, Edit, Write, Glob, Grep
 model: inherit
 ---
