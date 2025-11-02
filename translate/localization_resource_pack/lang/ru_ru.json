@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "Вы были мягко забанены на этом сервере",
-  "tick.ban.dfl.from": "Через пакет данных",
   "tick.show.entity.dfl.entity.num": "Количество сущностей: %s",
   "redstone.kill.item.dfl.entity.clear": "Очищено",
   "redstone.kill.item.dfl.entity.item": "предметов",

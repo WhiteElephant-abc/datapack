@@ -15,8 +15,6 @@
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Block, der zum Ersetzen fallender Blöcke verwendet wird.",
   "dialog.stone_disappearance.advanced_common.tick_fill": "Lösche Steine in einem 3*3*3-Bereich in der Nähe des Spielers in Echtzeit.",
   "dialog.stone_disappearance.advanced_overworld.title": "Erweiterte Einstellungen für Steinverschwinden: Oberwelt-Einstellungen",
-  "tick.ban.dfl.ban": "Du wurdest von diesem Server soft gebannt.",
-  "tick.ban.dfl.from": "Durch Datenpaket",
   "tick.show.entity.dfl.entity.num": "Anzahl der Entitäten: %s",
   "redstone.kill.item.dfl.entity.clear": "Entfernt",
   "redstone.kill.item.dfl.entity.item": "Gegenstände",
