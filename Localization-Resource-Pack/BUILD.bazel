@@ -4,7 +4,7 @@ load("@//rule:upload_modrinth.bzl", "upload_modrinth")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-pack_version = "1.0.0"
+pack_version = "2.0.0"
 
 pack_name = "Localization-Resource-Pack"
 
