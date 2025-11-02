@@ -1,7 +1,9 @@
-- 重构：将 Redstone 分类重命名为 Timer
-- 更新：函数路径从 dfl:redstone/ 改为 dfl:timer/
+- 重构：将软封禁玩家函数改为参数化宏函数
+- 移除：不再使用的本地化键名
+- 更新：函数用法支持自定义标题和副标题
 
 ---
 
-- Refactor: Renamed Redstone category to Timer
-- Update: Function paths changed from dfl:redstone/ to dfl:timer/
+- Refactor: Converted soft ban player function to parameterized macro function
+- Remove: Unused localization keys
+- Update: Function usage now supports custom title and subtitle
