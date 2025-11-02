@@ -109,12 +109,13 @@ Function usage: `/function dfl:start/create_teams {team_blue:"blue",team_red:"re
 
 ### Soft ban player
 
-Function usage: `/function dfl:tick/soft_ban_player`
+Function usage: `/function dfl:tick/soft_ban_player {title:"Ban Reason",subtitle:"Note"}`
 
 - Note: The executor of this function must be the player to be **banned**, you can use the `/execute` command;
 - Realize a soft ban by continuously tp the player to 0 0 0, setting the mode to adventure, and continuously giving the player negative buffs;
 - Must be executed every Tick;
-- Example: `/execute as @a[tag=ban] run function dfl:tick/ban`.
+- Title is {title}, subtitle is {subtitle};
+- Example: `/execute as @a[tag=ban] run function dfl:tick/soft_ban_player {title:"Ban Reason",subtitle:"Note"}`.
 
 The effect is as follows:
 

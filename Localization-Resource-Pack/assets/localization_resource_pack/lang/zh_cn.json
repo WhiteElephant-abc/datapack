@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "您已被此服务器软封禁",
-  "tick.ban.dfl.from": "通过数据包",
   "tick.show.entity.dfl.entity.num": "实体数量：%s",
   "tick.kill.dfl.entity.clear.notification": "实体过多，已清除 %s 个实体",
   "tick.kill.dfl.protection.hint": "想要防止实体被清除可以为实体添加 '%s' 标签",

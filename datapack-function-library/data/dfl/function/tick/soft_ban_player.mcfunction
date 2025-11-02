@@ -14,13 +14,13 @@ title @s times 0 70 20
 
 # 显示主标题
    # 告知玩家已被封禁，使用红色粗体
-title @s title \
-    {"type":"translatable","translate":"tick.ban.dfl.ban","fallback":"您已被此服务器软封禁","color":"red","bold":true}
+$title @s title \
+    {"text":"$(title)","color":"red","bold":true}
 
 # 显示副标题
    # 显示封禁来源信息
-title @s subtitle \
-    [{"type":"translatable","translate":"tick.ban.dfl.from","fallback":"通过数据包","color":"gray"},\
+$title @s subtitle \
+    [{"text":"$(subtitle)","color":"gray"},\
     {"text":" datapack function library","color":"gray"}]
 
 # 给予负面效果

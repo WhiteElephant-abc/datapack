@@ -109,12 +109,13 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 ### 软封禁玩家
 
-函数用法：`/function dfl:tick/soft_ban_player`
+函数用法：`/function dfl:tick/soft_ban_player {title:"封禁理由",subtitle:"备注"}`
 
 - 注意：此函数执行者必须为要**被封禁**的玩家，可以使用 `/execute` 命令；
 - 通过不断 tp 玩家到 0 0 0，将模式设为冒险以及不断给予玩家负面 Buff 来实现软封禁；
 - 必须每 Tick 执行一次；
-- 范例：`/execute as @a[tag=ban] run function dfl:tick/ban`。
+- 标题为 {title}，副标题为 {subtitle}；
+- 范例：`/execute as @a[tag=ban] run function dfl:tick/soft_ban_player {title:"封禁理由",subtitle:"备注"}`。
 
 效果如下：
 
