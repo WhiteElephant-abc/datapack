@@ -15,8 +15,6 @@
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Bloque utilizado para reemplazar bloques que pueden caer",
   "dialog.stone_disappearance.advanced_common.tick_fill": "Eliminar piedra en tiempo real en un área de 3x3x3 cerca del jugador",
   "dialog.stone_disappearance.advanced_overworld.title": "Configuración avanzada de desaparición de piedra: Configuración de la Superficie",
-  "tick.ban.dfl.ban": "Has sido baneado temporalmente de este servidor",
-  "tick.ban.dfl.from": "A través del paquete de datos",
   "tick.show.entity.dfl.entity.num": "Número de entidades: %s",
   "redstone.kill.item.dfl.entity.clear": "Eliminó",
   "redstone.kill.item.dfl.entity.item": "objetos caídos",

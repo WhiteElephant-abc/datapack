@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "Vous avez été banni temporairement de ce serveur",
-  "tick.ban.dfl.from": "Via datapack",
   "tick.show.entity.dfl.entity.num": "Nombre d'entités : %s",
   "redstone.kill.item.dfl.entity.clear": "A supprimé",
   "redstone.kill.item.dfl.entity.item": "objets tombés",

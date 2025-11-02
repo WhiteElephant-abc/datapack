@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "You have been soft-banned from this server",
-  "tick.ban.dfl.from": "Via datapack",
   "tick.show.entity.dfl.entity.num": "Entity count: %s",
   "redstone.kill.item.dfl.entity.clear": "Cleared",
   "redstone.kill.item.dfl.entity.item": "items",

@@ -15,8 +15,6 @@
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "떨어질 수 있는 블록을 교체하는 데 사용되는 블록",
   "dialog.stone_disappearance.advanced_common.tick_fill": "실시간으로 플레이어 주변 3*3*3 영역 내의 돌을 제거합니다",
   "dialog.stone_disappearance.advanced_overworld.title": "돌 사라짐 고급 설정: 오버월드 설정",
-  "tick.ban.dfl.ban": "이 서버에서 임시 차단되었습니다",
-  "tick.ban.dfl.from": "데이터 팩을 통해",
   "tick.show.entity.dfl.entity.num": "엔티티 수: %s",
   "redstone.kill.item.dfl.entity.clear": "제거했습니다",
   "redstone.kill.item.dfl.entity.item": "개의 드롭 아이템",

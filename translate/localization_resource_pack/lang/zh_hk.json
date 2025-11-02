@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "您已被此伺服器軟封鎖",
-  "tick.ban.dfl.from": "透過數據包",
   "tick.show.entity.dfl.entity.num": "實體數量：%s",
   "redstone.kill.item.dfl.entity.clear": "清除了",
   "redstone.kill.item.dfl.entity.item": "個掉落物",

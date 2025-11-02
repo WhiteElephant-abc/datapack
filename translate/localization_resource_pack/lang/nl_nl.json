@@ -15,8 +15,6 @@
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Blok gebruikt om vallende blokken te vervangen",
   "dialog.stone_disappearance.advanced_common.tick_fill": "Ruim steen in realtime op in een 3x3x3 gebied rond de speler",
   "dialog.stone_disappearance.advanced_overworld.title": "Geavanceerde instellingen voor steenverdwijning: Overworld-instellingen",
-  "tick.ban.dfl.ban": "Je bent tijdelijk verbannen van deze server",
-  "tick.ban.dfl.from": "via datapakket",
   "tick.show.entity.dfl.entity.num": "Aantal entiteiten: %s",
   "redstone.kill.item.dfl.entity.clear": "Opgeruimd",
   "redstone.kill.item.dfl.entity.item": "items",

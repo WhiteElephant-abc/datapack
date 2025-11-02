@@ -15,8 +15,6 @@
   "dialog.stone_disappearance.advanced_common.fill_falling_block_with": "Blok yang digunakan untuk mengganti blok yang bisa jatuh",
   "dialog.stone_disappearance.advanced_common.tick_fill": "Bersihkan batu di area 3*3*3 di sekitar pemain secara real-time",
   "dialog.stone_disappearance.advanced_overworld.title": "Pengaturan Lanjutan Batu Menghilang: Pengaturan Dunia Atas",
-  "tick.ban.dfl.ban": "Anda telah diban sementara dari server ini",
-  "tick.ban.dfl.from": "Melalui paket data",
   "tick.show.entity.dfl.entity.num": "Jumlah entitas: %s",
   "redstone.kill.item.dfl.entity.clear": "Telah membersihkan",
   "redstone.kill.item.dfl.entity.item": "item",

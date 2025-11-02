@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "Bu sunucudan geçici olarak yasaklandınız",
-  "tick.ban.dfl.from": "Veri paketi aracılığıyla",
   "tick.show.entity.dfl.entity.num": "Varlık sayısı: %s",
   "redstone.kill.item.dfl.entity.clear": "Temizlendi",
   "redstone.kill.item.dfl.entity.item": "eşya",

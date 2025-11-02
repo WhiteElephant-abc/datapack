@@ -1,6 +1,4 @@
 {
-  "tick.ban.dfl.ban": "あなたはこのサーバーからソフトバンされました",
-  "tick.ban.dfl.from": "データパックにより",
   "tick.show.entity.dfl.entity.num": "エンティティ数：%s",
   "redstone.kill.item.dfl.entity.clear": "クリアしました",
   "redstone.kill.item.dfl.entity.item": "個のドロップアイテム",
