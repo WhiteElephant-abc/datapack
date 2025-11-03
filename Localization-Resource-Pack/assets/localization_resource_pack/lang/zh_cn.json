@@ -4,6 +4,7 @@
   "tick.kill.dfl.protection.hint": "想要防止实体被清除可以为实体添加 '%s' 标签",
   "redstone.kill.item.dfl.entity.clear": "清除了",
   "redstone.kill.item.dfl.entity.item": "个掉落物",
+  "redstone.kill.item.dfl.entity.clear_with_count": "清除了 %s 个掉落物",
   "redstone.show.entity.dfl.entity.entity": "实体数量：",
   "redstone.show.entity.dfl.entity.other.entity": "非玩家实体数量：",
   "redstone.show.entity.dfl.entity.item": "掉落物数量：",
