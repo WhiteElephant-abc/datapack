@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "¡La validación de la configuración de la dimensión falló!",
   "title.lucky_block_island.error.actionbar": "Por favor, carga el paquete de datos al crear el mundo.",
   "tick.kill.dfl.entity.clear.notification": "Demasiadas entidades, se han eliminado %s entidades",
-  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes agregar la etiqueta '%s' a las entidades"
+  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes agregar la etiqueta '%s' a las entidades",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Eliminados %s objetos caídos"
 }

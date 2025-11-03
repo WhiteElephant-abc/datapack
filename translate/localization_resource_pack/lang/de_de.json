@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "Diese Einstellungen gelten nur im End.",
   "dialog.stone_disappearance.advanced_common.title": "Erweiterte Einstellungen für Steinverschwinden: Allgemeine Einstellungen",
   "tick.kill.dfl.entity.clear.notification": "Zu viele Entitäten, %s Entitäten wurden entfernt",
-  "tick.kill.dfl.protection.hint": "Um zu verhindern, dass Entitäten entfernt werden, kannst du den '%s'-Tag hinzufügen"
+  "tick.kill.dfl.protection.hint": "Um zu verhindern, dass Entitäten entfernt werden, kannst du den '%s'-Tag hinzufügen",
+  "redstone.kill.item.dfl.entity.clear_with_count": "%s Items bereinigt"
 }

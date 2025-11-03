@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Dimension settings validation failed!",
   "title.lucky_block_island.error.actionbar": "Please load the datapack when creating the world!",
   "tick.kill.dfl.entity.clear.notification": "Too many entities, cleared %s entities",
-  "tick.kill.dfl.protection.hint": "To prevent entities from being cleared, add the '%s' tag to entities"
+  "tick.kill.dfl.protection.hint": "To prevent entities from being cleared, add the '%s' tag to entities",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Cleared %s items"
 }

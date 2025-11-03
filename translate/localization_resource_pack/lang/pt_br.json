@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Validação das configurações de dimensão falhou! Por favor, carregue o pacote de dados ao criar o mundo.",
   "title.lucky_block_island.error.actionbar": "Validação das configurações de dimensão falhou! Por favor, carregue o pacote de dados ao criar o mundo!",
   "tick.kill.dfl.entity.clear.notification": "Muitas entidades, %s entidades foram removidas",
-  "tick.kill.dfl.protection.hint": "Para evitar que entidades sejam removidas, adicione a tag '%s' às entidades"
+  "tick.kill.dfl.protection.hint": "Para evitar que entidades sejam removidas, adicione a tag '%s' às entidades",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Limpou %s itens"
 }

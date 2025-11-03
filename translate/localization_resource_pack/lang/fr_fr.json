@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "La validation des paramètres de dimension a échoué. Veuillez charger le pack de données lors de la création du monde.",
   "title.lucky_block_island.error.actionbar": "La validation des paramètres de dimension a échoué ! Veuillez charger le pack de données lors de la création du monde !",
   "tick.kill.dfl.entity.clear.notification": "Trop d'entités, %s entités ont été supprimées",
-  "tick.kill.dfl.protection.hint": "Pour empêcher la suppression des entités, vous pouvez ajouter le tag '%s' aux entités"
+  "tick.kill.dfl.protection.hint": "Pour empêcher la suppression des entités, vous pouvez ajouter le tag '%s' aux entités",
+  "redstone.kill.item.dfl.entity.clear_with_count": "A supprimé %s objets"
 }

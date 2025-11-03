@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックを読み込んでください。",
   "title.lucky_block_island.error.actionbar": "ディメンション設定の検証に失敗しました。ワールド作成時にデータパックを読み込んでください！",
   "tick.kill.dfl.entity.clear.notification": "エンティティが多すぎます、%s 個のエンティティをクリアしました",
-  "tick.kill.dfl.protection.hint": "エンティティがクリアされるのを防ぐには、エンティティに '%s' タグを追加してください"
+  "tick.kill.dfl.protection.hint": "エンティティがクリアされるのを防ぐには、エンティティに '%s' タグを追加してください",
+  "redstone.kill.item.dfl.entity.clear_with_count": "%s 個のドロップアイテムをクリアしました"
 }

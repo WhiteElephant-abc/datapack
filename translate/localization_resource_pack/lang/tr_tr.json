@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Boyut ayarları doğrulaması başarısız oldu, lütfen dünya oluştururken veri paketini yükleyin",
   "title.lucky_block_island.error.actionbar": "Boyut ayarları doğrulaması başarısız oldu, lütfen dünya oluştururken veri paketini yükleyin!",
   "tick.kill.dfl.entity.clear.notification": "Çok fazla varlık, %s varlık temizlendi",
-  "tick.kill.dfl.protection.hint": "Varlıkların temizlenmesini önlemek için varlıklara '%s' etiketi ekleyebilirsiniz"
+  "tick.kill.dfl.protection.hint": "Varlıkların temizlenmesini önlemek için varlıklara '%s' etiketi ekleyebilirsiniz",
+  "redstone.kill.item.dfl.entity.clear_with_count": "%s eşya temizlendi"
 }

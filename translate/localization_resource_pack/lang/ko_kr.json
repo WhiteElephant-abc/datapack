@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "이 설정들은 엔드에서만 적용됩니다",
   "dialog.stone_disappearance.advanced_common.title": "돌 사라짐 고급 설정: 일반 설정",
   "tick.kill.dfl.entity.clear.notification": "엔티티가 너무 많아, %s개의 엔티티를 제거했습니다",
-  "tick.kill.dfl.protection.hint": "엔티티가 제거되는 것을 방지하려면 엔티티에 '%s' 태그를 추가하세요"
+  "tick.kill.dfl.protection.hint": "엔티티가 제거되는 것을 방지하려면 엔티티에 '%s' 태그를 추가하세요",
+  "redstone.kill.item.dfl.entity.clear_with_count": "%s개의 아이템을 제거했습니다"
 }

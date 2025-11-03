@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "Estas configuraciones solo se aplican en el End",
   "dialog.stone_disappearance.advanced_common.title": "Configuración avanzada de desaparición de piedra: Configuración general",
   "tick.kill.dfl.entity.clear.notification": "Demasiadas entidades, se han eliminado %s entidades",
-  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes añadir la etiqueta '%s' a las entidades"
+  "tick.kill.dfl.protection.hint": "Para evitar que las entidades sean eliminadas, puedes añadir la etiqueta '%s' a las entidades",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Se han eliminado %s objetos"
 }

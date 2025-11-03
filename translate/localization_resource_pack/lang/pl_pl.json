@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Weryfikacja ustawień wymiaru nie powiodła się!",
   "title.lucky_block_island.error.actionbar": "Proszę załadować pakiet danych podczas tworzenia świata!",
   "tick.kill.dfl.entity.clear.notification": "Zbyt wiele encji, usunięto %s encji",
-  "tick.kill.dfl.protection.hint": "Aby zapobiec usuwaniu encji, możesz dodać tag '%s' do encji"
+  "tick.kill.dfl.protection.hint": "Aby zapobiec usuwaniu encji, możesz dodać tag '%s' do encji",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Usunięto %s przedmiotów"
 }

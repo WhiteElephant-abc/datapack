@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "維度設定驗證失敗，請在建立世界時載入資料包",
   "title.lucky_block_island.error.actionbar": "維度設定驗證失敗，請在建立世界時載入資料包！",
   "tick.kill.dfl.entity.clear.notification": "實體過多，已清除 %s 個實體",
-  "tick.kill.dfl.protection.hint": "想要防止實體被清除可以為實體添加 '%s' 標籤"
+  "tick.kill.dfl.protection.hint": "想要防止實體被清除可以為實體添加 '%s' 標籤",
+  "redstone.kill.item.dfl.entity.clear_with_count": "清除了 %s 個物品"
 }

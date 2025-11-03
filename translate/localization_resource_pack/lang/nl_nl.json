@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "Deze instellingen zijn alleen van toepassing in de End",
   "dialog.stone_disappearance.advanced_common.title": "Geavanceerde instellingen voor steenverdwijning: Algemene instellingen",
   "tick.kill.dfl.entity.clear.notification": "Te veel entiteiten, %s entiteiten zijn opgeruimd",
-  "tick.kill.dfl.protection.hint": "Om te voorkomen dat entiteiten worden opgeruimd, voeg de '%s' tag toe aan de entiteit"
+  "tick.kill.dfl.protection.hint": "Om te voorkomen dat entiteiten worden opgeruimd, voeg de '%s' tag toe aan de entiteit",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Opgeruimd %s gevallen voorwerpen"
 }

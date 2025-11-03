@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "这些设置仅在末地生效",
   "dialog.stone_disappearance.advanced_common.title": "石头消失高级设置：通用设置",
   "tick.kill.dfl.entity.clear.notification": "实体过多，已清除 %s 个实体",
-  "tick.kill.dfl.protection.hint": "想要防止实体被清除可以为实体添加 '%s' 标签"
+  "tick.kill.dfl.protection.hint": "想要防止实体被清除可以为实体添加 '%s' 标签",
+  "redstone.kill.item.dfl.entity.clear_with_count": "清除了 %s 个掉落物"
 }

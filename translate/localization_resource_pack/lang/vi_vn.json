@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Xác thực cài đặt chiều không gian thất bại, vui lòng tải gói dữ liệu khi tạo thế giới",
   "title.lucky_block_island.error.actionbar": "Xác thực cài đặt chiều không gian thất bại, vui lòng tải gói dữ liệu khi tạo thế giới!",
   "tick.kill.dfl.entity.clear.notification": "Quá nhiều thực thể, đã xóa %s thực thể",
-  "tick.kill.dfl.protection.hint": "Muốn ngăn chặn thực thể bị xóa, có thể thêm nhãn '%s' cho thực thể"
+  "tick.kill.dfl.protection.hint": "Muốn ngăn chặn thực thể bị xóa, có thể thêm nhãn '%s' cho thực thể",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Đã xóa %s vật phẩm rơi"
 }

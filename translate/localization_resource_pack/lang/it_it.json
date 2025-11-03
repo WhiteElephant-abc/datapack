@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Validazione delle impostazioni della dimensione fallita!",
   "title.lucky_block_island.error.actionbar": "Si prega di caricare il datapack quando si crea il mondo!",
   "tick.kill.dfl.entity.clear.notification": "Troppe entità, sono state eliminate %s entità",
-  "tick.kill.dfl.protection.hint": "Per evitare che le entità vengano eliminate, puoi aggiungere l'etichetta '%s' alle entità"
+  "tick.kill.dfl.protection.hint": "Per evitare che le entità vengano eliminate, puoi aggiungere l'etichetta '%s' alle entità",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Rimossi %s oggetti"
 }

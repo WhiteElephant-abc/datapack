@@ -45,5 +45,6 @@
   "title.lucky_block_island.error.subtitle": "Проверка настроек измерения не удалась! Пожалуйста, загрузите пакет данных при создании мира",
   "title.lucky_block_island.error.actionbar": "Проверка настроек измерения не удалась! Пожалуйста, загрузите пакет данных при создании мира!",
   "tick.kill.dfl.entity.clear.notification": "Слишком много сущностей, очищено %s сущностей",
-  "tick.kill.dfl.protection.hint": "Чтобы предотвратить удаление сущностей, вы можете добавить тег '%s' к сущностям"
+  "tick.kill.dfl.protection.hint": "Чтобы предотвратить удаление сущностей, вы можете добавить тег '%s' к сущностям",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Удалено %s предметов"
 }

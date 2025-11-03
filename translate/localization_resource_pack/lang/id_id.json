@@ -45,5 +45,6 @@
   "dialog.stone_disappearance.advanced.end.tooltip": "Pengaturan ini hanya berlaku di End",
   "dialog.stone_disappearance.advanced_common.title": "Pengaturan Lanjutan Batu Menghilang: Pengaturan Umum",
   "tick.kill.dfl.entity.clear.notification": "Entitas terlalu banyak, telah membersihkan %s entitas",
-  "tick.kill.dfl.protection.hint": "Untuk mencegah entitas dibersihkan, tambahkan tag '%s' pada entitas"
+  "tick.kill.dfl.protection.hint": "Untuk mencegah entitas dibersihkan, tambahkan tag '%s' pada entitas",
+  "redstone.kill.item.dfl.entity.clear_with_count": "Membersihkan %s item"
 }
