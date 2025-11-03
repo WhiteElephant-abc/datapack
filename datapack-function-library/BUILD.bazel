@@ -1,7 +1,7 @@
 load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_filegroup")
 
-pack_version = "4.0.0"
+pack_version = "4.0.1"
 
 # 主要的数据包配置，目标名称为包名称
 complete_datapack_config(
