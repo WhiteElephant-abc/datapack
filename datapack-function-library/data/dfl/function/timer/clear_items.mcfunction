@@ -8,9 +8,7 @@ execute store result score item_number dfl_scoreboard \
     run kill @e[type=item,tag=!need]
 
 # 向玩家显示清理结果
-tellraw @a [ \
-    {"text": "[DFL] ", "color": "gray", "italic": true}, \
+tellraw @a \
     {"type": "translatable", "translate": "redstone.kill.item.dfl.entity.clear_with_count", \
         "fallback": "清除了 %s 个掉落物", "color": "gray", "italic": true, \
         "with": [{"score": {"name": "item_number", "objective": "dfl_scoreboard"}}]} \
-]
