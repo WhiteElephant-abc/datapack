@@ -1,5 +1,5 @@
-- 清理不再使用的本地化键名
+- 添加 'redstone.kill.item.dfl.entity.clear_with_count' 本地化键以优化清理物品显示逻辑
 
 ---
 
-- Cleaned up unused localization key names
+- Added 'redstone.kill.item.dfl.entity.clear_with_count' localization key to optimize item clearing display logic
