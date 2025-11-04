@@ -20,7 +20,7 @@ execute store result storage replace_block:data temp.fill_chunk.b_z int 1 run \
 execute store success score loaded temp.chunk.child run function replace_block:child_if_loaded with storage replace_block:data temp.fill_chunk
 execute if score loaded temp.chunk.child matches 0 run \
     function #unif.logger:logger/v1/warn \
-    {"msg":'loaded在递归z+中检测失败',"namespace":"Replace-Block"}
+    {"msg":'loaded在递归z+中检测失败',"namespace":"ReplaceBlock"}
 execute if score loaded temp.chunk.child matches 0 run \
     scoreboard players set success temp.chunk 1
 execute if score loaded temp.chunk.child matches 0 run return 1

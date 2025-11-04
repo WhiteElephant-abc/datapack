@@ -3,7 +3,7 @@
 # 检测n是否到达设定上限
 execute if score n temp.chunk >= n rb.settings run \
     function #unif.logger:logger/v1/debug \
-    {"msg":'n到达设定上限',"namespace":"Replace-Block"}
+    {"msg":'n到达设定上限',"namespace":"ReplaceBlock"}
 execute if score n temp.chunk >= n rb.settings run return run scoreboard players get n temp.chunk
 # n+1
 scoreboard players add n temp.chunk 1

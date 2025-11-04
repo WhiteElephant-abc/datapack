@@ -1,5 +1,5 @@
 function dfl:lib/datapack_banner {\
-    name:"Replace Block",\
+    name:"ReplaceBlock",\
     author:"white_elephant_",\
     author_url:"https://modrinth.com/user/white_elephant",\
     license_name:"GNU GPL",\
@@ -13,4 +13,4 @@ scoreboard objectives add rb.settings dummy
 
 execute as @a run \
     function #unif.logger:logger/v1/tips \
-    {"msg":'初始化成功',"namespace":"Replace-Block"}
+    {"msg":'初始化成功',"namespace":"ReplaceBlock"}

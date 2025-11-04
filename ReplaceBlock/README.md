@@ -1,4 +1,4 @@
-# [RB]方块替换 (Replace Block)
+# [RB]方块替换 (ReplaceBlock)
 
 **The English description is below.**
 

@@ -5,13 +5,13 @@ function replace_block:find_chunk
 # chunk未加载报错
 execute unless function replace_block:if_loaded run \
     function #unif.logger:logger/v1/error \
-    {"msg":'find_chunk输出坐标在if_loaded检测失败',"namespace":"Replace-Block"}
+    {"msg":'find_chunk输出坐标在if_loaded检测失败',"namespace":"ReplaceBlock"}
 execute unless function replace_block:if_loaded run \
     return fail
 # fill在原位置成功
 execute if function replace_block:parent_fill run return run \
     function #unif.logger:logger/v1/info \
-    {"msg":'fill在原位置成功',"namespace":"Replace-Block"}
+    {"msg":'fill在原位置成功',"namespace":"ReplaceBlock"}
 
 # 添加临时记分板
 scoreboard objectives add temp.chunk dummy
