@@ -21,7 +21,7 @@
   "redstone.show.entity.dfl.entity.entity": "개체 수:",
   "redstone.show.entity.dfl.entity.other.entity": "비플레이어 개체 수:",
   "redstone.show.entity.dfl.entity.item": "드롭 아이템 수:",
-  "dialog.sd.options.title": "돌 사라짐 설정",
+  "dialog.sd.options.title": "돌 사라짐 설정, SD 설정",
   "dialog.stone_disappearance.options.performance.label": "성능 설정",
   "dialog.stone_disappearance.options.performance.tooltip": "성능에 영향을 미치는 몇 가지 설정을 구성합니다",
   "dialog.stone_disappearance.options.advanced.label": "고급 설정",

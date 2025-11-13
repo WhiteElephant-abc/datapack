@@ -21,7 +21,7 @@
   "redstone.show.entity.dfl.entity.entity": "Aantal entiteiten:",
   "redstone.show.entity.dfl.entity.other.entity": "Aantal niet-speler entiteiten:",
   "redstone.show.entity.dfl.entity.item": "Aantal items:",
-  "dialog.sd.options.title": "Instellingen voor steenverdwijning",
+  "dialog.sd.options.title": "Instellingen voor Steenverdwijning - SD Instellingen",
   "dialog.stone_disappearance.options.performance.label": "Prestatie-instellingen",
   "dialog.stone_disappearance.options.performance.tooltip": "Configureer enkele instellingen die de prestaties beïnvloeden",
   "dialog.stone_disappearance.options.advanced.label": "Geavanceerde instellingen",

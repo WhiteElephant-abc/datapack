@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "Nombre d'entités :",
   "redstone.show.entity.dfl.entity.other.entity": "Nombre d'entités non-joueurs :",
   "redstone.show.entity.dfl.entity.item": "Nombre d'objets :",
-  "dialog.sd.options.title": "Paramètres de disparition de la pierre",
+  "dialog.sd.options.title": "Paramètres de disparition de la pierre, Paramètres SD",
   "dialog.stone_disappearance.options.performance.label": "Paramètres de performance",
   "dialog.stone_disappearance.options.performance.tooltip": "Configurer certains paramètres qui affecteront les performances",
   "dialog.stone_disappearance.options.advanced.label": "Paramètres avancés",

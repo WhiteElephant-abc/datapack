@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "Varlık sayısı:",
   "redstone.show.entity.dfl.entity.other.entity": "Oyuncu olmayan varlık sayısı:",
   "redstone.show.entity.dfl.entity.item": "Eşya sayısı:",
-  "dialog.sd.options.title": "Taş Kaybolma Ayarları",
+  "dialog.sd.options.title": "Taş Kaybolma Ayarları, SD Ayarları",
   "dialog.stone_disappearance.options.performance.label": "Performans Ayarları",
   "dialog.stone_disappearance.options.performance.tooltip": "Performansı etkileyecek bazı ayarları yapılandırın",
   "dialog.stone_disappearance.options.advanced.label": "Gelişmiş Ayarlar",

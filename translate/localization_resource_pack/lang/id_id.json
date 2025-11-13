@@ -21,7 +21,7 @@
   "redstone.show.entity.dfl.entity.entity": "Jumlah entitas:",
   "redstone.show.entity.dfl.entity.other.entity": "Jumlah entitas non-pemain:",
   "redstone.show.entity.dfl.entity.item": "Jumlah item:",
-  "dialog.sd.options.title": "Pengaturan Batu Menghilang",
+  "dialog.sd.options.title": "Pengaturan Batu Menghilang, Pengaturan SD",
   "dialog.stone_disappearance.options.performance.label": "Pengaturan Kinerja",
   "dialog.stone_disappearance.options.performance.tooltip": "Konfigurasi beberapa pengaturan yang akan mempengaruhi kinerja",
   "dialog.stone_disappearance.options.advanced.label": "Pengaturan Lanjutan",

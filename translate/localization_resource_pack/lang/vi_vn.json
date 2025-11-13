@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "Số lượng thực thể：",
   "redstone.show.entity.dfl.entity.other.entity": "Số lượng thực thể không phải người chơi：",
   "redstone.show.entity.dfl.entity.item": "Số lượng vật phẩm rơi：",
-  "dialog.sd.options.title": "Cài đặt Đá Biến Mất",
+  "dialog.sd.options.title": "Cài đặt biến mất đá",
   "dialog.stone_disappearance.options.performance.label": "Cài đặt Hiệu suất",
   "dialog.stone_disappearance.options.performance.tooltip": "Cấu hình một số cài đặt sẽ ảnh hưởng đến hiệu suất",
   "dialog.stone_disappearance.options.advanced.label": "Cài đặt Nâng cao",

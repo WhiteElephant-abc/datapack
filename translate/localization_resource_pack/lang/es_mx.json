@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "Número de entidades:",
   "redstone.show.entity.dfl.entity.other.entity": "Número de entidades no jugador:",
   "redstone.show.entity.dfl.entity.item": "Número de objetos caídos:",
-  "dialog.sd.options.title": "Configuración de desaparición de piedra",
+  "dialog.sd.options.title": "Configuración de Desaparición de Piedra",
   "dialog.stone_disappearance.options.performance.label": "Configuración de rendimiento",
   "dialog.stone_disappearance.options.performance.tooltip": "Configura algunas opciones que afectarán el rendimiento",
   "dialog.stone_disappearance.options.advanced.label": "Configuración avanzada",

@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "實體數量：",
   "redstone.show.entity.dfl.entity.other.entity": "非玩家實體數量：",
   "redstone.show.entity.dfl.entity.item": "掉落物數量：",
-  "dialog.sd.options.title": "石頭消失設定",
+  "dialog.sd.options.title": "石頭消失設定 (SD 設定)",
   "dialog.stone_disappearance.options.performance.label": "效能設定",
   "dialog.stone_disappearance.options.performance.tooltip": "配置一些將會影響效能的設定",
   "dialog.stone_disappearance.options.advanced.label": "進階設定",

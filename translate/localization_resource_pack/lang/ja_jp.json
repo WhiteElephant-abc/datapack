@@ -5,7 +5,7 @@
   "redstone.show.entity.dfl.entity.entity": "エンティティ数：",
   "redstone.show.entity.dfl.entity.other.entity": "非プレイヤーエンティティ数：",
   "redstone.show.entity.dfl.entity.item": "ドロップアイテム数：",
-  "dialog.sd.options.title": "石消失設定",
+  "dialog.sd.options.title": "石の消失設定 / SD設定",
   "dialog.stone_disappearance.options.performance.label": "パフォーマンス設定",
   "dialog.stone_disappearance.options.performance.tooltip": "パフォーマンスに影響する設定を構成します",
   "dialog.stone_disappearance.options.advanced.label": "詳細設定",

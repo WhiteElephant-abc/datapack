@@ -21,7 +21,7 @@
   "redstone.show.entity.dfl.entity.entity": "Anzahl der Entitäten:",
   "redstone.show.entity.dfl.entity.other.entity": "Anzahl der Nicht-Spieler-Entitäten:",
   "redstone.show.entity.dfl.entity.item": "Anzahl der Gegenstände:",
-  "dialog.sd.options.title": "Einstellungen für Steinverschwinden",
+  "dialog.sd.options.title": "Steinverschwinden-Einstellungen",
   "dialog.stone_disappearance.options.performance.label": "Leistungseinstellungen",
   "dialog.stone_disappearance.options.performance.tooltip": "Konfiguriere einige Einstellungen, die die Leistung beeinflussen.",
   "dialog.stone_disappearance.options.advanced.label": "Erweiterte Einstellungen",
