@@ -17,7 +17,8 @@ execute store result storage replace_block:data temp.fill_chunk.b_z int 1 run \
     scoreboard players get z.b temp.chunk
 
 # 未加载则退出
-execute store success score loaded temp.chunk.child run function replace_block:child_if_loaded with storage replace_block:data temp.fill_chunk
+execute store success score loaded temp.chunk.child run \
+    function replace_block:main/if_loaded with storage replace_block:data temp.fill_chunk
 execute if score loaded temp.chunk.child matches 0 run \
     function #unif.logger:logger/v1/warn \
     {"msg":'loaded在递归x+中检测失败',"namespace":"ReplaceBlock"}
@@ -26,11 +27,10 @@ execute if score loaded temp.chunk.child matches 0 run \
 execute if score loaded temp.chunk.child matches 0 run return 1
 
 # 填充
-execute store success score success temp.chunk run \
-    function replace_block:fill with storage replace_block:data temp.fill_chunk
+function replace_block:fill/main
 
 # 成功后退出
 execute if score success temp.chunk matches 1 run return 1
 execute if score n temp.chunk.child matches 0 run return fail
 # 递归调用
-function replace_block:child_traversal_chunk/x
+function replace_block:traversal/child_traversal_chunk/x

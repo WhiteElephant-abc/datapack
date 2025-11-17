@@ -7,12 +7,37 @@ $data modify storage $(storage) replace_block set value \
         replace_pairs:[\
             {\
                 target_block:"stone",\
+                replace_with:"air"\
+            },\
+            {\
+                target_block:"deepslate",\
+                replace_with:"air"\
+            },\
+            {\
+                target_block:"netherrack",\
+                replace_with:"air"\
+            },\
+            {\
+                target_block:"basalt",\
+                replace_with:"air"\
+            },\
+            {\
+                target_block:"end_stone",\
+                replace_with:"air"\
+            },\
+            \
+            {\
+                target_block:"sand",\
                 replace_with:"glass"\
             },\
             {\
-                target_block:"dirt",\
-                replace_with:"air"\
-            }\
+                target_block:"red_sand",\
+                replace_with:"glass"\
+            },\
+            {\
+                target_block:"gravel",\
+                replace_with:"glass"\
+            },\
         ],\
         dimensions:[\
             {\
@@ -31,11 +56,6 @@ $data modify storage $(storage) replace_block set value \
                 max_y:255\
             }\
         ],\
-        falling_blocks:{\
-            enabled:true,\
-            replace_with:"glass",\
-            targets:["sand","red_sand","gravel"]\
-        },\
         search_range:3,\
         success_threshold:50\
     }
