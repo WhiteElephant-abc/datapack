@@ -1,7 +1,7 @@
 ## 设置初始化
 
 # 重置设置
-data modify storage test:test replace_block set value \
+$data modify storage $(storage) replace_block set value \
     {\
         selector:"@e[type=player]",\
         replace_pairs:[\
