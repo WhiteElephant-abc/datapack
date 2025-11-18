@@ -1,5 +1,7 @@
-- 添加 'redstone.kill.item.dfl.entity.clear_with_count' 本地化键以优化清理物品显示逻辑
+- 添加遥远的地平线模组的本地化文件
+- 更新SD对话框设置按钮本地化文本
 
 ---
 
-- Added 'redstone.kill.item.dfl.entity.clear_with_count' localization key to optimize item clearing display logic
+- Added localization files for Distant Horizons mod
+- Updated SD dialog settings button localization text
