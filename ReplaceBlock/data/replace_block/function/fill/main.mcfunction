@@ -4,10 +4,12 @@ scoreboard objectives add temp.fill dummy
 execute store result score replace_pairs temp.fill run \
     data get storage replace_block:data settings.replace_pairs
 scoreboard players remove replace_pairs temp.fill 1
-# 读取维度数量
-execute store result score dimensions temp.fill run \
-    data get storage replace_block:data settings.dimensions
-scoreboard players remove dimensions temp.fill 1
+# 读取当前维度
+data modify storage replace_block:data temp.fill_chunk.Dimension set from entity @s Dimension
+function replace_block:fill/get_dimension with storage replace_block:data temp.fill_chunk
+execute if score dimension.not.found rb.return matches 1 run return run \
+    function #unif.logger:logger/v1/debug \
+    {"msg":'维度不存在',"namespace":"ReplaceBlock"}
 
 # 添加遍历方块列表的计数记分板
 scoreboard objectives add temp.fill.list dummy

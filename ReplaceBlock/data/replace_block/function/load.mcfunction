@@ -10,6 +10,7 @@ gamerule commandModificationBlockLimit 2147483647
 
 scoreboard objectives add rb.debug dummy
 scoreboard objectives add rb.settings dummy
+scoreboard objectives add rb.return dummy
 
 execute as @a run \
     function #unif.logger:logger/v1/tips \

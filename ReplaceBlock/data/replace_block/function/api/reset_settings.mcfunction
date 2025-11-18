@@ -10,23 +10,6 @@ data modify storage test:test replace_block set value \
                 replace_with:"air"\
             },\
             {\
-                target_block:"deepslate",\
-                replace_with:"air"\
-            },\
-            {\
-                target_block:"netherrack",\
-                replace_with:"air"\
-            },\
-            {\
-                target_block:"basalt",\
-                replace_with:"air"\
-            },\
-            {\
-                target_block:"end_stone",\
-                replace_with:"air"\
-            },\
-            \
-            {\
                 target_block:"sand",\
                 replace_with:"glass"\
             },\

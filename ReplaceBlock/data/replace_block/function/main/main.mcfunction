@@ -12,6 +12,7 @@ execute unless function replace_block:parent/if_loaded run \
 execute if function replace_block:parent/parent_fill run return run \
     function #unif.logger:logger/v1/info \
     {"msg":'fill在原位置成功',"namespace":"ReplaceBlock"}
+execute if score dimension.not.found rb.return matches 1 run return fail
 
 # 添加临时记分板
 scoreboard objectives add temp.chunk.child dummy

@@ -1,10 +1,8 @@
-# 添加遍历维度的计数记分板
-scoreboard objectives add temp.fill.dimension dummy
-scoreboard players set i temp.fill.dimension 0
-# 遍历维度
-function replace_block:fill/traversal_dimension
-# 移除遍历维度的计数记分板
-scoreboard objectives remove temp.fill.dimension
+# 读取当前方块对序号
+execute store result storage replace_block:data temp.fill_chunk.replace_pairs int 1 run \
+    scoreboard players get i temp.fill.list
+# 调用call_fill并传入序号
+function replace_block:fill/call_fill with storage replace_block:data temp.fill_chunk
 
 # i++
 scoreboard players add i temp.fill.list 1
