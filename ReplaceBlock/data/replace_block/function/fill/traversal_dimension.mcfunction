@@ -10,6 +10,6 @@ function replace_block:fill/call_fill with storage replace_block:data temp.fill_
 # i++
 scoreboard players add i temp.fill.dimension 1
 # 判断是否遍历完成
-execute if score i temp.fill.dimension > dimensions temp.fill.dimension run return 1
+execute if score i temp.fill.dimension > dimensions temp.fill run return 1
 # 递归
 function replace_block:fill/traversal_dimension

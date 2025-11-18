@@ -14,7 +14,6 @@ execute if function replace_block:parent/parent_fill run return run \
     {"msg":'fill在原位置成功',"namespace":"ReplaceBlock"}
 
 # 添加临时记分板
-scoreboard objectives add temp.chunk dummy
 scoreboard objectives add temp.chunk.child dummy
 # 初始化n
 scoreboard players set n temp.chunk 0

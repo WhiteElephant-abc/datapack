@@ -9,6 +9,6 @@ scoreboard objectives remove temp.fill.dimension
 # i++
 scoreboard players add i temp.fill.list 1
 # 判断是否遍历完成
-execute if score i temp.fill.list > replace_pairs temp.fill.list run return 1
+execute if score i temp.fill.list > replace_pairs temp.fill run return 1
 # 递归
 function replace_block:fill/traversal_list

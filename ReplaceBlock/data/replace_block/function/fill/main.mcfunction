@@ -3,9 +3,11 @@ scoreboard objectives add temp.fill dummy
 # 读取方块列表条目数
 execute store result score replace_pairs temp.fill run \
     data get storage replace_block:data settings.replace_pairs
+scoreboard players remove replace_pairs temp.fill 1
 # 读取维度数量
 execute store result score dimensions temp.fill run \
     data get storage replace_block:data settings.dimensions
+scoreboard players remove dimensions temp.fill 1
 
 # 添加遍历方块列表的计数记分板
 scoreboard objectives add temp.fill.list dummy
