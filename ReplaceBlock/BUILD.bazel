@@ -4,7 +4,7 @@ pack_version = "1.0.0"
 
 complete_datapack_config(
     game_versions = minecraft_versions_range("1.21"),
-    modrinth_project_id = "",
+    modrinth_project_id = "lr0gX2RY",
     pack_id = "replace_block",
     pack_version = pack_version,
     deps = [
