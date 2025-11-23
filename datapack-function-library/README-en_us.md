@@ -30,7 +30,7 @@ execute if score dfl_enable dfl_scoreboard matches 1
 
 **Some function usages are followed by `{xx:"xx"}`. These functions are [macro functions](https://zh.minecraft.wiki/w/Java%E7%89%88%E5%87%BD%E6%95%B0#%E5%AE%8F). When using them, you need to pass parameters through `{<parameter name>:"<content>"}` (the parameters in the usage are the recommended parameters tested by the author during development, or the parameters used by the author for testing). The parameter name (such as num) is expressed as: {num} in the text. The parameter format can refer to the function usage, and special formats will be explained.**
 
-If you encounter any problems, please click [here](https://github.com/WhiteElephant-abc/datapack/issues/new/choose) to give feedback.
+If you encounter any problems, please click [here](https://github.com/WhiteElephant-abc/E1epack/issues/new/choose) to give feedback.
 
 ---
 

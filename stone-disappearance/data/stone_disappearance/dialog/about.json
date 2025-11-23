@@ -17,11 +17,11 @@
             "bold": true,
             "click_event": {
               "action": "open_url",
-              "url": "https://github.com/WhiteElephant-abc/datapack"
+              "url": "https://github.com/WhiteElephant-abc/E1epack"
             },
             "hover_event": {
               "action": "show_text",
-              "value": "https://github.com/WhiteElephant-abc/datapack"
+              "value": "https://github.com/WhiteElephant-abc/E1epack"
             }
           }
         ],
