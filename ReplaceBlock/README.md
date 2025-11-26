@@ -12,7 +12,7 @@
 
 ## 调用
 
-要调用 API，请先在您命令存储的 `{}.replace_block` 中存储 API 配置，可调用 `replace_block:api/reset_settings` 函数并传入 `{storage:"您命令存储的命名空间 ID"}` 生成示例配置，然后调用 `replace_block:api/execute` 函数并传入 `{storage:"您命令存储的命名空间 ID"}`。方块替换将立即开始，并在同一 tick 内结束。目前 ReplaceBlock 并没有对配置内容的验证机制，因此请务必确认您的配置包含所有要求的数据，否则可能导致 ReplaceBlock 出现严重错误。
+要调用 API，请先在您命令存储的 `{}.replace_block` 中存储 API 配置，可调用 `replace_block:api/reset_settings` 函数并传入 `{storage:"您命令存储的命名空间 ID"}` 生成示例配置，然后调用 `replace_block:api/execute` 函数并传入 `{storage:"您命令存储的命名空间 ID"}`。方块替换将立即开始，并在同一 tick 内结束。请务必确认您的配置包含所有要求的数据，ReplaceBlock 会验证您的配置参数，若缺失参数会导致 API 调用失败。
 
 ## 配置
 
@@ -65,7 +65,7 @@ This datapack traverses and replaces blocks chunk by chunk. Each call will trave
 
 ## Usage
 
-To use the API, first store the API configuration in your command storage at `{}.replace_block`. You can call the `replace_block:api/reset_settings` function with `{storage:"your command storage namespace ID"}` to generate example configuration, then call the `replace_block:api/execute` function with `{storage:"your command storage namespace ID"}`. Block replacement will start immediately and end within the same tick. Currently, ReplaceBlock does not have a validation mechanism for configuration content, so please ensure your configuration contains all required data, otherwise it may cause serious errors in ReplaceBlock.
+To use the API, first store the API configuration in your command storage at `{}.replace_block`. You can call the `replace_block:api/reset_settings` function with `{storage:"your command storage namespace ID"}` to generate example configuration, then call the `replace_block:api/execute` function with `{storage:"your command storage namespace ID"}`. Block replacement will start immediately and end within the same tick. Please ensure your configuration contains all required data. ReplaceBlock will validate your configuration parameters, and missing parameters will cause API calls to fail.
 
 ## Configuration
 

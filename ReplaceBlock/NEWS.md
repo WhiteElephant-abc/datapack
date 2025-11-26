@@ -1,11 +1,7 @@
-- 初始版本发布
-- 提供方块替换核心功能
-- 包含完整的 API 文档
-- 支持多维度方块替换
+- 添加配置参数验证功能
+- 为 API 调用者添加调试标签
 
 ---
 
-- Initial version release
-- Provides core block replacement functionality
-- Includes comprehensive API documentation
-- Supports multi-dimensional block replacement
+- Added configuration parameter validation functionality
+- Added debug tags for API callers
