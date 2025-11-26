@@ -10,6 +10,8 @@ execute unless data storage replace_block:data settings run \
     {"msg":'未找到调用参数',"namespace":"ReplaceBlock"}
 execute unless data storage replace_block:data settings run \
     scoreboard players set check.fail rb.return 1
+execute unless data storage replace_block:data settings run \
+    return fail
 
    # 验证必需参数是否存在
 execute unless data storage replace_block:data settings.selector run \
