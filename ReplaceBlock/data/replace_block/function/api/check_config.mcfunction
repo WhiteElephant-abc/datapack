@@ -50,12 +50,12 @@ execute store result score check_config.replace_with rb.temp \
     if data storage replace_block:data settings.replace_pairs[].replace_with
 
    # 验证替换对数组完整性
-execute unless score check_config.replace_pairs rb.temp = check_config.replace_pairs rb.temp run \
+execute unless score check_config.replace_pairs rb.temp = check_config.target_block rb.temp run \
     function #unif.logger:logger/v1/error \
-    {"msg":'缺少参数 replace_pairs',"namespace":"ReplaceBlock"}
+    {"msg":'replace_pairs 中缺少参数 target_block',"namespace":"ReplaceBlock"}
 execute unless score check_config.replace_pairs rb.temp = check_config.replace_with rb.temp run \
     function #unif.logger:logger/v1/error \
-    {"msg":'缺少参数 replace_with',"namespace":"ReplaceBlock"}
+    {"msg":'replace_pairs 中缺少参数 replace_with',"namespace":"ReplaceBlock"}
 execute unless score check_config.replace_pairs rb.temp = check_config.replace_pairs rb.temp run \
     scoreboard players set check.fail rb.return 1
 execute unless score check_config.replace_pairs rb.temp = check_config.replace_with rb.temp run \
@@ -75,13 +75,13 @@ execute store result score check_config.max_y rb.temp \
    # 验证维度配置完整性
 execute unless score check_config.dimensions rb.temp = check_config.dimension rb.temp run \
     function #unif.logger:logger/v1/error \
-    {"msg":'缺少参数 dimension',"namespace":"ReplaceBlock"}
+    {"msg":'dimensions 中缺少参数 dimension',"namespace":"ReplaceBlock"}
 execute unless score check_config.dimensions rb.temp = check_config.min_y rb.temp run \
     function #unif.logger:logger/v1/error \
-    {"msg":'缺少参数 min_y',"namespace":"ReplaceBlock"}
+    {"msg":'dimensions 中缺少参数 min_y',"namespace":"ReplaceBlock"}
 execute unless score check_config.dimensions rb.temp = check_config.max_y rb.temp run \
     function #unif.logger:logger/v1/error \
-    {"msg":'缺少参数 max_y',"namespace":"ReplaceBlock"}
+    {"msg":'dimensions 中缺少参数 max_y',"namespace":"ReplaceBlock"}
 execute unless score check_config.dimensions rb.temp = check_config.dimension rb.temp run \
     scoreboard players set check.fail rb.return 1
 execute unless score check_config.dimensions rb.temp = check_config.min_y rb.temp run \
