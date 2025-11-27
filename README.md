@@ -47,3 +47,13 @@ This datapack provides developers with some practical functions (and some dialog
 This datapack continuously generates TNT beneath players' feet.
 
 [Modrinth](https://modrinth.com/project/x9cTWnQD) | [MCMOD](https://www.mcmod.cn/class/17429.html) | [GitHub](https://github.com/WhiteElephant-abc/E1epack/tree/main/SetBlock-TNT)
+
+---
+
+**[RB]方块替换 (ReplaceBlock)**
+
+此数据包提供了一个强大的 API，可以以完全原版的方式在世界生成后高性能地替换世界中的方块。
+
+This datapack provides a powerful API that can replace blocks in the world with high performance in a completely vanilla way after world generation.
+
+[Modrinth](https://modrinth.com/project/lr0gX2RY) | [MCMOD](https://www.mcmod.cn/class/00000.html) | [GitHub](https://github.com/WhiteElephant-abc/E1epack/tree/main/ReplaceBlock)
