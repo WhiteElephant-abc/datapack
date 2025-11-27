@@ -6,5 +6,5 @@ function dfl:lib/datapack_banner {\
     license_url:"https://www.gnu.org/licenses/gpl-3.0.txt",\
     official_url:"https://github.com/WhiteElephant-abc/E1epack/tree/main/SetBlock-TNT"}
 
-function dfl:start/show/health_list
-function dfl:start/show/death
+function dfl:start/show/display_health_in_tab
+function dfl:start/show/enable_death_scoreboard
