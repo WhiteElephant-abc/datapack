@@ -1,7 +1,5 @@
-- 添加配置参数验证功能
-- 为 API 调用者添加调试标签
+- 更新load函数中的仓库URL为精确路径
 
 ---
 
-- Added configuration parameter validation functionality
-- Added debug tags for API callers
+- Updated repository URLs in load function to specific paths

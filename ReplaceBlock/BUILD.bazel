@@ -1,6 +1,6 @@
 load("@//rule:datapack.bzl", "complete_datapack_config", "minecraft_versions_range")
 
-pack_version = "1.1.0"
+pack_version = "1.1.1"
 
 complete_datapack_config(
     game_versions = minecraft_versions_range("1.20.3"),
