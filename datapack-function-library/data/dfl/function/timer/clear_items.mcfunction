@@ -11,4 +11,4 @@ execute store result score item_number dfl_scoreboard \
 tellraw @a \
     {"type": "translatable", "translate": "redstone.kill.item.dfl.entity.clear_with_count", \
         "fallback": "清除了 %s 个掉落物", "color": "gray", "italic": true, \
-        "with": [{"score": {"name": "item_number", "objective": "dfl_scoreboard"}}]} \
+        "with": [{"score": {"name": "item_number", "objective": "dfl_scoreboard"}}]}
